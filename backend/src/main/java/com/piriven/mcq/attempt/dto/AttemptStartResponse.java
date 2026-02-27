@@ -1,0 +1,15 @@
+package com.piriven.mcq.attempt.dto;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+public record AttemptStartResponse(
+        UUID attemptId,
+        int attemptNo,
+        int year,
+        int paperNo,
+        int totalQuestions,
+        int durationSeconds,
+        LocalDateTime startedAt,
+        LocalDateTime expiresAt) {
+}

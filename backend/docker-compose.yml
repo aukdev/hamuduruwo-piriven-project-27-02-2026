@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mcq-postgres
+    environment:
+      POSTGRES_DB: mcq_db
+      POSTGRES_USER: mcq_user
+      POSTGRES_PASSWORD: mcq_pass
+    ports:
+      - "5438:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mcq_user -d mcq_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  adminer:
+    image: adminer:latest
+    container_name: mcq-adminer
+    ports:
+      - "5050:8080"
+    depends_on:
+      - postgres
+
+  # app:
+  #   build: .
+  #   container_name: mcq-backend
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_NAME: mcq_db
+  #     DB_USERNAME: mcq_user
+  #     DB_PASSWORD: mcq_pass
+  #     JWT_SECRET: aVeryLongSecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLongForHS512ProdKey2024
+  #     JWT_EXPIRATION: 86400000
+  #     SERVER_PORT: 8080
+  #   ports:
+  #     - "8080:8080"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+
+# volumes:
+#   pgdata:
