@@ -1,0 +1,119 @@
+@use "@angular/material" as mat;
+
+/* ── Deep Blue primary palette ── */
+$piriven-blue: (
+  50: #e2e8f3,
+  100: #b6c5e0,
+  200: #869ecc,
+  300: #5677b7,
+  400: #315aa7,
+  500: #0b3d91,
+  600: #0a3789,
+  700: #082f7e,
+  800: #062774,
+  900: #031a62,
+  A100: #92a8ff,
+  A200: #5f7fff,
+  A400: #2c56ff,
+  A700: #1242ff,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+/* ── Golden Yellow accent palette ── */
+$piriven-gold: (
+  50: #fef5e0,
+  100: #fce6b3,
+  200: #fad580,
+  300: #f8c44d,
+  400: #f7b826,
+  500: #f4b400,
+  600: #f3ad00,
+  700: #f1a400,
+  800: #ef9c00,
+  900: #ec8c00,
+  A100: #ffffff,
+  A200: #fff1dc,
+  A400: #ffddaa,
+  A700: #ffd390,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: rgba(0, 0, 0, 0.87),
+    600: rgba(0, 0, 0, 0.87),
+    700: rgba(0, 0, 0, 0.87),
+    800: rgba(0, 0, 0, 0.87),
+    900: rgba(0, 0, 0, 0.87),
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
+  ),
+);
+
+$piriven-primary: mat.define-palette($piriven-blue, 500);
+$piriven-accent: mat.define-palette($piriven-gold, 500);
+$piriven-warn: mat.define-palette(mat.$red-palette);
+
+$piriven-typography: mat.define-typography-config(
+  $font-family:
+    '"Noto Sans Sinhala", "Segoe UI", system-ui, -apple-system, sans-serif',
+  $headline-1: mat.define-typography-level(96px, 96px, 300),
+  $headline-5: mat.define-typography-level(24px, 32px, 600),
+  $headline-6: mat.define-typography-level(20px, 28px, 600),
+  $subtitle-1: mat.define-typography-level(16px, 24px, 500),
+  $subtitle-2: mat.define-typography-level(14px, 22px, 500),
+  $body-1: mat.define-typography-level(16px, 24px, 400),
+  $body-2: mat.define-typography-level(14px, 20px, 400),
+  $button: mat.define-typography-level(14px, 14px, 600),
+  $caption: mat.define-typography-level(12px, 16px, 400),
+);
+
+$piriven-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $piriven-primary,
+      accent: $piriven-accent,
+      warn: $piriven-warn,
+    ),
+    typography: $piriven-typography,
+    density: 0,
+  )
+);
+
+/* ── Shared color variables ── */
+$primary: #0b3d91;
+$primary-light: #315aa7;
+$primary-dark: #031a62;
+$accent: #f4b400;
+$accent-light: #fce6b3;
+$warn: #d32f2f;
+$success: #2e7d32;
+$bg-page: #f6f7fb;
+$bg-card: #ffffff;
+$text-primary: #1a1a2e;
+$text-secondary: #555770;
+$border-color: #e0e3eb;
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
