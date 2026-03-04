@@ -1,5 +1,6 @@
 package com.piriven.mcq.paper.entity;
 
+import com.piriven.mcq.subject.entity.Subject;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "papers", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "year", "paper_no" })
+        @UniqueConstraint(columnNames = { "year", "subject_id" })
 })
 @Getter
 @Setter
@@ -26,8 +27,9 @@ public class Paper {
     @Column(nullable = false)
     private int year;
 
-    @Column(name = "paper_no", nullable = false)
-    private int paperNo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "subject_id", nullable = false)
+    private Subject subject;
 
     @Column(name = "duration_seconds", nullable = false)
     private int durationSeconds;

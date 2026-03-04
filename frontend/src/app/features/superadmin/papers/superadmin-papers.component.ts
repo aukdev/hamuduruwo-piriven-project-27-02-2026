@@ -2,15 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import {
-  PaperDto,
-  PaperDetailDto,
-  SubjectDto,
-  PaperQuestionInfo,
-} from '../../../core/models';
+import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
 
 @Component({
-  selector: 'app-paper-management',
+  selector: 'app-superadmin-papers',
   template: `
     <app-page-header
       title="පත්‍ර කළමනාකරණය"
@@ -127,15 +122,11 @@ import {
           "
         ></mat-progress-bar>
 
-        <!-- Questions list -->
         <div
           class="questions-list mt-16"
           *ngIf="paperDetail.questions.length > 0"
         >
-          <div
-            class="question-item"
-            *ngFor="let pq of paperDetail.questions; let i = index"
-          >
+          <div class="question-item" *ngFor="let pq of paperDetail.questions">
             <div class="question-item__header">
               <span class="position">#{{ pq.position }}</span>
               <span class="q-text">{{ pq.questionText }}</span>
@@ -349,8 +340,6 @@ import {
           flex: 1;
         }
       }
-
-      /* Detail view */
       .detail-card,
       .question-form-card {
         padding: 24px !important;
@@ -385,8 +374,6 @@ import {
         font-weight: 400;
         white-space: nowrap;
       }
-
-      /* Question list */
       .questions-list {
         display: flex;
         flex-direction: column;
@@ -449,13 +436,9 @@ import {
         height: 14px !important;
         margin-left: auto;
       }
-
-      /* Add question area */
       .add-question-area {
         text-align: center;
       }
-
-      /* Question form */
       .full-width {
         width: 100%;
       }
@@ -483,8 +466,6 @@ import {
         gap: 12px;
         margin-top: 8px;
       }
-
-      /* Modal */
       .modal-overlay {
         position: fixed;
         top: 0;
@@ -505,7 +486,7 @@ import {
     `,
   ],
 })
-export class PaperManagementComponent implements OnInit {
+export class SuperadminPapersComponent implements OnInit {
   years: number[] = [];
   papers: PaperDto[] = [];
   subjects: SubjectDto[] = [];
@@ -524,12 +505,10 @@ export class PaperManagementComponent implements OnInit {
     'actions',
   ];
 
-  /* Create Paper */
   showCreateDialog = false;
   creatingPaper = false;
   createForm: FormGroup;
 
-  /* Question Form */
   showQuestionForm = false;
   submittingQuestion = false;
   questionForm: FormGroup;
@@ -571,14 +550,10 @@ export class PaperManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.api.getYears().subscribe({
-      next: (y) => (this.years = y.sort((a, b) => b - a)),
-      error: () => {},
-    });
-    this.api.getSubjects().subscribe({
-      next: (s) => (this.subjects = s),
-      error: () => {},
-    });
+    this.api
+      .getYears()
+      .subscribe({ next: (y) => (this.years = y.sort((a, b) => b - a)) });
+    this.api.getSubjects().subscribe({ next: (s) => (this.subjects = s) });
   }
 
   onYearChange(): void {
@@ -615,10 +590,7 @@ export class PaperManagementComponent implements OnInit {
     this.paperDetail = null;
     this.selectedPaperId = null;
     this.showQuestionForm = false;
-    // Refresh papers list
-    if (this.selectedYear) {
-      this.onYearChange();
-    }
+    if (this.selectedYear) this.onYearChange();
   }
 
   createPaper(): void {
@@ -635,11 +607,10 @@ export class PaperManagementComponent implements OnInit {
           questionCount: 40,
           durationSeconds: 1200,
         });
-        // Refresh years and select this year
         this.selectedYear = paper.year;
-        this.api.getYears().subscribe({
-          next: (y) => (this.years = y.sort((a, b) => b - a)),
-        });
+        this.api
+          .getYears()
+          .subscribe({ next: (y) => (this.years = y.sort((a, b) => b - a)) });
         this.onYearChange();
       },
       error: (err) => {
@@ -651,15 +622,12 @@ export class PaperManagementComponent implements OnInit {
 
   submitQuestion(): void {
     if (this.questionForm.invalid || !this.selectedPaperId) return;
-
-    // Validate exactly one correct answer
     const options = this.questionForm.value.options;
     const correctCount = options.filter((o: any) => o.isCorrect).length;
     if (correctCount !== 1) {
       this.notify.error('නිවැරදි පිළිතුරක් එකක් පමණක් තෝරන්න.');
       return;
     }
-
     this.submittingQuestion = true;
     this.api
       .createQuestionForPaper(this.selectedPaperId, this.questionForm.value)
@@ -699,11 +667,9 @@ export class PaperManagementComponent implements OnInit {
     this.questionForm.reset();
     const opts = this.optionControls;
     for (let i = 0; i < 4; i++) {
-      opts.at(i).patchValue({
-        optionText: '',
-        isCorrect: i === 0,
-        optionOrder: i + 1,
-      });
+      opts
+        .at(i)
+        .patchValue({ optionText: '', isCorrect: i === 0, optionOrder: i + 1 });
     }
   }
 }

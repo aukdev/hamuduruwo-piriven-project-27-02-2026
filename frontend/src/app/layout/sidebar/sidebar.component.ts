@@ -123,6 +123,11 @@ export class SidebarComponent implements OnInit {
             label: 'අනුමත කිරීම්',
             route: '/admin/pending',
           },
+          {
+            icon: 'description',
+            label: 'පත්‍ර කළමනාකරණය',
+            route: '/admin/papers',
+          },
           { icon: 'people', label: 'පරිශීලකයින්', route: '/admin/users' },
         ];
       case 'SUPER_ADMIN':
@@ -141,6 +146,11 @@ export class SidebarComponent implements OnInit {
             icon: 'quiz',
             label: 'ප්‍රශ්න කළමනාකරණය',
             route: '/superadmin/questions',
+          },
+          {
+            icon: 'description',
+            label: 'පත්‍ර කළමනාකරණය',
+            route: '/superadmin/papers',
           },
           { icon: 'people', label: 'පරිශීලකයින්', route: '/superadmin/users' },
         ];

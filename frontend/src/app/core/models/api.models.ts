@@ -95,7 +95,8 @@ export interface QuestionDto {
 export interface PaperDto {
   id: string;
   year: number;
-  paperNo: number;
+  subjectId: string;
+  subjectName: string;
   durationSeconds: number;
   questionCount: number;
   assignedQuestions: number;
@@ -104,7 +105,8 @@ export interface PaperDto {
 export interface PaperDetailDto {
   id: string;
   year: number;
-  paperNo: number;
+  subjectId: string;
+  subjectName: string;
   durationSeconds: number;
   questionCount: number;
   questions: PaperQuestionInfo[];
@@ -114,7 +116,26 @@ export interface PaperQuestionInfo {
   position: number;
   questionId: string;
   questionText: string;
-  subjectName: string;
+  options: PaperOptionInfo[];
+}
+
+export interface PaperOptionInfo {
+  id: string;
+  optionText: string;
+  optionOrder: number;
+  isCorrect: boolean;
+}
+
+export interface PaperCreateRequest {
+  year: number;
+  subjectId: string;
+  questionCount: number;
+  durationSeconds: number;
+}
+
+export interface PaperQuestionCreateRequest {
+  questionText: string;
+  options: QuestionOptionRequest[];
 }
 
 export interface PaperQuestionAssignRequest {
@@ -127,7 +148,7 @@ export interface AttemptStartResponse {
   attemptId: string;
   attemptNo: number;
   year: number;
-  paperNo: number;
+  subjectName: string;
   totalQuestions: number;
   durationSeconds: number;
   startedAt: string;
@@ -163,7 +184,7 @@ export interface AttemptResultResponse {
   attemptNo: number;
   status: string;
   year: number;
-  paperNo: number;
+  subjectName: string;
   correctCount: number;
   wrongCount: number;
   unansweredCount: number;

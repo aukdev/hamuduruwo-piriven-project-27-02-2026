@@ -27,7 +27,9 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         (click)="confirmStart(paper)"
       >
         <div class="paper-card__header">
-          <div class="paper-card__no">{{ paper.paperNo }}</div>
+          <div class="paper-card__no">
+            {{ paper.subjectName?.charAt(0) }}
+          </div>
           <mat-chip-listbox>
             <mat-chip
               [class.ready]="paper.assignedQuestions >= paper.questionCount"
@@ -41,7 +43,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
             </mat-chip>
           </mat-chip-listbox>
         </div>
-        <h3 class="paper-card__title">ප්‍රශ්න පත්‍ර {{ paper.paperNo }}</h3>
+        <h3 class="paper-card__title">{{ paper.subjectName }}</h3>
         <div class="paper-card__meta">
           <span
             ><mat-icon>quiz</mat-icon> ප්‍රශ්න {{ paper.questionCount }}</span
@@ -165,7 +167,9 @@ export class PapersComponent implements OnInit {
     this.year = +this.route.snapshot.params['year'];
     this.api.getPapersByYear(this.year).subscribe({
       next: (papers) => {
-        this.papers = papers.sort((a, b) => a.paperNo - b.paperNo);
+        this.papers = papers.sort((a, b) =>
+          a.subjectName.localeCompare(b.subjectName),
+        );
         this.loading = false;
       },
       error: () => (this.loading = false),
@@ -181,7 +185,7 @@ export class PapersComponent implements OnInit {
     const ref = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'විභාගය ආරම්භ කරන්න',
-        message: `${this.year} වර්ෂයේ ප්‍රශ්න පත්‍ර ${paper.paperNo} ආරම්භ කිරීමට අවශ්‍යද?\n\n⏱ මුළු කාලය: මිනිත්තු ${paper.durationSeconds / 60}\n📝 ප්‍රශ්න: ${paper.questionCount}\n⏳ එක් ප්‍රශ්නයකට: තත්පර 30`,
+        message: `${this.year} වර්ෂයේ ${paper.subjectName} ආරම්භ කිරීමට අවශ්‍යද?\n\n⏱ මුළු කාලය: මිනිත්තු ${paper.durationSeconds / 60}\n📝 ප්‍රශ්න: ${paper.questionCount}\n⏳ එක් ප්‍රශ්නයකට: තත්පර 30`,
         confirmText: 'ආරම්භ කරන්න',
         cancelText: 'නැත',
       },

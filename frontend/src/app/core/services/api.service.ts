@@ -19,6 +19,8 @@ import {
   CreateSubjectRequest,
   PaperDetailDto,
   PaperQuestionAssignRequest,
+  PaperCreateRequest,
+  PaperQuestionCreateRequest,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -182,6 +184,10 @@ export class ApiService {
   }
 
   /* ── Admin / Papers ── */
+  createPaper(req: PaperCreateRequest): Observable<PaperDto> {
+    return this.http.post<PaperDto>(`${BASE}/api/admin/papers`, req);
+  }
+
   getPaperDetail(paperId: string): Observable<PaperDetailDto> {
     return this.http.get<PaperDetailDto>(`${BASE}/api/admin/papers/${paperId}`);
   }
@@ -191,6 +197,25 @@ export class ApiService {
     req: PaperQuestionAssignRequest,
   ): Observable<any> {
     return this.http.post(`${BASE}/api/admin/papers/${paperId}/questions`, req);
+  }
+
+  createQuestionForPaper(
+    paperId: string,
+    req: PaperQuestionCreateRequest,
+  ): Observable<PaperDetailDto> {
+    return this.http.post<PaperDetailDto>(
+      `${BASE}/api/admin/papers/${paperId}/questions/create`,
+      req,
+    );
+  }
+
+  removeQuestionFromPaper(
+    paperId: string,
+    questionId: string,
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `${BASE}/api/admin/papers/${paperId}/questions/${questionId}`,
+    );
   }
 
   /* ── Super Admin / Questions ── */

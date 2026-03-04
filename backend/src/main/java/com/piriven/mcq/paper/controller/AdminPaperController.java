@@ -1,8 +1,9 @@
 package com.piriven.mcq.paper.controller;
 
-import com.piriven.mcq.paper.dto.PaperDetailDto;
-import com.piriven.mcq.paper.dto.PaperQuestionAssignRequest;
+import com.piriven.mcq.paper.dto.*;
 import com.piriven.mcq.paper.service.PaperService;
+import com.piriven.mcq.security.CurrentUser;
+import com.piriven.mcq.security.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,13 @@ public class AdminPaperController {
 
     private final PaperService paperService;
 
+    @PostMapping
+    public ResponseEntity<PaperDto> createPaper(
+            @Valid @RequestBody PaperCreateRequest request) {
+        PaperDto paper = paperService.createPaper(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(paper);
+    }
+
     @GetMapping("/{paperId}")
     public ResponseEntity<PaperDetailDto> getPaperDetail(@PathVariable UUID paperId) {
         return ResponseEntity.ok(paperService.getPaperDetail(paperId));
@@ -33,5 +41,22 @@ public class AdminPaperController {
         paperService.assignQuestionToPaper(paperId, request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(Map.of("message", "Question assigned to paper successfully"));
+    }
+
+    @PostMapping("/{paperId}/questions/create")
+    public ResponseEntity<PaperDetailDto> createQuestionForPaper(
+            @PathVariable UUID paperId,
+            @Valid @RequestBody PaperQuestionCreateRequest request,
+            @CurrentUser UserPrincipal currentUser) {
+        PaperDetailDto detail = paperService.createQuestionForPaper(paperId, request, currentUser.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(detail);
+    }
+
+    @DeleteMapping("/{paperId}/questions/{questionId}")
+    public ResponseEntity<Void> removeQuestionFromPaper(
+            @PathVariable UUID paperId,
+            @PathVariable UUID questionId) {
+        paperService.removeQuestionFromPaper(paperId, questionId);
+        return ResponseEntity.noContent().build();
     }
 }

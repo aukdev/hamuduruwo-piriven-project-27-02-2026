@@ -25,6 +25,15 @@ import { Component } from '@angular/core';
         <p>පරිශීලකයින් බැලීම, මකා දැමීම</p>
         <mat-icon class="arrow">chevron_right</mat-icon>
       </mat-card>
+
+      <mat-card class="action-card" routerLink="/superadmin/papers">
+        <div class="card-icon papers">
+          <mat-icon>description</mat-icon>
+        </div>
+        <h4>පත්‍ර කළමනාකරණය</h4>
+        <p>ප්‍රශ්න පත්‍ර සැදීම, ප්‍රශ්න එක් කිරීම</p>
+        <mat-icon class="arrow">chevron_right</mat-icon>
+      </mat-card>
     </div>
 
     <mat-card class="info-banner mt-24">
@@ -80,6 +89,9 @@ import { Component } from '@angular/core';
         }
         &.users {
           background: linear-gradient(135deg, #f4b400, #ff8f00);
+        }
+        &.papers {
+          background: linear-gradient(135deg, #2e7d32, #43a047);
         }
       }
       h4 {

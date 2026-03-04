@@ -73,8 +73,8 @@ import { AttemptResultResponse } from '../../../core/models';
         </div>
         <mat-divider></mat-divider>
         <div class="info-row">
-          <span>ප්‍රශ්න පත්‍ර අංකය</span>
-          <strong>{{ result.paperNo }}</strong>
+          <span>ප්‍රශ්න පත්‍ර විශය</span>
+          <strong>{{ result.subjectName }}</strong>
         </div>
         <mat-divider></mat-divider>
         <div class="info-row">
