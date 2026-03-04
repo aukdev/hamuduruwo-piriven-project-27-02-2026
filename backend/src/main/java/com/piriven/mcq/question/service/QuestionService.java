@@ -152,6 +152,18 @@ public class QuestionService {
         return buildPagedResponse(questionPage, true);
     }
 
+    @Transactional(readOnly = true)
+    public QuestionDto getTeacherQuestionById(UUID questionId, UUID teacherId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
+
+        if (!question.getCreatedBy().getId().equals(teacherId)) {
+            throw new BusinessException("You can only view your own questions", HttpStatus.FORBIDDEN);
+        }
+
+        return toDto(question, true);
+    }
+
     // ==================== Admin Operations ====================
 
     @Transactional(readOnly = true)
@@ -207,6 +219,19 @@ public class QuestionService {
     }
 
     // ==================== Super Admin Operations ====================
+
+    @Transactional(readOnly = true)
+    public PagedResponse<QuestionDto> getAllQuestionsForSuperAdmin(int page, int size, String status) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<Question> questionPage;
+        if (status != null && !status.isBlank()) {
+            QuestionStatus questionStatus = QuestionStatus.valueOf(status.toUpperCase());
+            questionPage = questionRepository.findByStatus(questionStatus, pageRequest);
+        } else {
+            questionPage = questionRepository.findAll(pageRequest);
+        }
+        return buildPagedResponse(questionPage, true);
+    }
 
     @Transactional
     public QuestionDto superAdminCreateQuestion(QuestionCreateRequest request, UUID superAdminId) {

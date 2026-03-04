@@ -27,6 +27,8 @@ app:
   jwt:
     secret: ${JWT_SECRET:aVeryLongSecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLongForHS512Algorithm2024}
     expiration-ms: ${JWT_EXPIRATION:86400000}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:3000,http://localhost:4200,http://127.0.0.1:4200}
 
   exam:
     total-duration-seconds: 1200

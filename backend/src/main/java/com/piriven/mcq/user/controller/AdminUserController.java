@@ -1,5 +1,6 @@
 package com.piriven.mcq.user.controller;
 
+import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.user.dto.UserDto;
 import com.piriven.mcq.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,15 @@ import java.util.UUID;
 public class AdminUserController {
 
     private final UserService userService;
+
+    @GetMapping("/users")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<PagedResponse<UserDto>> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        PagedResponse<UserDto> response = userService.getAllUsers(page, size);
+        return ResponseEntity.ok(response);
+    }
 
     @PatchMapping("/users/{id}/deactivate")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")

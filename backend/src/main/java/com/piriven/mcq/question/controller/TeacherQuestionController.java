@@ -58,4 +58,12 @@ public class TeacherQuestionController {
                 currentUser.getId(), page, size);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionDto> getQuestion(
+            @PathVariable UUID id,
+            @CurrentUser UserPrincipal currentUser) {
+        QuestionDto question = questionService.getTeacherQuestionById(id, currentUser.getId());
+        return ResponseEntity.ok(question);
+    }
 }

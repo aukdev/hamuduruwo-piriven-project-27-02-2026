@@ -1,5 +1,6 @@
 package com.piriven.mcq.user.service;
 
+import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
 import com.piriven.mcq.user.dto.UserDto;
@@ -8,10 +9,14 @@ import com.piriven.mcq.user.entity.User;
 import com.piriven.mcq.user.entity.UserStatus;
 import com.piriven.mcq.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,6 +29,35 @@ public class UserService {
     public User getUserById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<UserDto> getAllUsers(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<User> userPage = userRepository.findAll(pageRequest);
+        return buildPagedResponse(userPage);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<UserDto> getAllUsersForSuperAdmin(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Page<User> userPage = userRepository.findAll(pageRequest);
+        return buildPagedResponse(userPage);
+    }
+
+    private PagedResponse<UserDto> buildPagedResponse(Page<User> page) {
+        List<UserDto> content = page.getContent().stream()
+                .map(this::toDto)
+                .toList();
+
+        return PagedResponse.<UserDto>builder()
+                .content(content)
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .last(page.isLast())
+                .build();
     }
 
     @Transactional

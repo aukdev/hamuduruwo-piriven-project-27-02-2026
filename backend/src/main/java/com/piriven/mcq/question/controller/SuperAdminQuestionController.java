@@ -1,5 +1,6 @@
 package com.piriven.mcq.question.controller;
 
+import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.question.dto.QuestionCreateRequest;
 import com.piriven.mcq.question.dto.QuestionDto;
 import com.piriven.mcq.question.dto.QuestionUpdateRequest;
@@ -22,6 +23,15 @@ import java.util.UUID;
 public class SuperAdminQuestionController {
 
     private final QuestionService questionService;
+
+    @GetMapping
+    public ResponseEntity<PagedResponse<QuestionDto>> getAllQuestions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String status) {
+        PagedResponse<QuestionDto> response = questionService.getAllQuestionsForSuperAdmin(page, size, status);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     public ResponseEntity<QuestionDto> createQuestion(
