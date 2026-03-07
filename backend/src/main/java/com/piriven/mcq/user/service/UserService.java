@@ -3,6 +3,7 @@ package com.piriven.mcq.user.service;
 import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
+import com.piriven.mcq.user.dto.CreateUserRequest;
 import com.piriven.mcq.user.dto.ResetPasswordRequest;
 import com.piriven.mcq.user.dto.UserDto;
 import com.piriven.mcq.user.dto.UserUpdateRequest;
@@ -33,6 +34,26 @@ public class UserService {
     public User getUserById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+    }
+
+    @Transactional
+    public UserDto createUser(CreateUserRequest request) {
+        if (userRepository.existsByEmail(request.email())) {
+            throw new BusinessException("Email is already registered", HttpStatus.CONFLICT);
+        }
+
+        Role role = Role.valueOf(request.role());
+        User user = User.builder()
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .fullName(request.fullName())
+                .role(role)
+                .status(UserStatus.ACTIVE)
+                .teacherVerified(false)
+                .build();
+
+        user = userRepository.save(user);
+        return toDto(user);
     }
 
     @Transactional(readOnly = true)

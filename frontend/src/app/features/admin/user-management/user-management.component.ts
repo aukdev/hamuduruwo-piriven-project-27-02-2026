@@ -2,10 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { UserDto, UserUpdateRequest } from '../../../core/models';
+import {
+  UserDto,
+  UserUpdateRequest,
+  CreateUserRequest,
+} from '../../../core/models';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EditUserDialogComponent } from '../../../shared/components/edit-user-dialog/edit-user-dialog.component';
 import { ResetPasswordDialogComponent } from '../../../shared/components/reset-password-dialog/reset-password-dialog.component';
+import { CreateUserDialogComponent } from '../../../shared/components/create-user-dialog/create-user-dialog.component';
 
 @Component({
   selector: 'app-user-management',
@@ -15,6 +20,12 @@ import { ResetPasswordDialogComponent } from '../../../shared/components/reset-p
       subtitle="සියලු පරිශීලකයින් බැලීම, සංස්කරණය, මුරපද යළි පිහිටුවීම"
     >
     </app-page-header>
+
+    <div class="actions-bar">
+      <button mat-raised-button color="primary" (click)="createUser()">
+        <mat-icon>person_add</mat-icon> නව පරිශීලකයෙකු එක් කරන්න
+      </button>
+    </div>
 
     <app-loading-overlay [show]="loading"></app-loading-overlay>
 
@@ -130,7 +141,6 @@ import { ResetPasswordDialogComponent } from '../../../shared/components/reset-p
     </app-empty-state>
 
     <mat-paginator
-      *ngIf="totalElements > pageSize"
       [length]="totalElements"
       [pageSize]="pageSize"
       [pageIndex]="currentPage"
@@ -235,6 +245,9 @@ import { ResetPasswordDialogComponent } from '../../../shared/components/reset-p
         color: #999;
         margin-top: 6px;
         display: block;
+      }
+      .actions-bar {
+        margin-bottom: 16px;
       }
     `,
   ],
@@ -391,6 +404,26 @@ export class UserManagementComponent implements OnInit {
           },
           error: (err) =>
             this.notify.error(err.error?.message || 'අක්‍රිය කිරීම අසාර්ථකයි.'),
+        });
+      }
+    });
+  }
+
+  createUser(): void {
+    const ref = this.dialog.open(CreateUserDialogComponent, {
+      width: '480px',
+    });
+    ref.afterClosed().subscribe((result: CreateUserRequest | undefined) => {
+      if (result) {
+        this.api.createUser(result).subscribe({
+          next: () => {
+            this.notify.success('නව පරිශීලකයා සාර්ථකව එක් කරන ලදී.');
+            this.loadUsers();
+          },
+          error: (err) =>
+            this.notify.error(
+              err.error?.message || 'පරිශීලකයා එක් කිරීම අසාර්ථකයි.',
+            ),
         });
       }
     });

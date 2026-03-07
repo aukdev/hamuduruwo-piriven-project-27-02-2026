@@ -1,12 +1,14 @@
 package com.piriven.mcq.user.controller;
 
 import com.piriven.mcq.common.dto.PagedResponse;
+import com.piriven.mcq.user.dto.CreateUserRequest;
 import com.piriven.mcq.user.dto.ResetPasswordRequest;
 import com.piriven.mcq.user.dto.UserDto;
 import com.piriven.mcq.user.dto.UserUpdateRequest;
 import com.piriven.mcq.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,13 @@ import java.util.UUID;
 public class AdminUserController {
 
     private final UserService userService;
+
+    @PostMapping("/users")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody CreateUserRequest request) {
+        UserDto user = userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+    }
 
     @GetMapping("/users")
     @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")

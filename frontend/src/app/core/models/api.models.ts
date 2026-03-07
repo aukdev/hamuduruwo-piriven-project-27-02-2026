@@ -241,3 +241,10 @@ export interface UserUpdateRequest {
 export interface ResetPasswordRequest {
   newPassword: string;
 }
+
+export interface CreateUserRequest {
+  fullName: string;
+  email: string;
+  password: string;
+  role: AppRole;
+}

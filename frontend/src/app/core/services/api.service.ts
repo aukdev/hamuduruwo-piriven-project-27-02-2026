@@ -24,6 +24,7 @@ import {
   PaperQuestionCreateRequest,
   UserUpdateRequest,
   ResetPasswordRequest,
+  CreateUserRequest,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -151,6 +152,10 @@ export class ApiService {
   }
 
   /* ── Admin / Users ── */
+  createUser(req: CreateUserRequest): Observable<UserDto> {
+    return this.http.post<UserDto>(`${BASE}/api/admin/users`, req);
+  }
+
   getUsers(page = 0, size = 50): Observable<PagedResponse<UserDto>> {
     return this.http.get<PagedResponse<UserDto>>(`${BASE}/api/admin/users`, {
       params: new HttpParams().set('page', page).set('size', size),

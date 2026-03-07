@@ -38,6 +38,7 @@ import { LoadingOverlayComponent } from './components/loading-overlay/loading-ov
 import { TimerDisplayComponent } from './components/timer-display/timer-display.component';
 import { EditUserDialogComponent } from './components/edit-user-dialog/edit-user-dialog.component';
 import { ResetPasswordDialogComponent } from './components/reset-password-dialog/reset-password-dialog.component';
+import { CreateUserDialogComponent } from './components/create-user-dialog/create-user-dialog.component';
 
 const MATERIAL_MODULES = [
   MatToolbarModule,
@@ -75,6 +76,7 @@ const SHARED_COMPONENTS = [
   TimerDisplayComponent,
   EditUserDialogComponent,
   ResetPasswordDialogComponent,
+  CreateUserDialogComponent,
 ];
 
 @NgModule({
