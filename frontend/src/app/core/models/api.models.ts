@@ -46,6 +46,11 @@ export interface CreateSubjectRequest {
   description?: string;
 }
 
+export interface UpdateSubjectRequest {
+  name: string;
+  description?: string;
+}
+
 /* ── Question ── */
 export interface QuestionOptionRequest {
   optionText: string;

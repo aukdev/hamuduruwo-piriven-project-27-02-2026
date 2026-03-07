@@ -2,6 +2,7 @@ package com.piriven.mcq.subject.controller;
 
 import com.piriven.mcq.subject.dto.CreateSubjectRequest;
 import com.piriven.mcq.subject.dto.SubjectDto;
+import com.piriven.mcq.subject.dto.UpdateSubjectRequest;
 import com.piriven.mcq.subject.service.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,20 @@ public class AdminSubjectController {
     public ResponseEntity<SubjectDto> createSubject(@Valid @RequestBody CreateSubjectRequest request) {
         SubjectDto subject = subjectService.createSubject(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(subject);
+    }
+
+    @PutMapping("/subjects/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<SubjectDto> updateSubject(@PathVariable UUID id,
+            @Valid @RequestBody UpdateSubjectRequest request) {
+        return ResponseEntity.ok(subjectService.updateSubject(id, request));
+    }
+
+    @DeleteMapping("/subjects/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SUPER_ADMIN')")
+    public ResponseEntity<Void> deleteSubject(@PathVariable UUID id) {
+        subjectService.deleteSubject(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/teachers/{teacherId}/subjects/{subjectId}")

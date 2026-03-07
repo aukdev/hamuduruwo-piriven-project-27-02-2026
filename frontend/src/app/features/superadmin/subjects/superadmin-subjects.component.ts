@@ -8,11 +8,11 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 import { EditSubjectDialogComponent } from '../../../shared/components/edit-subject-dialog/edit-subject-dialog.component';
 
 @Component({
-  selector: 'app-subject-management',
+  selector: 'app-superadmin-subjects',
   template: `
     <app-page-header
       title="විෂය කළමනාකරණය"
-      subtitle="විෂයයන් එකතු කිරීම සහ ගුරුවරුන්ට පැවරීම"
+      subtitle="විෂයයන් එකතු කිරීම, සංස්කරණය, මකා දැමීම සහ ගුරුවරුන්ට පැවරීම"
     >
     </app-page-header>
 
@@ -212,7 +212,7 @@ import { EditSubjectDialogComponent } from '../../../shared/components/edit-subj
     `,
   ],
 })
-export class SubjectManagementComponent implements OnInit {
+export class SuperadminSubjectsComponent implements OnInit {
   subjects: SubjectDto[] = [];
   loading = true;
   creating = false;
@@ -317,7 +317,7 @@ export class SubjectManagementComponent implements OnInit {
       },
       width: '440px',
     });
-    ref.afterClosed().subscribe((result: boolean) => {
+    ref.afterClosed().subscribe((result) => {
       if (result) {
         this.api.deleteSubject(s.id).subscribe({
           next: () => {

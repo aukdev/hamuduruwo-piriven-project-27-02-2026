@@ -129,6 +129,11 @@ export class SidebarComponent implements OnInit {
             route: '/admin/papers',
           },
           { icon: 'people', label: 'පරිශීලකයින්', route: '/admin/users' },
+          {
+            icon: 'menu_book',
+            label: 'විෂය කළමනාකරණය',
+            route: '/admin/subjects',
+          },
         ];
       case 'SUPER_ADMIN':
         return [
@@ -148,6 +153,11 @@ export class SidebarComponent implements OnInit {
             route: '/superadmin/papers',
           },
           { icon: 'people', label: 'පරිශීලකයින්', route: '/superadmin/users' },
+          {
+            icon: 'menu_book',
+            label: 'විෂය කළමනාකරණය',
+            route: '/superadmin/subjects',
+          },
         ];
       default:
         return [];

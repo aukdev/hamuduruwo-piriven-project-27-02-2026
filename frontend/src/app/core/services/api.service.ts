@@ -17,6 +17,7 @@ import {
   PagedResponse,
   UserDto,
   CreateSubjectRequest,
+  UpdateSubjectRequest,
   PaperDetailDto,
   PaperQuestionAssignRequest,
   PaperCreateRequest,
@@ -201,6 +202,14 @@ export class ApiService {
   /* ── Admin / Subjects ── */
   createSubject(req: CreateSubjectRequest): Observable<SubjectDto> {
     return this.http.post<SubjectDto>(`${BASE}/api/admin/subjects`, req);
+  }
+
+  updateSubject(id: string, req: UpdateSubjectRequest): Observable<SubjectDto> {
+    return this.http.put<SubjectDto>(`${BASE}/api/admin/subjects/${id}`, req);
+  }
+
+  deleteSubject(id: string): Observable<void> {
+    return this.http.delete<void>(`${BASE}/api/admin/subjects/${id}`);
   }
 
   assignSubjectToTeacher(
