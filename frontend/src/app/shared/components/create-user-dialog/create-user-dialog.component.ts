@@ -27,7 +27,25 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>මුරපදය</mat-label>
-          <input matInput formControlName="password" type="text" />
+          <input
+            matInput
+            formControlName="password"
+            [type]="hidePassword ? 'password' : 'text'"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            [attr.aria-label]="
+              hidePassword ? 'මුරපදය පෙන්වන්න' : 'මුරපදය සඟවන්න'
+            "
+            [attr.aria-pressed]="!hidePassword"
+            (click)="togglePasswordVisibility()"
+          >
+            <mat-icon>{{
+              hidePassword ? 'visibility' : 'visibility_off'
+            }}</mat-icon>
+          </button>
           <mat-hint>අවම අක්ෂර 6ක්</mat-hint>
           <mat-error *ngIf="form.get('password')?.hasError('required')"
             >මුරපදය අවශ්‍යයි</mat-error
@@ -64,20 +82,37 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   `,
   styles: [
     `
+      :host ::ng-deep .mat-mdc-dialog-content {
+        padding: 16px 24px !important;
+        max-height: 70vh;
+        overflow-y: auto;
+      }
       .create-form {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        min-width: 350px;
+        gap: 8px;
+        min-width: 380px;
+        padding-top: 8px;
       }
       .full-width {
         width: 100%;
+      }
+      :host ::ng-deep .mat-mdc-form-field {
+        margin-bottom: 4px;
+      }
+      :host ::ng-deep .mat-mdc-text-field-wrapper {
+        padding: 0 12px !important;
+      }
+      :host ::ng-deep .mat-mdc-form-field-infix {
+        min-height: 48px !important;
+        padding: 12px 0 !important;
       }
     `,
   ],
 })
 export class CreateUserDialogComponent {
   form: FormGroup;
+  hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
@@ -95,5 +130,9 @@ export class CreateUserDialogComponent {
     if (this.form.valid) {
       this.dialogRef.close(this.form.value);
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
   }
 }
