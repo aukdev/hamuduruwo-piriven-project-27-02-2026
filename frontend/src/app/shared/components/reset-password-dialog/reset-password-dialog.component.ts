@@ -12,7 +12,25 @@ import { UserDto } from '../../../core/models';
       <form [formGroup]="form" class="reset-form">
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>නව මුරපදය</mat-label>
-          <input matInput formControlName="newPassword" type="text" />
+          <input
+            matInput
+            formControlName="newPassword"
+            [type]="hidePassword ? 'password' : 'text'"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            [attr.aria-label]="
+              hidePassword ? 'මුරපදය පෙන්වන්න' : 'මුරපදය සඟවන්න'
+            "
+            [attr.aria-pressed]="!hidePassword"
+            (click)="togglePasswordVisibility()"
+          >
+            <mat-icon>{{
+              hidePassword ? 'visibility' : 'visibility_off'
+            }}</mat-icon>
+          </button>
           <mat-hint>අවම අක්ෂර 6ක්</mat-hint>
           <mat-error *ngIf="form.get('newPassword')?.hasError('required')"
             >මුරපදය අවශ්‍යයි</mat-error
@@ -52,6 +70,7 @@ import { UserDto } from '../../../core/models';
 })
 export class ResetPasswordDialogComponent {
   form: FormGroup;
+  hidePassword = true;
 
   constructor(
     private fb: FormBuilder,
@@ -67,5 +86,9 @@ export class ResetPasswordDialogComponent {
     if (this.form.valid) {
       this.dialogRef.close(this.form.value.newPassword);
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.hidePassword = !this.hidePassword;
   }
 }
