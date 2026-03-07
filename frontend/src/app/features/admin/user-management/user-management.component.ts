@@ -2,15 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { UserDto } from '../../../core/models';
+import { UserDto, UserUpdateRequest } from '../../../core/models';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { EditUserDialogComponent } from '../../../shared/components/edit-user-dialog/edit-user-dialog.component';
+import { ResetPasswordDialogComponent } from '../../../shared/components/reset-password-dialog/reset-password-dialog.component';
 
 @Component({
   selector: 'app-user-management',
   template: `
     <app-page-header
       title="පරිශීලක කළමනාකරණය"
-      subtitle="ගුරුවරුන් සත්‍යාපනය සහ පරිශීලක අක්‍රිය කිරීම"
+      subtitle="සියලු පරිශීලකයින් බැලීම, සංස්කරණය, මුරපද යළි පිහිටුවීම"
     >
     </app-page-header>
 
@@ -21,9 +23,10 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       (selectedTabChange)="filterByTab($event.index)"
       class="mb-16"
     >
-      <mat-tab label="සියල්ලම ({{ users.length }})"></mat-tab>
-      <mat-tab label="ගුරුවරුන් ({{ getTeachers().length }})"></mat-tab>
-      <mat-tab label="සෙසු ({{ getStudents().length }})"></mat-tab>
+      <mat-tab label="සියල්ලම ({{ totalElements }})"></mat-tab>
+      <mat-tab label="ගුරුවරුන්"></mat-tab>
+      <mat-tab label="ශිෂ්‍යයින්"></mat-tab>
+      <mat-tab label="පරිපාලකයින්"></mat-tab>
     </mat-tab-group>
 
     <div class="users-list" *ngIf="!loading">
@@ -60,20 +63,55 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
           </div>
           <div class="user-actions">
             <button
-              mat-stroked-button
+              mat-icon-button
               color="primary"
-              *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
-              (click)="verifyTeacher(u)"
+              matTooltip="සංස්කරණය"
+              (click)="editUser(u)"
             >
-              <mat-icon>verified_user</mat-icon> සත්‍යාපනය
+              <mat-icon>edit</mat-icon>
             </button>
             <button
-              mat-stroked-button
-              color="warn"
-              *ngIf="u.status === 'ACTIVE'"
-              (click)="deactivateUser(u)"
+              mat-icon-button
+              matTooltip="මුරපදය යළි පිහිටුවීම"
+              (click)="resetPassword(u)"
             >
-              <mat-icon>block</mat-icon> අක්‍රිය
+              <mat-icon>lock_reset</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="ගුරු සත්‍යාපනය"
+              (click)="verifyTeacher(u)"
+              *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
+            >
+              <mat-icon>verified_user</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="අක්‍රිය කරන්න"
+              (click)="deactivateUser(u)"
+              *ngIf="u.status === 'ACTIVE' && u.role !== 'SUPER_ADMIN'"
+            >
+              <mat-icon>block</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="සක්‍රිය කරන්න"
+              (click)="activateUser(u)"
+              *ngIf="u.status === 'DEACTIVATED'"
+            >
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="ස්ථිරවම මකා දැමීම"
+              (click)="deleteUser(u)"
+              *ngIf="u.role !== 'SUPER_ADMIN'"
+            >
+              <mat-icon>delete_forever</mat-icon>
             </button>
           </div>
         </div>
@@ -189,11 +227,8 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       }
       .user-actions {
         display: flex;
-        gap: 8px;
+        gap: 2px;
         flex-shrink: 0;
-        button {
-          font-size: 13px;
-        }
       }
       .user-date {
         font-size: 11px;
@@ -209,7 +244,7 @@ export class UserManagementComponent implements OnInit {
   filteredUsers: UserDto[] = [];
   loading = true;
   currentPage = 0;
-  pageSize = 30;
+  pageSize = 20;
   totalElements = 0;
   currentTab = 0;
 
@@ -239,15 +274,14 @@ export class UserManagementComponent implements OnInit {
   filterByTab(index: number): void {
     this.currentTab = index;
     if (index === 0) this.filteredUsers = this.users;
-    else if (index === 1) this.filteredUsers = this.getTeachers();
-    else this.filteredUsers = this.getStudents();
-  }
-
-  getTeachers(): UserDto[] {
-    return this.users.filter((u) => u.role === 'TEACHER');
-  }
-  getStudents(): UserDto[] {
-    return this.users.filter((u) => u.role === 'STUDENT');
+    else if (index === 1)
+      this.filteredUsers = this.users.filter((u) => u.role === 'TEACHER');
+    else if (index === 2)
+      this.filteredUsers = this.users.filter((u) => u.role === 'STUDENT');
+    else
+      this.filteredUsers = this.users.filter(
+        (u) => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN',
+      );
   }
 
   onPageChange(event: any): void {
@@ -272,6 +306,47 @@ export class UserManagementComponent implements OnInit {
       SUPER_ADMIN: 'ප්‍රධාන පරිපාලක',
     };
     return map[role] || role;
+  }
+
+  editUser(u: UserDto): void {
+    const ref = this.dialog.open(EditUserDialogComponent, {
+      data: u,
+      width: '460px',
+    });
+    ref.afterClosed().subscribe((result: UserUpdateRequest | undefined) => {
+      if (result) {
+        this.api.updateUser(u.id, result).subscribe({
+          next: () => {
+            this.notify.success('පරිශීලක තොරතුරු යාවත්කාලීන කරන ලදී.');
+            this.loadUsers();
+          },
+          error: (err) =>
+            this.notify.error(
+              err.error?.message || 'යාවත්කාලීන කිරීම අසාර්ථකයි.',
+            ),
+        });
+      }
+    });
+  }
+
+  resetPassword(u: UserDto): void {
+    const ref = this.dialog.open(ResetPasswordDialogComponent, {
+      data: u,
+      width: '440px',
+    });
+    ref.afterClosed().subscribe((newPassword: string | undefined) => {
+      if (newPassword) {
+        this.api.resetPassword(u.id, { newPassword }).subscribe({
+          next: () => {
+            this.notify.success('මුරපදය සාර්ථකව යළි පිහිටුවන ලදී.');
+          },
+          error: (err) =>
+            this.notify.error(
+              err.error?.message || 'මුරපදය යළි පිහිටුවීම අසාර්ථකයි.',
+            ),
+        });
+      }
+    });
   }
 
   verifyTeacher(u: UserDto): void {
@@ -301,7 +376,7 @@ export class UserManagementComponent implements OnInit {
     const ref = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'පරිශීලකයා අක්‍රිය කරන්න',
-        message: `"${u.fullName}" (${u.email}) අක්‍රිය කිරීමට අවශ්‍යද? මෙම ක්‍රියාව ආපසු හැරවිය හැක.`,
+        message: `"${u.fullName}" (${u.email}) අක්‍රිය කිරීමට අවශ්‍යද?`,
         confirmText: 'අක්‍රිය කරන්න',
         dangerous: true,
       },
@@ -316,6 +391,41 @@ export class UserManagementComponent implements OnInit {
           },
           error: (err) =>
             this.notify.error(err.error?.message || 'අක්‍රිය කිරීම අසාර්ථකයි.'),
+        });
+      }
+    });
+  }
+
+  activateUser(u: UserDto): void {
+    this.api.activateUser(u.id).subscribe({
+      next: () => {
+        this.notify.success('පරිශීලකයා සක්‍රිය කරන ලදී.');
+        this.loadUsers();
+      },
+      error: (err) =>
+        this.notify.error(err.error?.message || 'සක්‍රිය කිරීම අසාර්ථකයි.'),
+    });
+  }
+
+  deleteUser(u: UserDto): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'පරිශීලකයා මකා දැමීම',
+        message: `"${u.fullName}" (${u.email}) ස්ථිරවම මකා දැමීමට අවශ්‍යද?\nමෙම ක්‍රියාව ආපසු හැරවිය නොහැක!`,
+        confirmText: 'ස්ථිරවම මකන්න',
+        dangerous: true,
+      },
+      width: '440px',
+    });
+    ref.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.deleteUser(u.id).subscribe({
+          next: () => {
+            this.notify.success('පරිශීලකයා මකා දමන ලදී.');
+            this.loadUsers();
+          },
+          error: (err) =>
+            this.notify.error(err.error?.message || 'මකා දැමීම අසාර්ථකයි.'),
         });
       }
     });

@@ -2,22 +2,36 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { UserDto } from '../../../core/models';
+import { UserDto, UserUpdateRequest } from '../../../core/models';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { EditUserDialogComponent } from '../../../shared/components/edit-user-dialog/edit-user-dialog.component';
+import { ResetPasswordDialogComponent } from '../../../shared/components/reset-password-dialog/reset-password-dialog.component';
 
+/* ────────── Main Users Component ────────── */
 @Component({
   selector: 'app-superadmin-users',
   template: `
     <app-page-header
-      title="පරිශීලක කළමනාකරණය (සම්පූර්ණ)"
-      subtitle="පරිශීලකයින් බැලීම සහ මකා දැමීම"
+      title="පරිශීලක කළමනාකරණය"
+      subtitle="සියලු පරිශීලකයින් බැලීම, සංස්කරණය, මුරපද යළි පිහිටුවීම"
     >
     </app-page-header>
 
     <app-loading-overlay [show]="loading"></app-loading-overlay>
 
+    <!-- Filter tabs -->
+    <mat-tab-group
+      (selectedTabChange)="filterByTab($event.index)"
+      class="mb-16"
+    >
+      <mat-tab label="සියල්ලම ({{ totalElements }})"></mat-tab>
+      <mat-tab label="ගුරුවරුන්"></mat-tab>
+      <mat-tab label="ශිෂ්‍යයින්"></mat-tab>
+      <mat-tab label="පරිපාලකයින්"></mat-tab>
+    </mat-tab-group>
+
     <div class="users-list" *ngIf="!loading">
-      <mat-card class="user-card" *ngFor="let u of users">
+      <mat-card class="user-card" *ngFor="let u of filteredUsers">
         <div class="user-main">
           <div class="user-avatar">{{ getInitials(u.fullName) }}</div>
           <div class="user-info">
@@ -34,29 +48,85 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
               >
                 {{ u.status === 'ACTIVE' ? 'සක්‍රිය' : 'අක්‍රිය' }}
               </span>
+              <span
+                class="verify-badge unverified"
+                *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
+              >
+                <mat-icon>warning_amber</mat-icon> සත්‍යාපනය නැත
+              </span>
+              <span
+                class="verify-badge verified"
+                *ngIf="u.role === 'TEACHER' && u.teacherVerified"
+              >
+                <mat-icon>verified</mat-icon> සත්‍යාපිත
+              </span>
               <span class="date-chip">{{
                 u.createdAt | date: 'yyyy-MM-dd'
               }}</span>
             </div>
           </div>
-          <button
-            mat-icon-button
-            color="warn"
-            matTooltip="ස්ථිරවම මකා දැමීම"
-            (click)="deleteUser(u)"
-            *ngIf="u.role !== 'SUPER_ADMIN'"
-          >
-            <mat-icon>delete_forever</mat-icon>
-          </button>
+          <div class="user-actions">
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="සංස්කරණය"
+              (click)="editUser(u)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="මුරපදය යළි පිහිටුවීම"
+              (click)="resetPassword(u)"
+            >
+              <mat-icon>lock_reset</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="ගුරු සත්‍යාපනය"
+              (click)="verifyTeacher(u)"
+              *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
+            >
+              <mat-icon>verified_user</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="අක්‍රිය කරන්න"
+              (click)="deactivateUser(u)"
+              *ngIf="u.status === 'ACTIVE' && u.role !== 'SUPER_ADMIN'"
+            >
+              <mat-icon>block</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="සක්‍රිය කරන්න"
+              (click)="activateUser(u)"
+              *ngIf="u.status === 'DEACTIVATED'"
+            >
+              <mat-icon>check_circle</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="ස්ථිරවම මකා දැමීම"
+              (click)="deleteUser(u)"
+              *ngIf="u.role !== 'SUPER_ADMIN'"
+            >
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </div>
         </div>
       </mat-card>
     </div>
 
     <app-empty-state
-      *ngIf="!loading && users.length === 0"
+      *ngIf="!loading && filteredUsers.length === 0"
       icon="people"
       title="පරිශීලකයින් නොමැත"
-      message="තවම පරිශීලකයින් නොමැත."
+      message="මෙම ප්‍රවර්ගයේ පරිශීලකයින් නොමැත."
     ></app-empty-state>
 
     <mat-paginator
@@ -99,6 +169,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       }
       .user-info {
         flex: 1;
+        min-width: 200px;
       }
       .user-info h4 {
         margin: 0;
@@ -130,6 +201,28 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
           color: #c62828;
         }
       }
+      .verify-badge {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+        &.unverified {
+          background: #fff3e0;
+          color: #e65100;
+        }
+        &.verified {
+          background: #e8f5e9;
+          color: #2e7d32;
+        }
+      }
       .date-chip {
         font-size: 11px;
         color: #999;
@@ -137,15 +230,22 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         background: #f5f5f5;
         border-radius: 4px;
       }
+      .user-actions {
+        display: flex;
+        gap: 2px;
+        flex-shrink: 0;
+      }
     `,
   ],
 })
 export class SuperadminUsersComponent implements OnInit {
   users: UserDto[] = [];
+  filteredUsers: UserDto[] = [];
   loading = true;
   currentPage = 0;
-  pageSize = 30;
+  pageSize = 20;
   totalElements = 0;
+  currentTab = 0;
 
   constructor(
     private api: ApiService,
@@ -159,14 +259,28 @@ export class SuperadminUsersComponent implements OnInit {
 
   loadUsers(): void {
     this.loading = true;
-    this.api.superGetUsers(this.currentPage, this.pageSize).subscribe({
+    this.api.getUsers(this.currentPage, this.pageSize).subscribe({
       next: (res) => {
         this.users = res.content;
         this.totalElements = res.totalElements;
+        this.filterByTab(this.currentTab);
         this.loading = false;
       },
       error: () => (this.loading = false),
     });
+  }
+
+  filterByTab(index: number): void {
+    this.currentTab = index;
+    if (index === 0) this.filteredUsers = this.users;
+    else if (index === 1)
+      this.filteredUsers = this.users.filter((u) => u.role === 'TEACHER');
+    else if (index === 2)
+      this.filteredUsers = this.users.filter((u) => u.role === 'STUDENT');
+    else
+      this.filteredUsers = this.users.filter(
+        (u) => u.role === 'ADMIN' || u.role === 'SUPER_ADMIN',
+      );
   }
 
   onPageChange(event: any): void {
@@ -193,6 +307,105 @@ export class SuperadminUsersComponent implements OnInit {
     return map[role] || role;
   }
 
+  editUser(u: UserDto): void {
+    const ref = this.dialog.open(EditUserDialogComponent, {
+      data: u,
+      width: '460px',
+    });
+    ref.afterClosed().subscribe((result: UserUpdateRequest | undefined) => {
+      if (result) {
+        this.api.updateUser(u.id, result).subscribe({
+          next: () => {
+            this.notify.success('පරිශීලක තොරතුරු යාවත්කාලීන කරන ලදී.');
+            this.loadUsers();
+          },
+          error: (err) =>
+            this.notify.error(
+              err.error?.message || 'යාවත්කාලීන කිරීම අසාර්ථකයි.',
+            ),
+        });
+      }
+    });
+  }
+
+  resetPassword(u: UserDto): void {
+    const ref = this.dialog.open(ResetPasswordDialogComponent, {
+      data: u,
+      width: '440px',
+    });
+    ref.afterClosed().subscribe((newPassword: string | undefined) => {
+      if (newPassword) {
+        this.api.resetPassword(u.id, { newPassword }).subscribe({
+          next: () => {
+            this.notify.success('මුරපදය සාර්ථකව යළි පිහිටුවන ලදී.');
+          },
+          error: (err) =>
+            this.notify.error(
+              err.error?.message || 'මුරපදය යළි පිහිටුවීම අසාර්ථකයි.',
+            ),
+        });
+      }
+    });
+  }
+
+  verifyTeacher(u: UserDto): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'ගුරුවරයා සත්‍යාපනය',
+        message: `"${u.fullName}" (${u.email}) ගුරුවරයා ලෙස සත්‍යාපනය කිරීමට අවශ්‍යද?`,
+        confirmText: 'සත්‍යාපනය කරන්න',
+      },
+      width: '400px',
+    });
+    ref.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.verifyTeacher(u.id).subscribe({
+          next: () => {
+            this.notify.success('ගුරුවරයා සත්‍යාපනය කරන ලදී!');
+            this.loadUsers();
+          },
+          error: (err) =>
+            this.notify.error(err.error?.message || 'සත්‍යාපනය අසාර්ථකයි.'),
+        });
+      }
+    });
+  }
+
+  deactivateUser(u: UserDto): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'පරිශීලකයා අක්‍රිය කරන්න',
+        message: `"${u.fullName}" (${u.email}) අක්‍රිය කිරීමට අවශ්‍යද?`,
+        confirmText: 'අක්‍රිය කරන්න',
+        dangerous: true,
+      },
+      width: '420px',
+    });
+    ref.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.deactivateUser(u.id).subscribe({
+          next: () => {
+            this.notify.success('පරිශීලකයා අක්‍රිය කරන ලදී.');
+            this.loadUsers();
+          },
+          error: (err) =>
+            this.notify.error(err.error?.message || 'අක්‍රිය කිරීම අසාර්ථකයි.'),
+        });
+      }
+    });
+  }
+
+  activateUser(u: UserDto): void {
+    this.api.activateUser(u.id).subscribe({
+      next: () => {
+        this.notify.success('පරිශීලකයා සක්‍රිය කරන ලදී.');
+        this.loadUsers();
+      },
+      error: (err) =>
+        this.notify.error(err.error?.message || 'සක්‍රිය කිරීම අසාර්ථකයි.'),
+    });
+  }
+
   deleteUser(u: UserDto): void {
     const ref = this.dialog.open(ConfirmDialogComponent, {
       data: {
@@ -205,7 +418,7 @@ export class SuperadminUsersComponent implements OnInit {
     });
     ref.afterClosed().subscribe((result) => {
       if (result) {
-        this.api.superDeleteUser(u.id).subscribe({
+        this.api.deleteUser(u.id).subscribe({
           next: () => {
             this.notify.success('පරිශීලකයා මකා දමන ලදී.');
             this.loadUsers();

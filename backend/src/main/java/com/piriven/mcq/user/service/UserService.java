@@ -3,7 +3,9 @@ package com.piriven.mcq.user.service;
 import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
+import com.piriven.mcq.user.dto.ResetPasswordRequest;
 import com.piriven.mcq.user.dto.UserDto;
+import com.piriven.mcq.user.dto.UserUpdateRequest;
 import com.piriven.mcq.user.entity.Role;
 import com.piriven.mcq.user.entity.User;
 import com.piriven.mcq.user.entity.UserStatus;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public User getUserById(UUID id) {
@@ -103,6 +107,40 @@ public class UserService {
         teacher.setTeacherVerified(true);
         teacher = userRepository.save(teacher);
         return toDto(teacher);
+    }
+
+    @Transactional
+    public UserDto updateUser(UUID userId, UserUpdateRequest request) {
+        User user = getUserById(userId);
+
+        user.setFullName(request.fullName());
+        user.setEmail(request.email());
+        user.setRole(Role.valueOf(request.role()));
+        user.setStatus(UserStatus.valueOf(request.status()));
+        if (request.teacherVerified() != null) {
+            user.setTeacherVerified(request.teacherVerified());
+        }
+
+        user = userRepository.save(user);
+        return toDto(user);
+    }
+
+    @Transactional
+    public void resetPassword(UUID userId, ResetPasswordRequest request) {
+        User user = getUserById(userId);
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public UserDto activateUser(UUID userId) {
+        User user = getUserById(userId);
+        if (user.getStatus() == UserStatus.ACTIVE) {
+            throw new BusinessException("User is already active");
+        }
+        user.setStatus(UserStatus.ACTIVE);
+        user = userRepository.save(user);
+        return toDto(user);
     }
 
     public UserDto toDto(User user) {

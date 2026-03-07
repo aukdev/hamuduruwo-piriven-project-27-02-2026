@@ -22,6 +22,8 @@ import {
   PaperCreateRequest,
   PaperUpdateRequest,
   PaperQuestionCreateRequest,
+  UserUpdateRequest,
+  ResetPasswordRequest,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -167,6 +169,28 @@ export class ApiService {
       `${BASE}/api/admin/teachers/${id}/verify`,
       {},
     );
+  }
+
+  updateUser(id: string, req: UserUpdateRequest): Observable<UserDto> {
+    return this.http.put<UserDto>(`${BASE}/api/admin/users/${id}`, req);
+  }
+
+  resetPassword(id: string, req: ResetPasswordRequest): Observable<void> {
+    return this.http.post<void>(
+      `${BASE}/api/admin/users/${id}/reset-password`,
+      req,
+    );
+  }
+
+  activateUser(id: string): Observable<UserDto> {
+    return this.http.patch<UserDto>(
+      `${BASE}/api/admin/users/${id}/activate`,
+      {},
+    );
+  }
+
+  deleteUser(id: string): Observable<void> {
+    return this.http.delete<void>(`${BASE}/api/admin/users/${id}`);
   }
 
   /* ── Admin / Subjects ── */

@@ -228,3 +228,16 @@ export interface FieldError {
   message: string;
   rejectedValue: any;
 }
+
+/* ── User Management ── */
+export interface UserUpdateRequest {
+  fullName: string;
+  email: string;
+  role: AppRole;
+  status: 'ACTIVE' | 'DEACTIVATED';
+  teacherVerified: boolean;
+}
+
+export interface ResetPasswordRequest {
+  newPassword: string;
+}

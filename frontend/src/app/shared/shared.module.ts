@@ -36,6 +36,8 @@ import { EmptyStateComponent } from './components/empty-state/empty-state.compon
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { TimerDisplayComponent } from './components/timer-display/timer-display.component';
+import { EditUserDialogComponent } from './components/edit-user-dialog/edit-user-dialog.component';
+import { ResetPasswordDialogComponent } from './components/reset-password-dialog/reset-password-dialog.component';
 
 const MATERIAL_MODULES = [
   MatToolbarModule,
@@ -71,6 +73,8 @@ const SHARED_COMPONENTS = [
   ConfirmDialogComponent,
   LoadingOverlayComponent,
   TimerDisplayComponent,
+  EditUserDialogComponent,
+  ResetPasswordDialogComponent,
 ];
 
 @NgModule({
