@@ -121,7 +121,7 @@ export class SidebarComponent implements OnInit {
           {
             icon: 'pending_actions',
             label: 'අනුමත කිරීම්',
-            route: '/admin/pending',
+            route: '/admin/approvals',
           },
           {
             icon: 'description',
@@ -140,12 +140,7 @@ export class SidebarComponent implements OnInit {
           {
             icon: 'pending_actions',
             label: 'අනුමත කිරීම්',
-            route: '/superadmin/pending',
-          },
-          {
-            icon: 'quiz',
-            label: 'ප්‍රශ්න කළමනාකරණය',
-            route: '/superadmin/questions',
+            route: '/superadmin/approvals',
           },
           {
             icon: 'description',

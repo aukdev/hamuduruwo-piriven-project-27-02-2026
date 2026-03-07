@@ -1,8 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
+import {
+  PaperDto,
+  PaperDetailDto,
+  SubjectDto,
+  PaperQuestionInfo,
+} from '../../../core/models';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-superadmin-papers',
@@ -80,6 +87,21 @@ import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
             >
               <mat-icon>visibility</mat-icon>
             </button>
+            <button
+              mat-icon-button
+              matTooltip="සංස්කරණය"
+              (click)="openEditPaper(p)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="මකා දැමීම"
+              (click)="confirmDeletePaper(p)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
           </td>
         </ng-container>
 
@@ -109,10 +131,20 @@ import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
             <mat-icon>assignment</mat-icon>
             {{ paperDetail.year }} - {{ paperDetail.subjectName }}
           </h3>
+          <span class="detail-info">
+            {{ paperDetail.durationSeconds / 60 }} මිනි. |
+          </span>
           <span class="progress-label">
             {{ paperDetail.questions.length }}/{{ paperDetail.questionCount }}
             ප්‍රශ්න
           </span>
+          <button
+            mat-icon-button
+            matTooltip="පත්‍රය සංස්කරණය"
+            (click)="openEditPaperFromDetail()"
+          >
+            <mat-icon>settings</mat-icon>
+          </button>
         </div>
 
         <mat-progress-bar
@@ -132,11 +164,26 @@ import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
               <span class="q-text">{{ pq.questionText }}</span>
               <button
                 mat-icon-button
+                matTooltip="සංස්කරණය"
+                (click)="openEditQuestion(pq)"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
                 color="warn"
-                matTooltip="ඉවත් කරන්න"
+                matTooltip="පත්‍රයෙන් ඉවත් කරන්න"
                 (click)="removeQuestion(pq.questionId)"
               >
-                <mat-icon>delete_outline</mat-icon>
+                <mat-icon>remove_circle_outline</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                matTooltip="ස්ථිරවම මකා දමන්න"
+                (click)="confirmDeleteQuestion(pq)"
+              >
+                <mat-icon>delete_forever</mat-icon>
               </button>
             </div>
             <div class="options-grid" *ngIf="pq.options && pq.options.length">
@@ -168,17 +215,18 @@ import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
         <button
           mat-flat-button
           color="primary"
-          (click)="showQuestionForm = true"
+          (click)="openCreateQuestionForm()"
           *ngIf="!showQuestionForm"
         >
           <mat-icon>add_circle</mat-icon> නව ප්‍රශ්නයක් එක් කරන්න
         </button>
       </div>
 
-      <!-- Inline Question Form -->
+      <!-- Inline Question Form (Create or Edit) -->
       <mat-card class="question-form-card" *ngIf="showQuestionForm">
         <h3 class="card-title">
-          <mat-icon>edit</mat-icon> නව ප්‍රශ්නයක් සාදන්න
+          <mat-icon>{{ editingQuestionId ? 'edit' : 'add_circle' }}</mat-icon>
+          {{ editingQuestionId ? 'ප්‍රශ්නය සංස්කරණය' : 'නව ප්‍රශ්නයක් සාදන්න' }}
         </h3>
         <form [formGroup]="questionForm" (ngSubmit)="submitQuestion()">
           <mat-form-field appearance="outline" class="full-width">
@@ -217,12 +265,13 @@ import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
               type="submit"
               [disabled]="questionForm.invalid || submittingQuestion"
             >
-              <mat-icon>save</mat-icon> සුරකින්න
+              <mat-icon>save</mat-icon>
+              {{ editingQuestionId ? 'යාවත්කාලීන' : 'සුරකින්න' }}
             </button>
             <button
               mat-stroked-button
               type="button"
-              (click)="showQuestionForm = false"
+              (click)="cancelQuestionForm()"
             >
               අවලංගු
             </button>
@@ -298,6 +347,48 @@ import { PaperDto, PaperDetailDto, SubjectDto } from '../../../core/models';
               mat-stroked-button
               type="button"
               (click)="showCreateDialog = false"
+            >
+              අවලංගු
+            </button>
+          </div>
+        </form>
+      </mat-card>
+    </div>
+
+    <!-- ============ Edit Paper Dialog ============ -->
+    <div
+      class="modal-overlay"
+      *ngIf="showEditDialog"
+      (click)="showEditDialog = false"
+    >
+      <mat-card class="modal-card" (click)="$event.stopPropagation()">
+        <h3 class="card-title"><mat-icon>edit</mat-icon> පත්‍රය සංස්කරණය</h3>
+        <form [formGroup]="editForm" (ngSubmit)="updatePaper()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>ප්‍රශ්න ගණන</mat-label>
+            <input matInput type="number" formControlName="questionCount" />
+            <mat-error>1-200 අතර අංකයක්</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>කාලය (තත්පර)</mat-label>
+            <input matInput type="number" formControlName="durationSeconds" />
+            <mat-error>අවම 60 තත්පර</mat-error>
+          </mat-form-field>
+
+          <div class="form-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="editForm.invalid || updatingPaper"
+            >
+              <mat-icon>save</mat-icon> යාවත්කාලීන
+            </button>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="showEditDialog = false"
             >
               අවලංගු
             </button>
@@ -509,13 +600,20 @@ export class SuperadminPapersComponent implements OnInit {
   creatingPaper = false;
   createForm: FormGroup;
 
+  showEditDialog = false;
+  updatingPaper = false;
+  editingPaperId: string | null = null;
+  editForm: FormGroup;
+
   showQuestionForm = false;
   submittingQuestion = false;
+  editingQuestionId: string | null = null;
   questionForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
+    private dialog: MatDialog,
     private notify: NotificationService,
   ) {
     this.createForm = this.fb.group({
@@ -531,18 +629,15 @@ export class SuperadminPapersComponent implements OnInit {
       durationSeconds: [1200, [Validators.required, Validators.min(60)]],
     });
 
-    this.questionForm = this.fb.group({
-      questionText: ['', Validators.required],
-      options: this.fb.array(
-        [1, 2, 3, 4].map((i) =>
-          this.fb.group({
-            optionText: ['', Validators.required],
-            isCorrect: [i === 1],
-            optionOrder: [i],
-          }),
-        ),
-      ),
+    this.editForm = this.fb.group({
+      questionCount: [
+        40,
+        [Validators.required, Validators.min(1), Validators.max(200)],
+      ],
+      durationSeconds: [1200, [Validators.required, Validators.min(60)]],
     });
+
+    this.questionForm = this.buildQuestionForm();
   }
 
   get optionControls(): FormArray {
@@ -573,10 +668,13 @@ export class SuperadminPapersComponent implements OnInit {
     });
   }
 
+  /* ── Paper Detail ── */
+
   openPaperDetail(paperId: string): void {
     this.selectedPaperId = paperId;
     this.loadingDetail = true;
     this.showQuestionForm = false;
+    this.editingQuestionId = null;
     this.api.getPaperDetail(paperId).subscribe({
       next: (d) => {
         this.paperDetail = d;
@@ -590,8 +688,11 @@ export class SuperadminPapersComponent implements OnInit {
     this.paperDetail = null;
     this.selectedPaperId = null;
     this.showQuestionForm = false;
+    this.editingQuestionId = null;
     if (this.selectedYear) this.onYearChange();
   }
+
+  /* ── Create Paper ── */
 
   createPaper(): void {
     if (this.createForm.invalid) return;
@@ -620,6 +721,85 @@ export class SuperadminPapersComponent implements OnInit {
     });
   }
 
+  /* ── Edit Paper ── */
+
+  openEditPaper(paper: PaperDto): void {
+    this.editingPaperId = paper.id;
+    this.editForm.patchValue({
+      questionCount: paper.questionCount,
+      durationSeconds: paper.durationSeconds,
+    });
+    this.showEditDialog = true;
+  }
+
+  openEditPaperFromDetail(): void {
+    if (!this.paperDetail || !this.selectedPaperId) return;
+    this.editingPaperId = this.selectedPaperId;
+    this.editForm.patchValue({
+      questionCount: this.paperDetail.questionCount,
+      durationSeconds: this.paperDetail.durationSeconds,
+    });
+    this.showEditDialog = true;
+  }
+
+  updatePaper(): void {
+    if (this.editForm.invalid || !this.editingPaperId) return;
+    this.updatingPaper = true;
+    this.api.updatePaper(this.editingPaperId, this.editForm.value).subscribe({
+      next: () => {
+        this.notify.success('පත්‍රය යාවත්කාලීන කරන ලදී!');
+        this.showEditDialog = false;
+        this.updatingPaper = false;
+        this.editingPaperId = null;
+        if (this.selectedPaperId) {
+          this.openPaperDetail(this.selectedPaperId);
+        }
+        if (this.selectedYear) this.onYearChange();
+      },
+      error: (err) => {
+        this.notify.error(err.error?.message || 'යාවත්කාලීන අසාර්ථකයි.');
+        this.updatingPaper = false;
+      },
+    });
+  }
+
+  /* ── Delete Paper ── */
+
+  confirmDeletePaper(paper: PaperDto): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'පත්‍රය මකා දැමීම',
+        message: `${paper.year} - ${paper.subjectName} පත්‍රය ස්ථිරවම මකා දැමීමට අවශ්‍යද? මෙම පත්‍රයට අදාළ සියලුම දත්ත මැකෙනු ඇත.`,
+        confirmText: 'මකා දමන්න',
+        dangerous: true,
+      },
+      width: '440px',
+    });
+    ref.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.deletePaper(paper.id).subscribe({
+          next: () => {
+            this.notify.success('පත්‍රය මකා දමන ලදී.');
+            this.api.getYears().subscribe({
+              next: (y) => (this.years = y.sort((a, b) => b - a)),
+            });
+            if (this.selectedYear) this.onYearChange();
+          },
+          error: (err) =>
+            this.notify.error(err.error?.message || 'මකා දැමීම අසාර්ථකයි.'),
+        });
+      }
+    });
+  }
+
+  /* ── Create Question ── */
+
+  openCreateQuestionForm(): void {
+    this.editingQuestionId = null;
+    this.questionForm = this.buildQuestionForm();
+    this.showQuestionForm = true;
+  }
+
   submitQuestion(): void {
     if (this.questionForm.invalid || !this.selectedPaperId) return;
     const options = this.questionForm.value.options;
@@ -628,16 +808,25 @@ export class SuperadminPapersComponent implements OnInit {
       this.notify.error('නිවැරදි පිළිතුරක් එකක් පමණක් තෝරන්න.');
       return;
     }
+
+    if (this.editingQuestionId) {
+      this.updateQuestion();
+    } else {
+      this.createNewQuestion();
+    }
+  }
+
+  private createNewQuestion(): void {
     this.submittingQuestion = true;
     this.api
-      .createQuestionForPaper(this.selectedPaperId, this.questionForm.value)
+      .createQuestionForPaper(this.selectedPaperId!, this.questionForm.value)
       .subscribe({
         next: (detail) => {
           this.notify.success('ප්‍රශ්නය සාර්ථකව එක් කරන ලදී!');
           this.paperDetail = detail;
           this.showQuestionForm = false;
           this.submittingQuestion = false;
-          this.resetQuestionForm();
+          this.questionForm = this.buildQuestionForm();
         },
         error: (err) => {
           this.notify.error(
@@ -648,13 +837,66 @@ export class SuperadminPapersComponent implements OnInit {
       });
   }
 
+  /* ── Edit Question ── */
+
+  openEditQuestion(pq: PaperQuestionInfo): void {
+    this.editingQuestionId = pq.questionId;
+    this.questionForm = this.buildQuestionForm();
+    this.questionForm.patchValue({ questionText: pq.questionText });
+    if (pq.options) {
+      pq.options.forEach((opt, i) => {
+        if (this.optionControls.at(i)) {
+          this.optionControls.at(i).patchValue({
+            optionText: opt.optionText,
+            isCorrect: opt.isCorrect,
+            optionOrder: opt.optionOrder,
+          });
+        }
+      });
+    }
+    this.showQuestionForm = true;
+  }
+
+  private updateQuestion(): void {
+    if (!this.editingQuestionId) return;
+    this.submittingQuestion = true;
+    const val = this.questionForm.value;
+    this.api
+      .superUpdateQuestion(this.editingQuestionId, {
+        questionText: val.questionText,
+        options: val.options,
+      })
+      .subscribe({
+        next: () => {
+          this.notify.success('ප්‍රශ්නය යාවත්කාලීන කරන ලදී!');
+          this.showQuestionForm = false;
+          this.editingQuestionId = null;
+          this.submittingQuestion = false;
+          this.openPaperDetail(this.selectedPaperId!);
+        },
+        error: (err) => {
+          this.notify.error(
+            err.error?.message || 'යාවත්කාලීන කිරීම අසාර්ථකයි.',
+          );
+          this.submittingQuestion = false;
+        },
+      });
+  }
+
+  cancelQuestionForm(): void {
+    this.showQuestionForm = false;
+    this.editingQuestionId = null;
+  }
+
+  /* ── Remove Question from Paper ── */
+
   removeQuestion(questionId: string): void {
     if (!this.selectedPaperId) return;
     this.api
       .removeQuestionFromPaper(this.selectedPaperId, questionId)
       .subscribe({
         next: () => {
-          this.notify.success('ප්‍රශ්නය ඉවත් කරන ලදී.');
+          this.notify.success('ප්‍රශ්නය පත්‍රයෙන් ඉවත් කරන ලදී.');
           this.openPaperDetail(this.selectedPaperId!);
         },
         error: (err) => {
@@ -663,13 +905,46 @@ export class SuperadminPapersComponent implements OnInit {
       });
   }
 
-  private resetQuestionForm(): void {
-    this.questionForm.reset();
-    const opts = this.optionControls;
-    for (let i = 0; i < 4; i++) {
-      opts
-        .at(i)
-        .patchValue({ optionText: '', isCorrect: i === 0, optionOrder: i + 1 });
-    }
+  /* ── Delete Question Permanently ── */
+
+  confirmDeleteQuestion(pq: PaperQuestionInfo): void {
+    const ref = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'ප්‍රශ්නය මකා දැමීම',
+        message: `"${pq.questionText.substring(0, 60)}..." ප්‍රශ්නය ස්ථිරවම මකා දැමීමට අවශ්‍යද? මෙය ආපසු හැරවිය නොහැක.`,
+        confirmText: 'මකා දමන්න',
+        dangerous: true,
+      },
+      width: '440px',
+    });
+    ref.afterClosed().subscribe((result) => {
+      if (result) {
+        this.api.superDeleteQuestion(pq.questionId).subscribe({
+          next: () => {
+            this.notify.success('ප්‍රශ්නය ස්ථිරවම මකා දමන ලදී.');
+            this.openPaperDetail(this.selectedPaperId!);
+          },
+          error: (err) =>
+            this.notify.error(err.error?.message || 'මකා දැමීම අසාර්ථකයි.'),
+        });
+      }
+    });
+  }
+
+  /* ── Helpers ── */
+
+  private buildQuestionForm(): FormGroup {
+    return this.fb.group({
+      questionText: ['', Validators.required],
+      options: this.fb.array(
+        [1, 2, 3, 4].map((i) =>
+          this.fb.group({
+            optionText: ['', Validators.required],
+            isCorrect: [i === 1],
+            optionOrder: [i],
+          }),
+        ),
+      ),
+    });
   }
 }

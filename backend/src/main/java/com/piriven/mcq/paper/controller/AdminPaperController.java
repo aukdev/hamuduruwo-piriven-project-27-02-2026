@@ -34,6 +34,20 @@ public class AdminPaperController {
         return ResponseEntity.ok(paperService.getPaperDetail(paperId));
     }
 
+    @PutMapping("/{paperId}")
+    public ResponseEntity<PaperDto> updatePaper(
+            @PathVariable UUID paperId,
+            @Valid @RequestBody PaperUpdateRequest request) {
+        PaperDto paper = paperService.updatePaper(paperId, request);
+        return ResponseEntity.ok(paper);
+    }
+
+    @DeleteMapping("/{paperId}")
+    public ResponseEntity<Void> deletePaper(@PathVariable UUID paperId) {
+        paperService.deletePaper(paperId);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/{paperId}/questions")
     public ResponseEntity<Map<String, String>> assignQuestion(
             @PathVariable UUID paperId,

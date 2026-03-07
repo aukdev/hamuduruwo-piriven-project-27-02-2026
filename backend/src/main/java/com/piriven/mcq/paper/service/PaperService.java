@@ -226,6 +226,31 @@ public class PaperService {
         }
     }
 
+    @Transactional
+    public PaperDto updatePaper(UUID paperId, PaperUpdateRequest request) {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
+
+        long assignedCount = paperQuestionRepository.countByPaperId(paperId);
+        if (request.questionCount() < assignedCount) {
+            throw new BusinessException(
+                    "Cannot reduce question count below assigned questions (" + assignedCount + ")",
+                    HttpStatus.CONFLICT);
+        }
+
+        paper.setQuestionCount(request.questionCount());
+        paper.setDurationSeconds(request.durationSeconds());
+        paper = paperRepository.save(paper);
+        return toDto(paper);
+    }
+
+    @Transactional
+    public void deletePaper(UUID paperId) {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
+        paperRepository.delete(paper);
+    }
+
     private PaperDto toDto(Paper paper) {
         long assigned = paperQuestionRepository.countByPaperId(paper.getId());
         return new PaperDto(

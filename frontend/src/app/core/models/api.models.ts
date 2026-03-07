@@ -133,6 +133,11 @@ export interface PaperCreateRequest {
   durationSeconds: number;
 }
 
+export interface PaperUpdateRequest {
+  questionCount: number;
+  durationSeconds: number;
+}
+
 export interface PaperQuestionCreateRequest {
   questionText: string;
   options: QuestionOptionRequest[];

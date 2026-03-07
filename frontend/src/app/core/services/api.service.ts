@@ -20,6 +20,7 @@ import {
   PaperDetailDto,
   PaperQuestionAssignRequest,
   PaperCreateRequest,
+  PaperUpdateRequest,
   PaperQuestionCreateRequest,
 } from '../models';
 
@@ -190,6 +191,14 @@ export class ApiService {
 
   getPaperDetail(paperId: string): Observable<PaperDetailDto> {
     return this.http.get<PaperDetailDto>(`${BASE}/api/admin/papers/${paperId}`);
+  }
+
+  updatePaper(paperId: string, req: PaperUpdateRequest): Observable<PaperDto> {
+    return this.http.put<PaperDto>(`${BASE}/api/admin/papers/${paperId}`, req);
+  }
+
+  deletePaper(paperId: string): Observable<void> {
+    return this.http.delete<void>(`${BASE}/api/admin/papers/${paperId}`);
   }
 
   assignQuestionToPaper(
