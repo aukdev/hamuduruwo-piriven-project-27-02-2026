@@ -6,6 +6,7 @@ import { SuperadminApprovalsComponent } from './approvals/superadmin-approvals.c
 import { SuperadminUsersComponent } from './users/superadmin-users.component';
 import { SuperadminPapersComponent } from './papers/superadmin-papers.component';
 import { SuperadminSubjectsComponent } from './subjects/superadmin-subjects.component';
+import { StudentAnswersComponent } from '../../shared/components/student-answers/student-answers.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'users', component: SuperadminUsersComponent },
   { path: 'papers', component: SuperadminPapersComponent },
   { path: 'subjects', component: SuperadminSubjectsComponent },
+  { path: 'student-answers', component: StudentAnswersComponent },
 ];
 
 @NgModule({

@@ -114,6 +114,11 @@ export class SidebarComponent implements OnInit {
             label: 'මගේ ප්‍රශ්න',
             route: '/teacher/questions',
           },
+          {
+            icon: 'assignment',
+            label: 'ශිෂ්‍ය පිළිතුරු',
+            route: '/teacher/student-answers',
+          },
         ];
       case 'ADMIN':
         return [
@@ -133,6 +138,11 @@ export class SidebarComponent implements OnInit {
             icon: 'menu_book',
             label: 'විෂය කළමනාකරණය',
             route: '/admin/subjects',
+          },
+          {
+            icon: 'assignment',
+            label: 'ශිෂ්‍ය පිළිතුරු',
+            route: '/admin/student-answers',
           },
         ];
       case 'SUPER_ADMIN':
@@ -157,6 +167,11 @@ export class SidebarComponent implements OnInit {
             icon: 'menu_book',
             label: 'විෂය කළමනාකරණය',
             route: '/superadmin/subjects',
+          },
+          {
+            icon: 'assignment',
+            label: 'ශිෂ්‍ය පිළිතුරු',
+            route: '/superadmin/student-answers',
           },
         ];
       default:

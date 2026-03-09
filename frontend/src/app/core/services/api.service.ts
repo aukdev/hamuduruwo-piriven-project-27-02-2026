@@ -26,6 +26,8 @@ import {
   UserUpdateRequest,
   ResetPasswordRequest,
   CreateUserRequest,
+  StudentAttemptSummaryDto,
+  AttemptDetailDto,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -308,5 +310,50 @@ export class ApiService {
 
   superDeleteUser(id: string): Observable<void> {
     return this.http.delete<void>(`${BASE}/api/superadmin/users/${id}`);
+  }
+
+  /* ── Admin / Student Attempts ── */
+  getStudentAttempts(
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<StudentAttemptSummaryDto>> {
+    return this.http.get<PagedResponse<StudentAttemptSummaryDto>>(
+      `${BASE}/api/admin/student-attempts`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getStudentAttemptsByPaper(
+    paperId: string,
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<StudentAttemptSummaryDto>> {
+    return this.http.get<PagedResponse<StudentAttemptSummaryDto>>(
+      `${BASE}/api/admin/student-attempts/by-paper/${paperId}`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getStudentAttemptsByStudent(
+    studentId: string,
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<StudentAttemptSummaryDto>> {
+    return this.http.get<PagedResponse<StudentAttemptSummaryDto>>(
+      `${BASE}/api/admin/student-attempts/by-student/${studentId}`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getAttemptDetail(attemptId: string): Observable<AttemptDetailDto> {
+    return this.http.get<AttemptDetailDto>(
+      `${BASE}/api/admin/student-attempts/${attemptId}/detail`,
+    );
   }
 }

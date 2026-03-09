@@ -72,6 +72,10 @@ public class SecurityConfig {
                         // Super Admin endpoints
                         .requestMatchers("/api/superadmin/**").hasRole("SUPER_ADMIN")
 
+                        // Student attempts viewing (admin + teacher)
+                        .requestMatchers("/api/admin/student-attempts/**")
+                        .hasAnyRole("ADMIN", "SUPER_ADMIN", "TEACHER")
+
                         // Admin endpoints
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "SUPER_ADMIN")
 

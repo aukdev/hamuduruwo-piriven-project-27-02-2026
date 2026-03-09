@@ -234,6 +234,67 @@ export interface FieldError {
   rejectedValue: any;
 }
 
+/* ── Student Attempt Viewing (Admin/Teacher) ── */
+export interface StudentAttemptSummaryDto {
+  attemptId: string;
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  paperId: string;
+  year: number;
+  subjectName: string;
+  attemptNo: number;
+  status: string;
+  correctCount: number;
+  wrongCount: number;
+  score: number;
+  totalQuestions: number;
+  startedAt: string;
+  submittedAt: string;
+}
+
+export interface AttemptDetailDto {
+  attemptId: string;
+  studentId: string;
+  studentName: string;
+  studentEmail: string;
+  year: number;
+  subjectName: string;
+  attemptNo: number;
+  status: string;
+  correctCount: number;
+  wrongCount: number;
+  unansweredCount: number;
+  score: number;
+  totalQuestions: number;
+  startedAt: string;
+  submittedAt: string;
+  answers: AttemptAnswerDetailDto[];
+}
+
+export interface AttemptAnswerDetailDto {
+  questionNumber: number;
+  questionId: string;
+  questionText: string;
+  options: OptionDetail[];
+  selectedOptionId: string | null;
+  selectedOptionText: string | null;
+  selectedOptionOrder: number | null;
+  isCorrect: boolean;
+  isTimeout: boolean;
+  isUnanswered: boolean;
+  timeTakenSeconds: number | null;
+  answeredAt: string | null;
+}
+
+export interface OptionDetail {
+  id: string;
+  optionText: string;
+  optionOrder: number;
+  isCorrect: boolean;
+  isSelected: boolean;
+}
+
 /* ── User Management ── */
 export interface UserUpdateRequest {
   fullName: string;

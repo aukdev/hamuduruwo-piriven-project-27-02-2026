@@ -6,6 +6,7 @@ import { PendingApprovalsComponent } from './pending-approvals/pending-approvals
 import { UserManagementComponent } from './user-management/user-management.component';
 import { SubjectManagementComponent } from './subject-management/subject-management.component';
 import { PaperManagementComponent } from './paper-management/paper-management.component';
+import { StudentAnswersComponent } from '../../shared/components/student-answers/student-answers.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'users', component: UserManagementComponent },
   { path: 'subjects', component: SubjectManagementComponent },
   { path: 'papers', component: PaperManagementComponent },
+  { path: 'student-answers', component: StudentAnswersComponent },
 ];
 
 @NgModule({

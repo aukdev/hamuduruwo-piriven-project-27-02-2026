@@ -5,6 +5,7 @@ import { TeacherDashboardComponent } from './dashboard/teacher-dashboard.compone
 import { QuestionCreateComponent } from './question-create/question-create.component';
 import { QuestionListComponent } from './question-list/question-list.component';
 import { QuestionDetailComponent } from './question-detail/question-detail.component';
+import { StudentAnswersComponent } from '../../shared/components/student-answers/student-answers.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'questions/edit/:id', component: QuestionCreateComponent },
   { path: 'questions/:id', component: QuestionDetailComponent },
   { path: 'questions', component: QuestionListComponent },
+  { path: 'student-answers', component: StudentAnswersComponent },
 ];
 
 @NgModule({
