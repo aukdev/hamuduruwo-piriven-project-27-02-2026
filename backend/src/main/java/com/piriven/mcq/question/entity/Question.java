@@ -1,5 +1,6 @@
 package com.piriven.mcq.question.entity;
 
+import com.piriven.mcq.paper.entity.Paper;
 import com.piriven.mcq.subject.entity.Subject;
 import com.piriven.mcq.user.entity.User;
 import jakarta.persistence.*;
@@ -33,6 +34,13 @@ public class Question {
 
     @Column(name = "question_text", nullable = false, columnDefinition = "TEXT")
     private String questionText;
+
+    @Column(name = "year", nullable = false)
+    private Integer year;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paper_id")
+    private Paper paper;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)

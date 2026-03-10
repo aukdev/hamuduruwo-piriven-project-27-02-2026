@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
-import { QuestionDto } from '../../../core/models';
+import { QuestionDto, PaperDto, SubjectDto } from '../../../core/models';
 
 @Component({
   selector: 'app-question-detail',
@@ -32,9 +32,66 @@ import { QuestionDto } from '../../../core/models';
             getStatusLabel(question.status)
           }}</span>
           <span class="meta-chip">{{ question.subjectName }}</span>
+          <span class="meta-chip meta-chip--year">{{ question.year }}</span>
           <span class="meta-chip">{{
             question.createdAt | date: 'yyyy-MM-dd HH:mm'
           }}</span>
+        </div>
+
+        <!-- Paper Assignment -->
+        <div class="paper-info" *ngIf="question.paperId">
+          <mat-icon>description</mat-icon>
+          <span>ප්‍රශ්න පත්‍රයට පවරා ඇත</span>
+        </div>
+        <div
+          class="paper-assign"
+          *ngIf="
+            !question.paperId &&
+            (question.status === 'DRAFT' || question.status === 'REJECTED')
+          "
+        >
+          <mat-icon color="warn">warning</mat-icon>
+          <span>ප්‍රශ්න පත්‍රයකට පවරා නැත</span>
+          <button
+            mat-stroked-button
+            color="primary"
+            (click)="showAssignPanel = !showAssignPanel"
+          >
+            <mat-icon>link</mat-icon> පත්‍රයකට පවරන්න
+          </button>
+        </div>
+
+        <!-- Paper Assign Panel -->
+        <div class="assign-panel" *ngIf="showAssignPanel">
+          <mat-form-field appearance="outline">
+            <mat-label>විෂය තෝරන්න</mat-label>
+            <mat-select
+              [(value)]="selectedSubjectId"
+              (selectionChange)="onAssignSubjectChange($event.value)"
+            >
+              <mat-option *ngFor="let s of subjects" [value]="s.id">{{
+                s.name
+              }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>ප්‍රශ්න පත්‍රය</mat-label>
+            <mat-select [(value)]="selectedPaperId">
+              <mat-option *ngFor="let p of papers" [value]="p.id">
+                {{ p.year }} - {{ p.subjectName }} ({{ p.assignedQuestions }}/{{
+                  p.questionCount
+                }})
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-flat-button
+            color="primary"
+            [disabled]="!selectedPaperId || assigning"
+            (click)="assignToPaper()"
+          >
+            <mat-icon>check</mat-icon> පවරන්න
+          </button>
         </div>
 
         <h3 class="question-text">{{ question.questionText }}</h3>
@@ -86,6 +143,10 @@ import { QuestionDto } from '../../../core/models';
         background: #f0f0f5;
         border-radius: 6px;
         color: #555;
+      }
+      .meta-chip--year {
+        background: rgba(46, 125, 50, 0.08);
+        color: #2e7d32;
       }
       .question-text {
         font-size: 17px;
@@ -166,12 +227,75 @@ import { QuestionDto } from '../../../core/models';
           line-height: 1.6;
         }
       }
+      .paper-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        padding: 10px 14px;
+        background: rgba(46, 125, 50, 0.06);
+        border-radius: 8px;
+        border-left: 3px solid #2e7d32;
+        font-size: 13px;
+        color: #2e7d32;
+        font-weight: 600;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+      .paper-assign {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding: 10px 14px;
+        background: rgba(255, 152, 0, 0.06);
+        border-radius: 8px;
+        border-left: 3px solid #ff9800;
+        font-size: 13px;
+        color: #e65100;
+        font-weight: 600;
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+        button {
+          margin-left: auto;
+        }
+      }
+      .assign-panel {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+        padding: 16px;
+        background: #f8f9fb;
+        border-radius: 10px;
+        border: 1px solid #e0e3eb;
+
+        mat-form-field {
+          flex: 1;
+          min-width: 200px;
+        }
+      }
     `,
   ],
 })
 export class QuestionDetailComponent implements OnInit {
   question: QuestionDto | null = null;
   loading = true;
+  showAssignPanel = false;
+  subjects: SubjectDto[] = [];
+  papers: PaperDto[] = [];
+  selectedSubjectId = '';
+  selectedPaperId = '';
+  assigning = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -180,7 +304,7 @@ export class QuestionDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
+    const id = this.route.snapshot.paramMap.get('id');
     if (!id) {
       this.router.navigate(['/teacher/questions']);
       return;
@@ -195,6 +319,31 @@ export class QuestionDetailComponent implements OnInit {
         this.router.navigate(['/teacher/questions']);
       },
     });
+    this.api.getMySubjects().subscribe((s) => (this.subjects = s));
+  }
+
+  onAssignSubjectChange(subjectId: string): void {
+    this.selectedPaperId = '';
+    this.papers = [];
+    if (!subjectId) return;
+    this.api
+      .getTeacherPapersBySubject(subjectId)
+      .subscribe((papers) => (this.papers = papers));
+  }
+
+  assignToPaper(): void {
+    if (!this.question || !this.selectedPaperId) return;
+    this.assigning = true;
+    this.api
+      .assignPaperToQuestion(this.question.id, this.selectedPaperId)
+      .subscribe({
+        next: (q) => {
+          this.question = q;
+          this.showAssignPanel = false;
+          this.assigning = false;
+        },
+        error: () => (this.assigning = false),
+      });
   }
 
   getLetters(): string[] {

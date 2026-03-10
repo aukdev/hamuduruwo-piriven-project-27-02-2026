@@ -3,7 +3,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { SubjectDto, UpdateSubjectRequest } from '../../../core/models';
+import {
+  SubjectDto,
+  UpdateSubjectRequest,
+  UserDto,
+} from '../../../core/models';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EditSubjectDialogComponent } from '../../../shared/components/edit-subject-dialog/edit-subject-dialog.component';
 
@@ -60,13 +64,13 @@ import { EditSubjectDialogComponent } from '../../../shared/components/edit-subj
         </h3>
         <form [formGroup]="assignForm" (ngSubmit)="assignSubject()">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>ගුරුවරයාගේ ID</mat-label>
-            <input
-              matInput
-              formControlName="teacherId"
-              placeholder="ගුරුවරයාගේ ID ඇතුළත් කරන්න"
-            />
-            <mat-error>ID අවශ්‍යයි</mat-error>
+            <mat-label>ගුරුවරයා</mat-label>
+            <mat-select formControlName="teacherId">
+              <mat-option *ngFor="let t of teachers" [value]="t.id">
+                {{ t.fullName }} ({{ t.email }})
+              </mat-option>
+            </mat-select>
+            <mat-error>ගුරුවරයෙකු තෝරන්න</mat-error>
           </mat-form-field>
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>විෂයය</mat-label>
@@ -214,6 +218,7 @@ import { EditSubjectDialogComponent } from '../../../shared/components/edit-subj
 })
 export class SuperadminSubjectsComponent implements OnInit {
   subjects: SubjectDto[] = [];
+  teachers: UserDto[] = [];
   loading = true;
   creating = false;
   assigning = false;
@@ -239,6 +244,17 @@ export class SuperadminSubjectsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSubjects();
+    this.loadTeachers();
+  }
+
+  loadTeachers(): void {
+    this.api.superGetUsers(0, 200).subscribe({
+      next: (res) => {
+        this.teachers = res.content.filter(
+          (u) => u.role === 'TEACHER' && u.status === 'ACTIVE',
+        );
+      },
+    });
   }
 
   loadSubjects(): void {

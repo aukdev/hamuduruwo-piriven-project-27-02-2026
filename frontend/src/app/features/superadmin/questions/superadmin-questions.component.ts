@@ -45,6 +45,19 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
           </mat-select>
         </mat-form-field>
 
+        <mat-form-field
+          appearance="outline"
+          class="full-width"
+          *ngIf="!editingId"
+        >
+          <mat-label>අවුරුද්ද</mat-label>
+          <mat-select formControlName="year">
+            <mat-option *ngFor="let y of yearOptions" [value]="y">{{
+              y
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>ප්‍රශ්නය</mat-label>
           <textarea matInput formControlName="questionText" rows="3"></textarea>
@@ -101,6 +114,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
             getStatusLabel(q.status)
           }}</span>
           <span class="chip">{{ q.subjectName }}</span>
+          <span class="chip year">{{ q.year }}</span>
           <span class="chip author">{{ q.createdByEmail }}</span>
         </div>
         <p class="q-text">{{ q.questionText }}</p>
@@ -222,6 +236,10 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         background: rgba(0, 0, 0, 0.05);
         color: #666;
       }
+      .chip.year {
+        background: rgba(46, 125, 50, 0.08);
+        color: #2e7d32;
+      }
       .q-text {
         font-size: 14px;
         color: #333;
@@ -249,6 +267,7 @@ export class SuperadminQuestionsComponent implements OnInit {
   currentPage = 0;
   pageSize = 20;
   totalElements = 0;
+  yearOptions: number[] = [];
 
   questionForm: FormGroup;
 
@@ -266,6 +285,10 @@ export class SuperadminQuestionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const currentYear = new Date().getFullYear();
+    for (let y = currentYear + 1; y >= 2020; y--) {
+      this.yearOptions.push(y);
+    }
     this.api.getSubjects().subscribe((s) => (this.subjects = s));
     this.loadQuestions();
   }
@@ -273,6 +296,7 @@ export class SuperadminQuestionsComponent implements OnInit {
   private buildForm(): FormGroup {
     return this.fb.group({
       subjectId: ['', Validators.required],
+      year: [null as number | null, Validators.required],
       questionText: ['', Validators.required],
       options: this.fb.array(
         [0, 1, 2, 3].map((i) =>
@@ -327,6 +351,7 @@ export class SuperadminQuestionsComponent implements OnInit {
     this.questionForm = this.buildForm();
     this.questionForm.patchValue({
       subjectId: q.subjectId,
+      year: q.year,
       questionText: q.questionText,
     });
     q.options.forEach((opt, i) => {

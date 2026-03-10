@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../../core/services/api.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import {
   StudentAttemptSummaryDto,
@@ -178,7 +179,9 @@ import {
                 ><mat-icon>cancel</mat-icon> වැරදි:
                 {{ selectedAttempt.wrongCount }}</span
               >
-              <span class="unanswered-label" *ngIf="selectedAttempt.unansweredCount > 0"
+              <span
+                class="unanswered-label"
+                *ngIf="selectedAttempt.unansweredCount > 0"
                 ><mat-icon>help_outline</mat-icon> පිළිතුරු නොදුන්:
                 {{ selectedAttempt.unansweredCount }}</span
               >
@@ -198,7 +201,9 @@ import {
           [class.timeout]="ans.isTimeout"
         >
           <div class="question-header">
-            <span class="question-number">ප්‍රශ්නය {{ ans.questionNumber }}</span>
+            <span class="question-number"
+              >ප්‍රශ්නය {{ ans.questionNumber }}</span
+            >
             <span class="question-status" *ngIf="ans.isCorrect">
               <mat-icon>check_circle</mat-icon> නිවැරදි
             </span>
@@ -660,11 +665,15 @@ export class StudentAnswersComponent implements OnInit {
   papers: PaperDto[] = [];
   selectedYear: number | null = null;
   selectedPaperId: string | null = null;
+  private isTeacher = false;
 
   constructor(
     private api: ApiService,
+    private auth: AuthService,
     private notify: NotificationService,
-  ) {}
+  ) {
+    this.isTeacher = this.auth.hasRole('TEACHER');
+  }
 
   ngOnInit(): void {
     this.loadYears();
@@ -681,13 +690,21 @@ export class StudentAnswersComponent implements OnInit {
     this.loading = true;
     let obs;
     if (this.selectedPaperId) {
-      obs = this.api.getStudentAttemptsByPaper(
-        this.selectedPaperId,
-        this.currentPage,
-        this.pageSize,
-      );
+      obs = this.isTeacher
+        ? this.api.getTeacherStudentAttemptsByPaper(
+            this.selectedPaperId,
+            this.currentPage,
+            this.pageSize,
+          )
+        : this.api.getStudentAttemptsByPaper(
+            this.selectedPaperId,
+            this.currentPage,
+            this.pageSize,
+          );
     } else {
-      obs = this.api.getStudentAttempts(this.currentPage, this.pageSize);
+      obs = this.isTeacher
+        ? this.api.getTeacherStudentAttempts(this.currentPage, this.pageSize)
+        : this.api.getStudentAttempts(this.currentPage, this.pageSize);
     }
 
     obs.subscribe({
@@ -731,7 +748,10 @@ export class StudentAnswersComponent implements OnInit {
 
   viewDetail(attemptId: string): void {
     this.loading = true;
-    this.api.getAttemptDetail(attemptId).subscribe({
+    const obs = this.isTeacher
+      ? this.api.getTeacherAttemptDetail(attemptId)
+      : this.api.getAttemptDetail(attemptId);
+    obs.subscribe({
       next: (detail) => {
         this.selectedAttempt = detail;
         this.loading = false;

@@ -9,7 +9,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { SubjectDto, QuestionDto } from '../../../core/models';
+import { SubjectDto, QuestionDto, PaperDto } from '../../../core/models';
 
 @Component({
   selector: 'app-question-create',
@@ -28,12 +28,31 @@ import { SubjectDto, QuestionDto } from '../../../core/models';
         <!-- Subject -->
         <mat-form-field appearance="outline" *ngIf="!isEdit">
           <mat-label>විෂය තෝරන්න</mat-label>
-          <mat-select formControlName="subjectId">
+          <mat-select
+            formControlName="subjectId"
+            (selectionChange)="onSubjectChange($event.value)"
+          >
             <mat-option *ngFor="let s of subjects" [value]="s.id">{{
               s.name
             }}</mat-option>
           </mat-select>
           <mat-error>විෂයක් තෝරන්න</mat-error>
+        </mat-form-field>
+
+        <!-- Paper -->
+        <mat-form-field appearance="outline" *ngIf="!isEdit">
+          <mat-label>ප්‍රශ්න පත්‍රය තෝරන්න</mat-label>
+          <mat-select formControlName="paperId">
+            <mat-option *ngFor="let p of papers" [value]="p.id">
+              {{ p.year }} - {{ p.subjectName }} ({{ p.assignedQuestions }}/{{
+                p.questionCount
+              }})
+            </mat-option>
+          </mat-select>
+          <mat-hint *ngIf="loadingPapers"
+            >ප්‍රශ්න පත්‍ර පූරණය වෙමින්...</mat-hint
+          >
+          <mat-error>ප්‍රශ්න පත්‍රයක් තෝරන්න</mat-error>
         </mat-form-field>
 
         <!-- Question Text -->
@@ -169,9 +188,11 @@ import { SubjectDto, QuestionDto } from '../../../core/models';
 export class QuestionCreateComponent implements OnInit {
   form!: FormGroup;
   subjects: SubjectDto[] = [];
+  papers: PaperDto[] = [];
   isEdit = false;
   editId = '';
   saving = false;
+  loadingPapers = false;
   optLabels = ['A', 'B', 'C', 'D'];
   private existingQuestion?: QuestionDto;
 
@@ -188,10 +209,25 @@ export class QuestionCreateComponent implements OnInit {
     this.editId = this.route.snapshot.params['id'];
     this.isEdit = !!this.editId;
 
-    this.api.getSubjects().subscribe((s) => (this.subjects = s));
+    this.api.getMySubjects().subscribe((s) => (this.subjects = s));
 
     if (this.isEdit) {
       this.loadQuestion();
+    } else {
+      // Pre-select paper if navigated from papers page
+      const qPaperId = this.route.snapshot.queryParams['paperId'];
+      if (qPaperId) {
+        this.api.getTeacherPapers().subscribe((papers) => {
+          const target = papers.find((p) => p.id === qPaperId);
+          if (target) {
+            this.form.patchValue({ subjectId: target.subjectId });
+            this.papers = papers.filter(
+              (p) => p.subjectId === target.subjectId,
+            );
+            this.form.patchValue({ paperId: qPaperId });
+          }
+        });
+      }
     }
   }
 
@@ -203,6 +239,7 @@ export class QuestionCreateComponent implements OnInit {
     this.form = this.fb.group(
       {
         subjectId: ['', Validators.required],
+        paperId: ['', Validators.required],
         questionText: ['', Validators.required],
         options: this.fb.array([
           this.createOption(1),
@@ -243,6 +280,20 @@ export class QuestionCreateComponent implements OnInit {
     });
   }
 
+  onSubjectChange(subjectId: string): void {
+    this.form.patchValue({ paperId: '' });
+    this.papers = [];
+    if (!subjectId) return;
+    this.loadingPapers = true;
+    this.api.getTeacherPapersBySubject(subjectId).subscribe({
+      next: (papers) => {
+        this.papers = papers;
+        this.loadingPapers = false;
+      },
+      error: () => (this.loadingPapers = false),
+    });
+  }
+
   private loadQuestion(): void {
     // Load from teacher's questions list
     this.api.getMyQuestions(0, 200).subscribe({
@@ -252,8 +303,14 @@ export class QuestionCreateComponent implements OnInit {
           this.existingQuestion = q;
           this.form.patchValue({
             subjectId: q.subjectId,
+            paperId: q.paperId || '',
             questionText: q.questionText,
           });
+          if (q.subjectId) {
+            this.api
+              .getTeacherPapersBySubject(q.subjectId)
+              .subscribe((papers) => (this.papers = papers));
+          }
           q.options
             .sort((a, b) => a.optionOrder - b.optionOrder)
             .forEach((opt, i) => {
@@ -301,7 +358,7 @@ export class QuestionCreateComponent implements OnInit {
     } else {
       this.api
         .createQuestion({
-          subjectId: val.subjectId,
+          paperId: val.paperId,
           questionText: val.questionText,
           options: val.options,
         })

@@ -104,6 +104,13 @@ public class SubjectService {
     }
 
     @Transactional(readOnly = true)
+    public List<UUID> getTeacherSubjectIds(UUID teacherId) {
+        return teacherSubjectRepository.findByTeacherId(teacherId).stream()
+                .map(ts -> ts.getSubject().getId())
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public boolean isTeacherAssignedToSubject(UUID teacherId, UUID subjectId) {
         return teacherSubjectRepository.existsByTeacherIdAndSubjectId(teacherId, subjectId);
     }

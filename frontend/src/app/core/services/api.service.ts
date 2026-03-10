@@ -41,6 +41,41 @@ export class ApiService {
     return this.http.get<SubjectDto[]>(`${BASE}/api/subjects`);
   }
 
+  getMySubjects(): Observable<SubjectDto[]> {
+    return this.http.get<SubjectDto[]>(`${BASE}/api/teacher/subjects`);
+  }
+
+  /* ── Teacher / Papers ── */
+  getTeacherPapers(): Observable<PaperDto[]> {
+    return this.http.get<PaperDto[]>(`${BASE}/api/teacher/papers`);
+  }
+
+  getTeacherPapersBySubject(subjectId: string): Observable<PaperDto[]> {
+    return this.http.get<PaperDto[]>(`${BASE}/api/teacher/papers`, {
+      params: { subjectId },
+    });
+  }
+
+  getTeacherPaperDetail(paperId: string): Observable<PaperDetailDto> {
+    return this.http.get<PaperDetailDto>(
+      `${BASE}/api/teacher/papers/${paperId}`,
+    );
+  }
+
+  updateTeacherPaper(
+    paperId: string,
+    req: PaperUpdateRequest,
+  ): Observable<PaperDto> {
+    return this.http.put<PaperDto>(
+      `${BASE}/api/teacher/papers/${paperId}`,
+      req,
+    );
+  }
+
+  createTeacherPaper(req: PaperCreateRequest): Observable<PaperDto> {
+    return this.http.post<PaperDto>(`${BASE}/api/teacher/papers`, req);
+  }
+
   /* ── Papers ── */
   getYears(): Observable<number[]> {
     return this.http.get<number[]>(`${BASE}/api/papers/years`);
@@ -120,8 +155,50 @@ export class ApiService {
     );
   }
 
-  getQuestion(id: number | string): Observable<QuestionDto> {
+  getQuestion(id: string): Observable<QuestionDto> {
     return this.http.get<QuestionDto>(`${BASE}/api/teacher/questions/${id}`);
+  }
+
+  assignPaperToQuestion(
+    questionId: string,
+    paperId: string,
+  ): Observable<QuestionDto> {
+    return this.http.patch<QuestionDto>(
+      `${BASE}/api/teacher/questions/${questionId}/paper`,
+      { paperId },
+    );
+  }
+
+  /* ── Teacher / Student Attempts ── */
+  getTeacherStudentAttempts(
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<StudentAttemptSummaryDto>> {
+    return this.http.get<PagedResponse<StudentAttemptSummaryDto>>(
+      `${BASE}/api/teacher/student-attempts`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getTeacherStudentAttemptsByPaper(
+    paperId: string,
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<StudentAttemptSummaryDto>> {
+    return this.http.get<PagedResponse<StudentAttemptSummaryDto>>(
+      `${BASE}/api/teacher/student-attempts/by-paper/${paperId}`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getTeacherAttemptDetail(attemptId: string): Observable<AttemptDetailDto> {
+    return this.http.get<AttemptDetailDto>(
+      `${BASE}/api/teacher/student-attempts/${attemptId}/detail`,
+    );
   }
 
   /* ── Admin / Questions ── */

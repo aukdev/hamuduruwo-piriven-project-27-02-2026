@@ -59,7 +59,9 @@ export interface QuestionOptionRequest {
 }
 
 export interface QuestionCreateRequest {
-  subjectId: string;
+  subjectId?: string;
+  year?: number;
+  paperId?: string;
   questionText: string;
   options: QuestionOptionRequest[];
 }
@@ -84,6 +86,8 @@ export interface QuestionDto {
   id: string;
   subjectId: string;
   subjectName: string;
+  year: number;
+  paperId?: string;
   questionText: string;
   status: 'DRAFT' | 'PENDING_REVIEW' | 'APPROVED' | 'REJECTED';
   rejectionReason?: string;

@@ -48,6 +48,13 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
             getStatusLabel(q.status)
           }}</span>
           <span class="question-item__subject">{{ q.subjectName }}</span>
+          <span class="question-item__year">{{ q.year }}</span>
+          <span class="question-item__paper" *ngIf="q.paperId">
+            <mat-icon>description</mat-icon> පත්‍රයට පවරා ඇත
+          </span>
+          <span class="question-item__no-paper" *ngIf="!q.paperId">
+            <mat-icon>warning</mat-icon> පත්‍රයක් නැත
+          </span>
         </div>
         <p class="question-item__text">{{ q.questionText }}</p>
         <div class="question-item__footer">
@@ -132,6 +139,46 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         background: rgba(11, 61, 145, 0.08);
         padding: 2px 8px;
         border-radius: 4px;
+      }
+      .question-item__year {
+        font-size: 12px;
+        font-weight: 600;
+        color: #2e7d32;
+        background: rgba(46, 125, 50, 0.08);
+        padding: 2px 8px;
+        border-radius: 4px;
+      }
+      .question-item__paper {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #2e7d32;
+        background: rgba(46, 125, 50, 0.06);
+        padding: 2px 8px;
+        border-radius: 4px;
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
+      }
+      .question-item__no-paper {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        color: #e65100;
+        background: rgba(255, 152, 0, 0.08);
+        padding: 2px 8px;
+        border-radius: 4px;
+        mat-icon {
+          font-size: 14px;
+          width: 14px;
+          height: 14px;
+        }
       }
       .question-item__text {
         font-size: 15px;

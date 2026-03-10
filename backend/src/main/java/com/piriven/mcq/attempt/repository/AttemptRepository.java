@@ -44,4 +44,9 @@ public interface AttemptRepository extends JpaRepository<Attempt, UUID> {
                         "WHERE a.student.id = :studentId AND a.status IN ('SUBMITTED', 'EXPIRED') " +
                         "ORDER BY a.submittedAt DESC", countQuery = "SELECT COUNT(a) FROM Attempt a WHERE a.student.id = :studentId AND a.status IN ('SUBMITTED', 'EXPIRED')")
         Page<Attempt> findCompletedAttemptsByStudentId(@Param("studentId") UUID studentId, Pageable pageable);
+
+        @Query(value = "SELECT a FROM Attempt a JOIN FETCH a.student JOIN FETCH a.paper p JOIN FETCH p.subject " +
+                        "WHERE p.subject.id IN :subjectIds AND a.status IN ('SUBMITTED', 'EXPIRED') " +
+                        "ORDER BY a.submittedAt DESC", countQuery = "SELECT COUNT(a) FROM Attempt a WHERE a.paper.subject.id IN :subjectIds AND a.status IN ('SUBMITTED', 'EXPIRED')")
+        Page<Attempt> findCompletedAttemptsBySubjectIds(@Param("subjectIds") List<UUID> subjectIds, Pageable pageable);
 }

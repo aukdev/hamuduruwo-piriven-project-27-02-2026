@@ -21,6 +21,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         <div class="question-card__header">
           <span class="status-badge status-PENDING_REVIEW">සමාලෝචනයට</span>
           <span class="chip">{{ q.subjectName }}</span>
+          <span class="chip year">{{ q.year }}</span>
           <span class="chip author">{{ q.createdByEmail }}</span>
         </div>
 
@@ -98,6 +99,10 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       .chip.author {
         background: rgba(0, 0, 0, 0.05);
         color: #666;
+      }
+      .chip.year {
+        background: rgba(46, 125, 50, 0.08);
+        color: #2e7d32;
       }
       .question-text {
         font-size: 15px;

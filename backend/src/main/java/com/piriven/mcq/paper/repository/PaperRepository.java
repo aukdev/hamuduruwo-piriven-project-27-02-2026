@@ -22,4 +22,10 @@ public interface PaperRepository extends JpaRepository<Paper, UUID> {
 
     @Query("SELECT DISTINCT p.year FROM Paper p ORDER BY p.year")
     List<Integer> findDistinctYears();
+
+    @Query("SELECT p FROM Paper p JOIN FETCH p.subject WHERE p.subject.id IN :subjectIds ORDER BY p.year DESC, p.subject.name")
+    List<Paper> findBySubjectIdIn(@Param("subjectIds") List<UUID> subjectIds);
+
+    @Query("SELECT p FROM Paper p JOIN FETCH p.subject WHERE p.subject.id = :subjectId ORDER BY p.year DESC")
+    List<Paper> findBySubjectIdWithSubject(@Param("subjectId") UUID subjectId);
 }

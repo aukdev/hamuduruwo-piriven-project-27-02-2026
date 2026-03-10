@@ -3,6 +3,10 @@ package com.piriven.mcq.question.service;
 import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
+import com.piriven.mcq.paper.entity.Paper;
+import com.piriven.mcq.paper.entity.PaperQuestion;
+import com.piriven.mcq.paper.repository.PaperQuestionRepository;
+import com.piriven.mcq.paper.repository.PaperRepository;
 import com.piriven.mcq.question.dto.*;
 import com.piriven.mcq.question.entity.Question;
 import com.piriven.mcq.question.entity.QuestionOption;
@@ -34,6 +38,8 @@ public class QuestionService {
     private final SubjectRepository subjectRepository;
     private final UserRepository userRepository;
     private final SubjectService subjectService;
+    private final PaperRepository paperRepository;
+    private final PaperQuestionRepository paperQuestionRepository;
 
     // ==================== Teacher Operations ====================
 
@@ -46,12 +52,18 @@ public class QuestionService {
             throw new BusinessException("Teacher must be verified before creating questions", HttpStatus.FORBIDDEN);
         }
 
-        if (!subjectService.isTeacherAssignedToSubject(teacherId, request.subjectId())) {
-            throw new BusinessException("Teacher is not assigned to this subject", HttpStatus.FORBIDDEN);
+        if (request.paperId() == null) {
+            throw new BusinessException("Paper ID is required");
         }
 
-        Subject subject = subjectRepository.findById(request.subjectId())
-                .orElseThrow(() -> new ResourceNotFoundException("Subject", "id", request.subjectId()));
+        Paper paper = paperRepository.findById(request.paperId())
+                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", request.paperId()));
+
+        Subject subject = paper.getSubject();
+
+        if (!subjectService.isTeacherAssignedToSubject(teacherId, subject.getId())) {
+            throw new BusinessException("Teacher is not assigned to this subject", HttpStatus.FORBIDDEN);
+        }
 
         validateOptions(request.options());
 
@@ -59,6 +71,8 @@ public class QuestionService {
                 .subject(subject)
                 .createdBy(teacher)
                 .questionText(request.questionText())
+                .year(paper.getYear())
+                .paper(paper)
                 .status(QuestionStatus.DRAFT)
                 .build();
 
@@ -92,6 +106,7 @@ public class QuestionService {
 
         question.setQuestionText(request.questionText());
         question.clearOptions();
+        questionRepository.saveAndFlush(question);
 
         for (QuestionOptionRequest optReq : request.options()) {
             QuestionOption option = QuestionOption.builder()
@@ -166,6 +181,33 @@ public class QuestionService {
 
     // ==================== Admin Operations ====================
 
+    @Transactional
+    public QuestionDto assignPaperToQuestion(UUID questionId, UUID paperId, UUID teacherId) {
+        Question question = questionRepository.findById(questionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
+
+        if (!question.getCreatedBy().getId().equals(teacherId)) {
+            throw new BusinessException("You can only modify your own questions", HttpStatus.FORBIDDEN);
+        }
+
+        if (question.getStatus() == QuestionStatus.APPROVED || question.getStatus() == QuestionStatus.PENDING_REVIEW) {
+            throw new BusinessException("Cannot change paper assignment for " + question.getStatus() + " questions");
+        }
+
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
+
+        if (!subjectService.isTeacherAssignedToSubject(teacherId, paper.getSubject().getId())) {
+            throw new BusinessException("Teacher is not assigned to this subject", HttpStatus.FORBIDDEN);
+        }
+
+        question.setPaper(paper);
+        question.setSubject(paper.getSubject());
+        question.setYear(paper.getYear());
+        question = questionRepository.save(question);
+        return toDto(question, true);
+    }
+
     @Transactional(readOnly = true)
     public PagedResponse<QuestionDto> getPendingQuestions(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending());
@@ -200,6 +242,24 @@ public class QuestionService {
         question.setApprovedAt(LocalDateTime.now());
         question.setRejectionReason(null);
         question = questionRepository.save(question);
+
+        // Auto-assign to paper if question has a paper reference
+        if (question.getPaper() != null) {
+            UUID paperId = question.getPaper().getId();
+            if (!paperQuestionRepository.existsByPaperIdAndQuestionId(paperId, question.getId())) {
+                long currentCount = paperQuestionRepository.countByPaperId(paperId);
+                if (currentCount < question.getPaper().getQuestionCount()) {
+                    int nextPosition = (int) currentCount + 1;
+                    PaperQuestion pq = PaperQuestion.builder()
+                            .paper(question.getPaper())
+                            .question(question)
+                            .position(nextPosition)
+                            .build();
+                    paperQuestionRepository.save(pq);
+                }
+            }
+        }
+
         return toDto(question, true);
     }
 
@@ -238,8 +298,25 @@ public class QuestionService {
         User superAdmin = userRepository.findById(superAdminId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", superAdminId));
 
-        Subject subject = subjectRepository.findById(request.subjectId())
-                .orElseThrow(() -> new ResourceNotFoundException("Subject", "id", request.subjectId()));
+        Paper paper = null;
+        Subject subject;
+        int year;
+
+        if (request.paperId() != null) {
+            paper = paperRepository.findById(request.paperId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", request.paperId()));
+            subject = paper.getSubject();
+            year = paper.getYear();
+        } else {
+            if (request.subjectId() == null || request.year() == null) {
+                throw new BusinessException("Either paperId or both subjectId and year are required");
+            }
+            subject = subjectRepository.findById(request.subjectId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Subject", "id", request.subjectId()));
+            year = request.year();
+            // Try to find existing paper for subject+year
+            paper = paperRepository.findByYearAndSubjectId(year, subject.getId()).orElse(null);
+        }
 
         validateOptions(request.options());
 
@@ -247,6 +324,8 @@ public class QuestionService {
                 .subject(subject)
                 .createdBy(superAdmin)
                 .questionText(request.questionText())
+                .year(year)
+                .paper(paper)
                 .status(QuestionStatus.APPROVED)
                 .approvedBy(superAdmin)
                 .approvedAt(LocalDateTime.now())
@@ -274,6 +353,7 @@ public class QuestionService {
 
         question.setQuestionText(request.questionText());
         question.clearOptions();
+        questionRepository.saveAndFlush(question);
 
         for (QuestionOptionRequest optReq : request.options()) {
             QuestionOption option = QuestionOption.builder()
@@ -327,6 +407,8 @@ public class QuestionService {
                 question.getId(),
                 question.getSubject().getId(),
                 question.getSubject().getName(),
+                question.getYear(),
+                question.getPaper() != null ? question.getPaper().getId() : null,
                 question.getQuestionText(),
                 question.getStatus().name(),
                 question.getRejectionReason(),

@@ -105,6 +105,11 @@ export class SidebarComponent implements OnInit {
             route: '/teacher/dashboard',
           },
           {
+            icon: 'description',
+            label: 'ප්‍රශ්න පත්‍ර',
+            route: '/teacher/papers',
+          },
+          {
             icon: 'add_circle',
             label: 'ප්‍රශ්නයක් සාදන්න',
             route: '/teacher/questions/create',

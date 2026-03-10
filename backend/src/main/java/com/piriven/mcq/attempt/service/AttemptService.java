@@ -17,6 +17,8 @@ import com.piriven.mcq.question.dto.QuestionOptionDto;
 import com.piriven.mcq.question.entity.Question;
 import com.piriven.mcq.question.entity.QuestionOption;
 import com.piriven.mcq.question.repository.QuestionOptionRepository;
+import com.piriven.mcq.subject.dto.SubjectDto;
+import com.piriven.mcq.subject.service.SubjectService;
 import com.piriven.mcq.user.entity.User;
 import com.piriven.mcq.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,7 @@ public class AttemptService {
     private final PaperQuestionRepository paperQuestionRepository;
     private final UserRepository userRepository;
     private final QuestionOptionRepository questionOptionRepository;
+    private final SubjectService subjectService;
 
     @Value("${app.exam.total-duration-seconds:1200}")
     private int totalDurationSeconds;
@@ -499,6 +502,23 @@ public class AttemptService {
     @Transactional(readOnly = true)
     public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByStudent(UUID studentId, int page, int size) {
         Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByStudentId(studentId,
+                PageRequest.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    // ==================== Teacher: View Student Attempts (filtered by assigned
+    // subjects) ====================
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getTeacherStudentAttempts(UUID teacherId, int page, int size) {
+        List<UUID> subjectIds = subjectService.getTeacherSubjects(teacherId).stream()
+                .map(SubjectDto::id)
+                .toList();
+        if (subjectIds.isEmpty()) {
+            return PagedResponse.<StudentAttemptSummaryDto>builder()
+                    .content(List.of()).page(0).size(size).totalElements(0).totalPages(0).last(true).build();
+        }
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsBySubjectIds(subjectIds,
                 PageRequest.of(page, size));
         return buildAttemptSummaryPage(attempts);
     }
