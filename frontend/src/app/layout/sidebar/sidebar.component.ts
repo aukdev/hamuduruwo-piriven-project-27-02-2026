@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService, CurrentUser } from '../../core/services/auth.service';
+import { Subscription } from 'rxjs';
 
 interface NavItem {
   icon: string;
@@ -71,15 +72,20 @@ interface NavItem {
     `,
   ],
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   navItems: NavItem[] = [];
+  private sub!: Subscription;
 
   constructor(private auth: AuthService) {}
 
   ngOnInit(): void {
-    this.auth.currentUser$.subscribe((user) => {
+    this.sub = this.auth.currentUser$.subscribe((user) => {
       this.navItems = user ? this.getNavItems(user) : [];
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   private getNavItems(user: CurrentUser): NavItem[] {

@@ -14,7 +14,11 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
     >
     </app-page-header>
 
-    <app-loading-overlay [show]="loading"></app-loading-overlay>
+    <app-skeleton
+      *ngIf="loading"
+      type="question-list"
+      [count]="4"
+    ></app-skeleton>
 
     <div class="questions-list" *ngIf="!loading">
       <mat-card class="question-card" *ngFor="let q of questions">
@@ -94,7 +98,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         padding: 2px 8px;
         background: rgba(11, 61, 145, 0.08);
         border-radius: 4px;
-        color: #0b3d91;
+        color: var(--color-primary);
       }
       .chip.author {
         background: rgba(0, 0, 0, 0.05);
@@ -102,12 +106,12 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       }
       .chip.year {
         background: rgba(46, 125, 50, 0.08);
-        color: #2e7d32;
+        color: var(--color-success);
       }
       .question-text {
         font-size: 15px;
         line-height: 1.7;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
         margin-bottom: 16px;
         padding-bottom: 12px;
         border-bottom: 1px solid #f0f0f5;
@@ -129,7 +133,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         color: #333;
 
         &.correct {
-          border-color: #2e7d32;
+          border-color: var(--color-success);
           background: rgba(46, 125, 50, 0.04);
         }
       }
@@ -143,15 +147,15 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         font-weight: 700;
         font-size: 12px;
         background: #e8eaf6;
-        color: #0b3d91;
+        color: var(--color-primary);
 
         .correct & {
           background: #e8f5e9;
-          color: #2e7d32;
+          color: var(--color-success);
         }
       }
       .correct-mark {
-        color: #2e7d32;
+        color: var(--color-success);
         font-size: 18px;
         width: 18px;
         height: 18px;

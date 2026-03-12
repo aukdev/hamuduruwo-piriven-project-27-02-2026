@@ -3,6 +3,7 @@ package com.piriven.mcq.user.service;
 import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
+import com.piriven.mcq.common.util.PaginationUtil;
 import com.piriven.mcq.user.dto.CreateUserRequest;
 import com.piriven.mcq.user.dto.ResetPasswordRequest;
 import com.piriven.mcq.user.dto.UserDto;
@@ -58,14 +59,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public PagedResponse<UserDto> getAllUsers(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PaginationUtil.of(page, size, Sort.by("createdAt").descending());
         Page<User> userPage = userRepository.findAll(pageRequest);
         return buildPagedResponse(userPage);
     }
 
     @Transactional(readOnly = true)
     public PagedResponse<UserDto> getAllUsersForSuperAdmin(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PaginationUtil.of(page, size, Sort.by("createdAt").descending());
         Page<User> userPage = userRepository.findAll(pageRequest);
         return buildPagedResponse(userPage);
     }

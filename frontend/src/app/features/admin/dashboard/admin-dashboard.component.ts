@@ -9,54 +9,60 @@ import { ApiService } from '../../../core/services/api.service';
       subtitle="පද්ධති කළමනාකරණය"
     ></app-page-header>
 
-    <div class="stats-grid">
-      <mat-card class="stat-card pending" routerLink="/admin/approvals">
-        <mat-icon>hourglass_empty</mat-icon>
-        <div class="stat-info">
-          <span class="stat-number">{{ pendingCount }}</span>
-          <span class="stat-label">අනුමැතිය බලාපොරොත්තු</span>
-        </div>
-      </mat-card>
+    <app-skeleton *ngIf="loading" type="dashboard"></app-skeleton>
 
-      <mat-card class="stat-card" routerLink="/admin/users">
-        <mat-icon>people</mat-icon>
-        <div class="stat-info">
-          <span class="stat-number">{{ userCount }}</span>
-          <span class="stat-label">පරිශීලකයින්</span>
-        </div>
-      </mat-card>
+    <div *ngIf="!loading">
+      <div class="stats-grid">
+        <mat-card class="stat-card pending" routerLink="/admin/approvals">
+          <mat-icon>hourglass_empty</mat-icon>
+          <div class="stat-info">
+            <span class="stat-number">{{ pendingCount }}</span>
+            <span class="stat-label">අනුමැතිය බලාපොරොත්තු</span>
+          </div>
+        </mat-card>
 
-      <mat-card class="stat-card" routerLink="/admin/subjects">
-        <mat-icon>menu_book</mat-icon>
-        <div class="stat-info">
-          <span class="stat-number">{{ subjectCount }}</span>
-          <span class="stat-label">විෂයයන්</span>
-        </div>
-      </mat-card>
-    </div>
+        <mat-card class="stat-card" routerLink="/admin/users">
+          <mat-icon>people</mat-icon>
+          <div class="stat-info">
+            <span class="stat-number">{{ userCount }}</span>
+            <span class="stat-label">පරිශීලකයින්</span>
+          </div>
+        </mat-card>
 
-    <h3 class="section-title mt-24">ඉක්මන් ක්‍රියා</h3>
-    <div class="actions-grid">
-      <mat-card class="action-card" routerLink="/admin/approvals">
-        <mat-icon color="primary">fact_check</mat-icon>
-        <h4>ප්‍රශ්න අනුමත කරන්න</h4>
-        <p>ගුරුවරුන් ඉදිරිපත් කළ ප්‍රශ්න සමාලෝචනය කර අනුමත/ප්‍රතික්ෂේප කරන්න</p>
-      </mat-card>
-      <mat-card class="action-card" routerLink="/admin/users">
-        <mat-icon color="primary">manage_accounts</mat-icon>
-        <h4>පරිශීලක කළමනාකරණය</h4>
-        <p>ගුරුවරුන් සත්‍යාපනය, පරිශීලකයින් අක්‍රිය කිරීම</p>
-      </mat-card>
-      <mat-card class="action-card" routerLink="/admin/subjects">
-        <mat-icon color="primary">library_books</mat-icon>
-        <h4>විෂය කළමනාකරණය</h4>
-        <p>නව විෂයයන් එකතු කිරීම, ගුරුවරුන්ට විෂයයන් පැවරීම</p>
-      </mat-card>
-      <mat-card class="action-card" routerLink="/admin/papers">
-        <mat-icon color="primary">assignment</mat-icon>
-        <h4>පත්‍ර කළමනාකරණය</h4>
-        <p>පත්‍රවලට ප්‍රශ්න පැවරීම</p>
-      </mat-card>
+        <mat-card class="stat-card" routerLink="/admin/subjects">
+          <mat-icon>menu_book</mat-icon>
+          <div class="stat-info">
+            <span class="stat-number">{{ subjectCount }}</span>
+            <span class="stat-label">විෂයයන්</span>
+          </div>
+        </mat-card>
+      </div>
+
+      <h3 class="section-title mt-24">ඉක්මන් ක්‍රියා</h3>
+      <div class="actions-grid">
+        <mat-card class="action-card" routerLink="/admin/approvals">
+          <mat-icon color="primary">fact_check</mat-icon>
+          <h4>ප්‍රශ්න අනුමත කරන්න</h4>
+          <p>
+            ගුරුවරුන් ඉදිරිපත් කළ ප්‍රශ්න සමාලෝචනය කර අනුමත/ප්‍රතික්ෂේප කරන්න
+          </p>
+        </mat-card>
+        <mat-card class="action-card" routerLink="/admin/users">
+          <mat-icon color="primary">manage_accounts</mat-icon>
+          <h4>පරිශීලක කළමනාකරණය</h4>
+          <p>ගුරුවරුන් සත්‍යාපනය, පරිශීලකයින් අක්‍රිය කිරීම</p>
+        </mat-card>
+        <mat-card class="action-card" routerLink="/admin/subjects">
+          <mat-icon color="primary">library_books</mat-icon>
+          <h4>විෂය කළමනාකරණය</h4>
+          <p>නව විෂයයන් එකතු කිරීම, ගුරුවරුන්ට විෂයයන් පැවරීම</p>
+        </mat-card>
+        <mat-card class="action-card" routerLink="/admin/papers">
+          <mat-icon color="primary">assignment</mat-icon>
+          <h4>පත්‍ර කළමනාකරණය</h4>
+          <p>පත්‍රවලට ප්‍රශ්න පැවරීම</p>
+        </mat-card>
+      </div>
     </div>
   `,
   styles: [
@@ -79,13 +85,13 @@ import { ApiService } from '../../../core/services/api.service';
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
         }
         &.pending {
-          border-left: 4px solid #f4b400;
+          border-left: 4px solid var(--color-accent);
         }
         mat-icon {
           font-size: 36px;
           width: 36px;
           height: 36px;
-          color: #0b3d91;
+          color: var(--color-primary);
         }
       }
       .stat-info {
@@ -95,7 +101,7 @@ import { ApiService } from '../../../core/services/api.service';
       .stat-number {
         font-size: 28px;
         font-weight: 700;
-        color: #0b3d91;
+        color: var(--color-primary);
         line-height: 1;
       }
       .stat-label {
@@ -122,7 +128,7 @@ import { ApiService } from '../../../core/services/api.service';
         transition: all 0.15s;
 
         &:hover {
-          border-color: #0b3d91;
+          border-color: var(--color-primary);
         }
         mat-icon {
           font-size: 32px;
@@ -134,7 +140,7 @@ import { ApiService } from '../../../core/services/api.service';
           margin: 0 0 6px;
           font-size: 15px;
           font-weight: 600;
-          color: #1a1a2e;
+          color: var(--color-text-primary);
         }
         p {
           margin: 0;
@@ -150,21 +156,37 @@ export class AdminDashboardComponent implements OnInit {
   pendingCount = 0;
   userCount = 0;
   subjectCount = 0;
+  loading = true;
+  private loadCount = 0;
 
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
     this.api.getPendingQuestions(0, 1).subscribe({
-      next: (r) => (this.pendingCount = r.totalElements),
-      error: () => {},
+      next: (r) => {
+        this.pendingCount = r.totalElements;
+        this.checkLoaded();
+      },
+      error: () => this.checkLoaded(),
     });
     this.api.getUsers(0, 1).subscribe({
-      next: (r) => (this.userCount = r.totalElements),
-      error: () => {},
+      next: (r) => {
+        this.userCount = r.totalElements;
+        this.checkLoaded();
+      },
+      error: () => this.checkLoaded(),
     });
     this.api.getSubjects().subscribe({
-      next: (s) => (this.subjectCount = s.length),
-      error: () => {},
+      next: (s) => {
+        this.subjectCount = s.length;
+        this.checkLoaded();
+      },
+      error: () => this.checkLoaded(),
     });
+  }
+
+  private checkLoaded(): void {
+    this.loadCount++;
+    if (this.loadCount >= 3) this.loading = false;
   }
 }

@@ -41,6 +41,7 @@ import { ResetPasswordDialogComponent } from './components/reset-password-dialog
 import { CreateUserDialogComponent } from './components/create-user-dialog/create-user-dialog.component';
 import { EditSubjectDialogComponent } from './components/edit-subject-dialog/edit-subject-dialog.component';
 import { StudentAnswersComponent } from './components/student-answers/student-answers.component';
+import { SkeletonComponent } from './components/skeleton/skeleton.component';
 
 const MATERIAL_MODULES = [
   MatToolbarModule,
@@ -81,6 +82,7 @@ const SHARED_COMPONENTS = [
   CreateUserDialogComponent,
   EditSubjectDialogComponent,
   StudentAnswersComponent,
+  SkeletonComponent,
 ];
 
 @NgModule({

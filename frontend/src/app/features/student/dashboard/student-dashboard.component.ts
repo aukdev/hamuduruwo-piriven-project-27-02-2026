@@ -97,40 +97,40 @@ import { AuthService, CurrentUser } from '../../../core/services/auth.service';
         h3 {
           font-size: 16px;
           font-weight: 700;
-          color: #1a1a2e;
+          color: var(--color-text-primary);
           margin-bottom: 4px;
         }
         p {
           font-size: 13px;
-          color: #555770;
+          color: var(--color-text-secondary);
         }
       }
       .action-card__arrow {
         color: #c1c5d0;
       }
       .highlight-card {
-        border-left: 4px solid #f4b400 !important;
+        border-left: 4px solid var(--color-accent) !important;
       }
       .info-banner {
         display: flex;
         gap: 16px;
         padding: 20px !important;
         background: rgba(11, 61, 145, 0.03) !important;
-        border-left: 4px solid #0b3d91 !important;
+        border-left: 4px solid var(--color-primary) !important;
 
         > mat-icon {
-          color: #0b3d91;
+          color: var(--color-primary);
           margin-top: 2px;
         }
         p {
           font-size: 14px;
-          color: #1a1a2e;
+          color: var(--color-text-primary);
           margin-bottom: 8px;
         }
         ul {
           padding-left: 20px;
           font-size: 13px;
-          color: #555770;
+          color: var(--color-text-secondary);
           line-height: 1.8;
         }
       }

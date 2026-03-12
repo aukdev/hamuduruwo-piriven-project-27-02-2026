@@ -9,6 +9,7 @@ import com.piriven.mcq.attempt.repository.AttemptRepository;
 import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
+import com.piriven.mcq.common.util.PaginationUtil;
 import com.piriven.mcq.paper.entity.Paper;
 import com.piriven.mcq.paper.entity.PaperQuestion;
 import com.piriven.mcq.paper.repository.PaperQuestionRepository;
@@ -363,11 +364,6 @@ public class AttemptService {
             }
         }
 
-        // Unanswered questions (never served) also count as wrong
-        int totalAnswered = correctCount + wrongCount;
-        int unanswered = attempt.getPaper().getQuestionCount() - totalAnswered;
-        wrongCount += unanswered;
-
         attempt.setCorrectCount(correctCount);
         attempt.setWrongCount(wrongCount);
         attempt.setScore(correctCount); // 1 mark per correct question
@@ -389,9 +385,6 @@ public class AttemptService {
         // Compare with previous best
         UUID paperId = attempt.getPaper().getId();
         UUID studentId = attempt.getStudent().getId();
-
-        Optional<Integer> previousBest = attemptRepository
-                .findBestScoreByStudentAndPaper(studentId, paperId);
 
         // The previous best should exclude the current attempt
         Integer prevBestScore = null;
@@ -487,20 +480,34 @@ public class AttemptService {
 
     @Transactional(readOnly = true)
     public PagedResponse<StudentAttemptSummaryDto> getAllStudentAttempts(int page, int size) {
-        Page<Attempt> attempts = attemptRepository.findAllCompletedAttempts(PageRequest.of(page, size));
+        Page<Attempt> attempts = attemptRepository.findAllCompletedAttempts(PaginationUtil.of(page, size));
         return buildAttemptSummaryPage(attempts);
     }
 
     @Transactional(readOnly = true)
     public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByPaper(UUID paperId, int page, int size) {
-        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperId(paperId, PageRequest.of(page, size));
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperId(paperId,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByPaper(UUID teacherId, UUID paperId, int page,
+            int size) {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
+        if (!subjectService.isTeacherAssignedToSubject(teacherId, paper.getSubject().getId())) {
+            throw new BusinessException("You are not assigned to this subject.");
+        }
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperId(paperId,
+                PaginationUtil.of(page, size));
         return buildAttemptSummaryPage(attempts);
     }
 
     @Transactional(readOnly = true)
     public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByStudent(UUID studentId, int page, int size) {
         Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByStudentId(studentId,
-                PageRequest.of(page, size));
+                PaginationUtil.of(page, size));
         return buildAttemptSummaryPage(attempts);
     }
 
@@ -517,12 +524,26 @@ public class AttemptService {
                     .content(List.of()).page(0).size(size).totalElements(0).totalPages(0).last(true).build();
         }
         Page<Attempt> attempts = attemptRepository.findCompletedAttemptsBySubjectIds(subjectIds,
-                PageRequest.of(page, size));
+                PaginationUtil.of(page, size));
         return buildAttemptSummaryPage(attempts);
     }
 
     @Transactional(readOnly = true)
     public AttemptDetailDto getAttemptDetail(UUID attemptId) {
+        return buildAttemptDetail(attemptId);
+    }
+
+    @Transactional(readOnly = true)
+    public AttemptDetailDto getAttemptDetail(UUID teacherId, UUID attemptId) {
+        Attempt attempt = attemptRepository.findById(attemptId)
+                .orElseThrow(() -> new ResourceNotFoundException("Attempt", "id", attemptId));
+        if (!subjectService.isTeacherAssignedToSubject(teacherId, attempt.getPaper().getSubject().getId())) {
+            throw new BusinessException("You are not assigned to this subject.");
+        }
+        return buildAttemptDetail(attemptId);
+    }
+
+    private AttemptDetailDto buildAttemptDetail(UUID attemptId) {
         Attempt attempt = attemptRepository.findById(attemptId)
                 .orElseThrow(() -> new ResourceNotFoundException("Attempt", "id", attemptId));
 

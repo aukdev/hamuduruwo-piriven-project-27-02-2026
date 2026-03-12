@@ -179,10 +179,10 @@ export class LoginComponent {
     }
     this.loading = true;
     this.auth.login(this.form.value).subscribe({
-      next: (res) => {
+      next: () => {
         this.loading = false;
         this.notify.success('සාර්ථකව පිවිසුණි!');
-        this.redirectByRole(res.role);
+        this.auth.navigateByRole();
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
@@ -191,24 +191,5 @@ export class LoginComponent {
         this.notify.error(msg);
       },
     });
-  }
-
-  private redirectByRole(role: string): void {
-    switch (role) {
-      case 'STUDENT':
-        this.router.navigate(['/student']);
-        break;
-      case 'TEACHER':
-        this.router.navigate(['/teacher']);
-        break;
-      case 'ADMIN':
-        this.router.navigate(['/admin']);
-        break;
-      case 'SUPER_ADMIN':
-        this.router.navigate(['/superadmin']);
-        break;
-      default:
-        this.router.navigate(['/']);
-    }
   }
 }

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -123,12 +124,19 @@ import { AuthService } from '../../core/services/auth.service';
     `,
   ],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
   sidenavOpen = true;
   user = this.auth.currentUser;
+  private sub!: Subscription;
 
-  constructor(private auth: AuthService) {
-    this.auth.currentUser$.subscribe((u) => (this.user = u));
+  constructor(private auth: AuthService) {}
+
+  ngOnInit(): void {
+    this.sub = this.auth.currentUser$.subscribe((u) => (this.user = u));
+  }
+
+  ngOnDestroy(): void {
+    this.sub?.unsubscribe();
   }
 
   toggleSidenav(): void {

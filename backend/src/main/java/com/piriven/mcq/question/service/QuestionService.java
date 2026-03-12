@@ -3,6 +3,7 @@ package com.piriven.mcq.question.service;
 import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
+import com.piriven.mcq.common.util.PaginationUtil;
 import com.piriven.mcq.paper.entity.Paper;
 import com.piriven.mcq.paper.entity.PaperQuestion;
 import com.piriven.mcq.paper.repository.PaperQuestionRepository;
@@ -162,7 +163,7 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public PagedResponse<QuestionDto> getTeacherQuestions(UUID teacherId, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PaginationUtil.of(page, size, Sort.by("createdAt").descending());
         Page<Question> questionPage = questionRepository.findByCreatedById(teacherId, pageRequest);
         return buildPagedResponse(questionPage, true);
     }
@@ -210,7 +211,7 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public PagedResponse<QuestionDto> getPendingQuestions(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").ascending());
+        PageRequest pageRequest = PaginationUtil.of(page, size, Sort.by("createdAt").ascending());
         Page<Question> questionPage = questionRepository.findByStatus(QuestionStatus.PENDING_REVIEW, pageRequest);
         return buildPagedResponse(questionPage, true);
     }
@@ -282,7 +283,7 @@ public class QuestionService {
 
     @Transactional(readOnly = true)
     public PagedResponse<QuestionDto> getAllQuestionsForSuperAdmin(int page, int size, String status) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        PageRequest pageRequest = PaginationUtil.of(page, size, Sort.by("createdAt").descending());
         Page<Question> questionPage;
         if (status != null && !status.isBlank()) {
             QuestionStatus questionStatus = QuestionStatus.valueOf(status.toUpperCase());

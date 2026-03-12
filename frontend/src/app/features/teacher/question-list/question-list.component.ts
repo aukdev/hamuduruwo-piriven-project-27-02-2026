@@ -34,7 +34,11 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       <mat-tab label="ප්‍රතික්ෂේප ({{ getCount('REJECTED') }})"></mat-tab>
     </mat-tab-group>
 
-    <app-loading-overlay [show]="loading"></app-loading-overlay>
+    <app-skeleton
+      *ngIf="loading"
+      type="question-list"
+      [count]="5"
+    ></app-skeleton>
 
     <!-- Questions List -->
     <div class="questions-list" *ngIf="!loading">
@@ -123,7 +127,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         transition: all 0.15s;
 
         &:hover {
-          border-color: #0b3d91;
+          border-color: var(--color-primary);
         }
       }
       .question-item__header {
@@ -135,7 +139,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       .question-item__subject {
         font-size: 12px;
         font-weight: 600;
-        color: #0b3d91;
+        color: var(--color-primary);
         background: rgba(11, 61, 145, 0.08);
         padding: 2px 8px;
         border-radius: 4px;
@@ -143,7 +147,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       .question-item__year {
         font-size: 12px;
         font-weight: 600;
-        color: #2e7d32;
+        color: var(--color-success);
         background: rgba(46, 125, 50, 0.08);
         padding: 2px 8px;
         border-radius: 4px;
@@ -183,7 +187,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       .question-item__text {
         font-size: 15px;
         line-height: 1.6;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
         margin-bottom: 12px;
         display: -webkit-box;
         -webkit-line-clamp: 2;

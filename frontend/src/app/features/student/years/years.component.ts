@@ -10,7 +10,12 @@ import { ApiService } from '../../../core/services/api.service';
       subtitle="අතීත ප්‍රශ්න පත්‍ර වර්ෂ / Select Year"
     ></app-page-header>
 
-    <app-loading-overlay [show]="loading"></app-loading-overlay>
+    <app-skeleton
+      *ngIf="loading"
+      type="card-grid"
+      [count]="8"
+      gridMinWidth="160px"
+    ></app-skeleton>
 
     <div class="years-grid" *ngIf="!loading">
       <mat-card
@@ -49,17 +54,17 @@ import { ApiService } from '../../../core/services/api.service';
 
         &:hover {
           transform: translateY(-4px);
-          border-color: #0b3d91;
+          border-color: var(--color-primary);
         }
       }
       .year-card__number {
         font-size: 32px;
         font-weight: 800;
-        color: #0b3d91;
+        color: var(--color-primary);
       }
       .year-card__label {
         font-size: 12px;
-        color: #555770;
+        color: var(--color-text-secondary);
         margin-top: 4px;
       }
       .year-card__icon {
@@ -67,7 +72,7 @@ import { ApiService } from '../../../core/services/api.service';
         top: 12px;
         right: 12px;
         font-size: 20px;
-        color: #f4b400;
+        color: var(--color-accent);
         opacity: 0.6;
       }
     `,

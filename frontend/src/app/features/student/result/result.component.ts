@@ -6,10 +6,7 @@ import { AttemptResultResponse } from '../../../core/models';
 @Component({
   selector: 'app-result',
   template: `
-    <app-loading-overlay
-      [show]="loading"
-      text="ප්‍රතිඵල පූරණය වෙමින්..."
-    ></app-loading-overlay>
+    <app-skeleton *ngIf="loading" type="result"></app-skeleton>
 
     <div class="result-container" *ngIf="!loading && result">
       <!-- Score Hero -->
@@ -122,33 +119,33 @@ import { AttemptResultResponse } from '../../../core/models';
         height: 120px;
         border-radius: 50%;
         background: #fce4ec;
-        border: 4px solid #c62828;
+        border: 4px solid var(--color-warn);
         margin-bottom: 16px;
         padding-top: 32px;
 
         &.good {
           background: #fff3e0;
-          border-color: #f4b400;
+          border-color: var(--color-accent);
         }
         &.great {
           background: #e8f5e9;
-          border-color: #2e7d32;
+          border-color: var(--color-success);
         }
       }
       .score-hero__number {
         font-size: 36px;
         font-weight: 800;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
       }
       .score-hero__total {
         font-size: 18px;
         font-weight: 500;
-        color: #555770;
+        color: var(--color-text-secondary);
       }
       .score-hero__title {
         font-size: 18px;
         font-weight: 600;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
         line-height: 1.6;
         margin-top: 8px;
       }
@@ -158,8 +155,8 @@ import { AttemptResultResponse } from '../../../core/models';
         gap: 6px;
         margin-top: 12px;
         padding: 6px 16px;
-        background: #f4b400;
-        color: #1a1a2e;
+        background: var(--color-accent);
+        color: var(--color-text-primary);
         border-radius: 20px;
         font-weight: 700;
         font-size: 13px;
@@ -188,23 +185,23 @@ import { AttemptResultResponse } from '../../../core/models';
         }
 
         &.correct mat-icon {
-          color: #2e7d32;
+          color: var(--color-success);
         }
         &.wrong mat-icon {
-          color: #c62828;
+          color: var(--color-warn);
         }
         &.unanswered mat-icon {
-          color: #555770;
+          color: var(--color-text-secondary);
         }
       }
       .stat-card__value {
         font-size: 28px;
         font-weight: 800;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
       }
       .stat-card__label {
         font-size: 12px;
-        color: #555770;
+        color: var(--color-text-secondary);
         margin-top: 4px;
       }
       .comparison-card {
@@ -212,20 +209,20 @@ import { AttemptResultResponse } from '../../../core/models';
         gap: 16px;
         padding: 20px !important;
         margin-bottom: 20px;
-        border-left: 4px solid #0b3d91 !important;
+        border-left: 4px solid var(--color-primary) !important;
 
         mat-icon {
-          color: #0b3d91;
+          color: var(--color-primary);
           margin-top: 2px;
         }
         p {
           font-size: 14px;
-          color: #1a1a2e;
+          color: var(--color-text-primary);
           line-height: 1.6;
         }
         small {
           font-size: 12px;
-          color: #555770;
+          color: var(--color-text-secondary);
         }
       }
       .info-card {
@@ -240,10 +237,10 @@ import { AttemptResultResponse } from '../../../core/models';
         font-size: 14px;
 
         span:first-child {
-          color: #555770;
+          color: var(--color-text-secondary);
         }
         strong {
-          color: #1a1a2e;
+          color: var(--color-text-primary);
         }
       }
       .result-actions {

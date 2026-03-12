@@ -98,22 +98,5 @@ $piriven-theme: mat.define-light-theme(
   )
 );
 
-/* ── Shared color variables ── */
-$primary: #0b3d91;
-$primary-light: #315aa7;
-$primary-dark: #031a62;
-$accent: #f4b400;
-$accent-light: #fce6b3;
-$warn: #d32f2f;
-$success: #2e7d32;
-$bg-page: #f6f7fb;
-$bg-card: #ffffff;
-$text-primary: #1a1a2e;
-$text-secondary: #555770;
-$border-color: #e0e3eb;
-$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
-$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-$radius-sm: 8px;
-$radius-md: 12px;
-$radius-lg: 16px;
+/* ── Re-export design tokens from single source ── */
+@forward "variables";

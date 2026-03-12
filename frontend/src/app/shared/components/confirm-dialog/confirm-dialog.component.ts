@@ -7,6 +7,7 @@ export interface ConfirmDialogData {
   confirmText?: string;
   cancelText?: string;
   dangerous?: boolean;
+  showInput?: boolean;
   inputLabel?: string;
   inputRequired?: boolean;
 }
@@ -33,7 +34,9 @@ export interface ConfirmDialogData {
       <button
         mat-flat-button
         [color]="data.dangerous ? 'warn' : 'primary'"
-        [disabled]="data.inputRequired && !inputValue?.trim()"
+        [disabled]="
+          (data.showInput || data.inputRequired) && !inputValue?.trim()
+        "
         (click)="onConfirm()"
       >
         {{ data.confirmText || 'තහවුරු කරන්න' }}
@@ -67,6 +70,8 @@ export class ConfirmDialogComponent {
   }
 
   onConfirm(): void {
-    this.dialogRef.close(this.data.inputLabel ? this.inputValue : true);
+    this.dialogRef.close(
+      this.data.inputLabel ? { inputValue: this.inputValue } : true,
+    );
   }
 }

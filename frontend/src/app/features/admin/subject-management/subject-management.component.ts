@@ -91,7 +91,12 @@ import { EditSubjectDialogComponent } from '../../../shared/components/edit-subj
 
     <!-- Existing Subjects -->
     <h3 class="section-title mt-24">පවතින විෂයයන්</h3>
-    <app-loading-overlay [show]="loading"></app-loading-overlay>
+    <app-skeleton
+      *ngIf="loading"
+      type="card-grid"
+      [count]="6"
+      gridMinWidth="260px"
+    ></app-skeleton>
     <div class="subjects-grid" *ngIf="!loading">
       <mat-card class="subject-chip-card" *ngFor="let s of subjects">
         <div class="subject-content">
@@ -151,7 +156,7 @@ import { EditSubjectDialogComponent } from '../../../shared/components/edit-subj
         gap: 8px;
         font-size: 15px;
         font-weight: 600;
-        color: #0b3d91;
+        color: var(--color-primary);
         margin: 0 0 16px;
         mat-icon {
           font-size: 20px;
@@ -190,7 +195,7 @@ import { EditSubjectDialogComponent } from '../../../shared/components/edit-subj
           flex: 1;
           strong {
             font-size: 14px;
-            color: #1a1a2e;
+            color: var(--color-text-primary);
           }
           p {
             margin: 4px 0 0;

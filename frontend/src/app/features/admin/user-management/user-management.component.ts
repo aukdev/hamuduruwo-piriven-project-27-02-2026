@@ -27,7 +27,7 @@ import { CreateUserDialogComponent } from '../../../shared/components/create-use
       </button>
     </div>
 
-    <app-loading-overlay [show]="loading"></app-loading-overlay>
+    <app-skeleton *ngIf="loading" type="user-list" [count]="6"></app-skeleton>
 
     <!-- Filter tabs -->
     <mat-tab-group
@@ -172,7 +172,7 @@ import { CreateUserDialogComponent } from '../../../shared/components/create-use
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #0b3d91;
+        background: var(--color-primary);
         color: #fff;
         font-weight: 700;
         font-size: 15px;
@@ -186,7 +186,7 @@ import { CreateUserDialogComponent } from '../../../shared/components/create-use
         margin: 0;
         font-size: 15px;
         font-weight: 600;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
       }
       .user-email {
         font-size: 13px;

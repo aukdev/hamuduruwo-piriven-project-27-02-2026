@@ -207,25 +207,7 @@ export class LandingComponent {
     private router: Router,
   ) {
     if (this.auth.isAuthenticated) {
-      this.redirectByRole();
-    }
-  }
-
-  private redirectByRole(): void {
-    const role = this.auth.currentUser?.role;
-    switch (role) {
-      case 'STUDENT':
-        this.router.navigate(['/student']);
-        break;
-      case 'TEACHER':
-        this.router.navigate(['/teacher']);
-        break;
-      case 'ADMIN':
-        this.router.navigate(['/admin']);
-        break;
-      case 'SUPER_ADMIN':
-        this.router.navigate(['/superadmin']);
-        break;
+      this.auth.navigateByRole();
     }
   }
 }

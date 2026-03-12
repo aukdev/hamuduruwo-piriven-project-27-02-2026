@@ -18,7 +18,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       </button>
     </app-page-header>
 
-    <app-loading-overlay [show]="loading"></app-loading-overlay>
+    <app-skeleton *ngIf="loading" type="card-grid" [count]="6"></app-skeleton>
 
     <div class="papers-grid" *ngIf="!loading">
       <mat-card
@@ -102,8 +102,12 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         width: 40px;
         height: 40px;
         border-radius: 10px;
-        background: linear-gradient(135deg, #0b3d91, #315aa7);
-        color: #f4b400;
+        background: linear-gradient(
+          135deg,
+          var(--color-primary),
+          var(--color-primary-light)
+        );
+        color: var(--color-accent);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -111,13 +115,13 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         font-size: 18px;
       }
       .ready {
-        background: #2e7d32 !important;
+        background: var(--color-success) !important;
         color: #fff !important;
       }
       .paper-card__title {
         font-size: 16px;
         font-weight: 700;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
         margin-bottom: 12px;
       }
       .paper-card__meta {
@@ -130,7 +134,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
           align-items: center;
           gap: 4px;
           font-size: 12px;
-          color: #555770;
+          color: var(--color-text-secondary);
 
           mat-icon {
             font-size: 16px;
@@ -142,7 +146,7 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
       .paper-card__assigned {
         span {
           font-size: 12px;
-          color: #555770;
+          color: var(--color-text-secondary);
           display: block;
           margin-bottom: 6px;
         }

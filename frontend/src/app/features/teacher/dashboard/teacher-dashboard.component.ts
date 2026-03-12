@@ -20,35 +20,39 @@ import { QuestionDto } from '../../../core/models';
       </button>
     </app-page-header>
 
-    <div class="dashboard-grid">
-      <mat-card class="stat-card" *ngFor="let stat of stats">
-        <div class="stat-card__icon-wrap" [style.background]="stat.bg">
-          <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
-        </div>
-        <div class="stat-card__info">
-          <div class="stat-card__value">{{ stat.count }}</div>
-          <div class="stat-card__label">{{ stat.label }}</div>
-        </div>
-      </mat-card>
-    </div>
+    <app-skeleton *ngIf="loading" type="dashboard"></app-skeleton>
 
-    <div class="mt-24">
-      <h3 class="section-title">ඉක්මන් ක්‍රියා</h3>
-      <div class="quick-actions">
-        <mat-card
-          class="action-card"
-          (click)="router.navigate(['/teacher/questions/create'])"
-        >
-          <mat-icon>add_circle</mat-icon>
-          <span>නව ප්‍රශ්නයක් සාදන්න</span>
+    <div *ngIf="!loading">
+      <div class="dashboard-grid">
+        <mat-card class="stat-card" *ngFor="let stat of stats">
+          <div class="stat-card__icon-wrap" [style.background]="stat.bg">
+            <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
+          </div>
+          <div class="stat-card__info">
+            <div class="stat-card__value">{{ stat.count }}</div>
+            <div class="stat-card__label">{{ stat.label }}</div>
+          </div>
         </mat-card>
-        <mat-card
-          class="action-card"
-          (click)="router.navigate(['/teacher/questions'])"
-        >
-          <mat-icon>list_alt</mat-icon>
-          <span>මගේ ප්‍රශ්න බලන්න</span>
-        </mat-card>
+      </div>
+
+      <div class="mt-24">
+        <h3 class="section-title">ඉක්මන් ක්‍රියා</h3>
+        <div class="quick-actions">
+          <mat-card
+            class="action-card"
+            (click)="router.navigate(['/teacher/questions/create'])"
+          >
+            <mat-icon>add_circle</mat-icon>
+            <span>නව ප්‍රශ්නයක් සාදන්න</span>
+          </mat-card>
+          <mat-card
+            class="action-card"
+            (click)="router.navigate(['/teacher/questions'])"
+          >
+            <mat-icon>list_alt</mat-icon>
+            <span>මගේ ප්‍රශ්න බලන්න</span>
+          </mat-card>
+        </div>
       </div>
     </div>
   `,
@@ -77,11 +81,11 @@ import { QuestionDto } from '../../../core/models';
       .stat-card__value {
         font-size: 28px;
         font-weight: 800;
-        color: #1a1a2e;
+        color: var(--color-text-primary);
       }
       .stat-card__label {
         font-size: 12px;
-        color: #555770;
+        color: var(--color-text-secondary);
       }
       .quick-actions {
         display: grid;
@@ -96,11 +100,11 @@ import { QuestionDto } from '../../../core/models';
         cursor: pointer;
 
         mat-icon {
-          color: #0b3d91;
+          color: var(--color-primary);
         }
         span {
           font-weight: 600;
-          color: #1a1a2e;
+          color: var(--color-text-primary);
         }
 
         &:hover {
@@ -142,6 +146,8 @@ export class TeacherDashboardComponent implements OnInit {
     },
   ];
 
+  loading = true;
+
   constructor(
     private api: ApiService,
     public auth: AuthService,
@@ -164,7 +170,9 @@ export class TeacherDashboardComponent implements OnInit {
         this.stats[3].count = questions.filter(
           (q) => q.status === 'REJECTED',
         ).length;
+        this.loading = false;
       },
+      error: () => (this.loading = false),
     });
   }
 }

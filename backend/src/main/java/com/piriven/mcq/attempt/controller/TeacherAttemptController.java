@@ -31,14 +31,17 @@ public class TeacherAttemptController {
 
     @GetMapping("/by-paper/{paperId}")
     public ResponseEntity<PagedResponse<StudentAttemptSummaryDto>> getAttemptsByPaper(
+            @CurrentUser UserPrincipal currentUser,
             @PathVariable UUID paperId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(attemptService.getStudentAttemptsByPaper(paperId, page, size));
+        return ResponseEntity.ok(attemptService.getStudentAttemptsByPaper(currentUser.getId(), paperId, page, size));
     }
 
     @GetMapping("/{attemptId}/detail")
-    public ResponseEntity<AttemptDetailDto> getAttemptDetail(@PathVariable UUID attemptId) {
-        return ResponseEntity.ok(attemptService.getAttemptDetail(attemptId));
+    public ResponseEntity<AttemptDetailDto> getAttemptDetail(
+            @CurrentUser UserPrincipal currentUser,
+            @PathVariable UUID attemptId) {
+        return ResponseEntity.ok(attemptService.getAttemptDetail(currentUser.getId(), attemptId));
     }
 }

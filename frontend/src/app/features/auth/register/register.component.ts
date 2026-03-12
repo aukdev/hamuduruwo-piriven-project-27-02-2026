@@ -301,10 +301,10 @@ export class RegisterComponent {
     }
     this.loading = true;
     this.auth.register(this.form.value).subscribe({
-      next: (res) => {
+      next: () => {
         this.loading = false;
         this.notify.success('ලියාපදිංචිය සාර්ථකයි!');
-        this.redirectByRole(res.role);
+        this.auth.navigateByRole();
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;
@@ -312,18 +312,5 @@ export class RegisterComponent {
         this.notify.error(msg);
       },
     });
-  }
-
-  private redirectByRole(role: string): void {
-    switch (role) {
-      case 'STUDENT':
-        this.router.navigate(['/student']);
-        break;
-      case 'TEACHER':
-        this.router.navigate(['/teacher']);
-        break;
-      default:
-        this.router.navigate(['/']);
-    }
   }
 }
