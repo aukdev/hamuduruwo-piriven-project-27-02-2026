@@ -111,8 +111,8 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
         font-size: 18px;
       }
       .ready {
-        background: #e8f5e9 !important;
-        color: #2e7d32 !important;
+        background: #2e7d32 !important;
+        color: #fff !important;
       }
       .paper-card__title {
         font-size: 16px;

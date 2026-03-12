@@ -13,7 +13,9 @@ import { NextQuestionResponse, QuestionOptionDto } from '../../../core/models';
       <div class="exam-top-bar">
         <div class="exam-top-bar__left">
           <span class="exam-badge"
-            >ප්‍රශ්නය {{ currentQuestion.questionNumber }}/40</span
+            >ප්‍රශ්නය {{ currentQuestion.questionNumber }}/{{
+              totalQuestions
+            }}</span
           >
         </div>
         <div class="exam-top-bar__timers">
@@ -71,12 +73,12 @@ import { NextQuestionResponse, QuestionOptionDto } from '../../../core/models';
           <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
           <span *ngIf="!submitting">
             {{
-              currentQuestion.questionNumber === 40
+              currentQuestion.questionNumber === totalQuestions
                 ? 'විභාගය ඉදිරිපත් කරන්න'
                 : 'ඊළඟ ප්‍රශ්නය'
             }}
             <mat-icon>{{
-              currentQuestion.questionNumber === 40
+              currentQuestion.questionNumber === totalQuestions
                 ? 'done_all'
                 : 'arrow_forward'
             }}</mat-icon>
@@ -87,7 +89,7 @@ import { NextQuestionResponse, QuestionOptionDto } from '../../../core/models';
       <!-- Progress -->
       <mat-progress-bar
         mode="determinate"
-        [value]="((currentQuestion.questionNumber || 0) / 40) * 100"
+        [value]="((currentQuestion.questionNumber || 0) / totalQuestions) * 100"
         class="exam-progress"
       >
       </mat-progress-bar>
@@ -222,6 +224,7 @@ export class ExamComponent implements OnInit, OnDestroy {
   examLoading = true;
   submitting = false;
   allAnswered = false;
+  totalQuestions = 40;
   optionLabels = ['A', 'B', 'C', 'D'];
 
   constructor(
@@ -261,6 +264,7 @@ export class ExamComponent implements OnInit, OnDestroy {
         }
 
         this.currentQuestion = res;
+        this.totalQuestions = res.totalQuestions || this.totalQuestions;
         this.totalRemainingSeconds = res.remainingSecondsTotal || 0;
         this.questionRemainingSeconds = res.remainingSecondsForQuestion || 30;
         this.examLoading = false;

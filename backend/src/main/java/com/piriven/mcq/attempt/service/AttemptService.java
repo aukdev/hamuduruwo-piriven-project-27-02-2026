@@ -46,17 +46,11 @@ public class AttemptService {
     private final QuestionOptionRepository questionOptionRepository;
     private final SubjectService subjectService;
 
-    @Value("${app.exam.total-duration-seconds:1200}")
-    private int totalDurationSeconds;
-
     @Value("${app.exam.per-question-seconds:30}")
     private int perQuestionSeconds;
 
     @Value("${app.exam.max-attempts-per-paper:10}")
     private int maxAttemptsPerPaper;
-
-    @Value("${app.exam.questions-per-paper:40}")
-    private int questionsPerPaper;
 
     // ==================== Start Attempt ====================
 
@@ -68,10 +62,10 @@ public class AttemptService {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
 
-        // Check paper has 40 questions
+        // Check paper has enough questions assigned
         long assignedCount = paperQuestionRepository.countByPaperId(paperId);
-        if (assignedCount < questionsPerPaper) {
-            throw new BusinessException("Paper does not have " + questionsPerPaper +
+        if (assignedCount < paper.getQuestionCount()) {
+            throw new BusinessException("Paper does not have " + paper.getQuestionCount() +
                     " questions assigned yet. Currently has " + assignedCount);
         }
 
@@ -105,7 +99,7 @@ public class AttemptService {
                 .attemptNo(attemptNo)
                 .status(AttemptStatus.IN_PROGRESS)
                 .startedAt(now)
-                .expiresAt(now.plusSeconds(totalDurationSeconds))
+                .expiresAt(now.plusSeconds(paper.getDurationSeconds()))
                 .correctCount(0)
                 .wrongCount(0)
                 .score(0)
@@ -371,7 +365,7 @@ public class AttemptService {
 
         // Unanswered questions (never served) also count as wrong
         int totalAnswered = correctCount + wrongCount;
-        int unanswered = questionsPerPaper - totalAnswered;
+        int unanswered = attempt.getPaper().getQuestionCount() - totalAnswered;
         wrongCount += unanswered;
 
         attempt.setCorrectCount(correctCount);
@@ -384,12 +378,13 @@ public class AttemptService {
         int correctCount = attempt.getCorrectCount();
         int wrongCount = attempt.getWrongCount();
         int score = attempt.getScore();
-        int unanswered = questionsPerPaper - correctCount - wrongCount;
+        int totalQuestions = attempt.getPaper().getQuestionCount();
+        int unanswered = totalQuestions - correctCount - wrongCount;
         if (unanswered < 0)
             unanswered = 0;
 
         // Generate Sinhala score message
-        String scoreMessage = generateScoreMessage(score);
+        String scoreMessage = generateScoreMessage(score, totalQuestions);
 
         // Compare with previous best
         UUID paperId = attempt.getPaper().getId();
@@ -417,11 +412,11 @@ public class AttemptService {
             if (score > prevBestScore) {
                 isNewBest = true;
                 comparisonMessage = "සුබ පැතුම්! ඔබේ පෙර හොඳම ලකුණු වාර්තාව (" +
-                        prevBestScore + "/40) ඉක්මවා ඇත! නව හොඳම ලකුණු: " +
-                        score + "/40 🎉";
+                        prevBestScore + "/" + totalQuestions + ") ඉක්මවා ඇත! නව හොඳම ලකුණු: " +
+                        score + "/" + totalQuestions + " 🎉";
             } else {
                 comparisonMessage = "ඔබට තවත් වැඩි දියුණු විය හැකිය. ඔබේ හොඳම ලකුණු: " +
-                        prevBestScore + "/40. නැවත උත්සාහ කරන්න! 💪";
+                        prevBestScore + "/" + totalQuestions + ". නැවත උත්සාහ කරන්න! 💪";
             }
         }
 
@@ -435,7 +430,7 @@ public class AttemptService {
                 wrongCount,
                 unanswered,
                 score,
-                questionsPerPaper,
+                totalQuestions,
                 attempt.getStartedAt(),
                 attempt.getSubmittedAt(),
                 scoreMessage,
@@ -444,13 +439,15 @@ public class AttemptService {
                 comparisonMessage);
     }
 
-    private String generateScoreMessage(int score) {
-        if (score > 35) {
+    private String generateScoreMessage(int score, int totalQuestions) {
+        int threshold90 = (int) (totalQuestions * 0.9);
+        int threshold75 = (int) (totalQuestions * 0.75);
+        if (score > threshold90) {
             return "ඉතා විශිෂ්ටයි! ඔබ ඉතා දක්ෂ ශිෂ්‍යයෙකි. " +
                     "මෙම විශිෂ්ට ප්‍රතිඵලය ගැන අපි ඔබට සුබ පතමු! " +
                     "ඔබේ කැපවීම හා උත්සාහය ඉතා ප්‍රශංසනීයයි. " +
                     "මෙලෙස දිගටම ඉදිරියට යන්න! 🌟";
-        } else if (score >= 30) {
+        } else if (score >= threshold75) {
             return "හොඳයි! ඔබ හොඳ ප්‍රතිඵලයක් ලබා ඇත. " +
                     "තව උනන්දු වී පාඩම් කළ යුතුයි. " +
                     "ඔබට තවත් ඉහළ ප්‍රතිඵල ලබා ගත හැකිය! 📚";
@@ -477,6 +474,7 @@ public class AttemptService {
                 false,
                 false,
                 answer.getPaperQuestion().getPosition(),
+                attempt.getPaper().getQuestionCount(),
                 question.getId(),
                 question.getQuestionText(),
                 optionDtos,
@@ -584,7 +582,8 @@ public class AttemptService {
                     aa != null ? aa.getAnsweredAt() : null));
         }
 
-        int unanswered = questionsPerPaper - attempt.getCorrectCount() - attempt.getWrongCount();
+        int totalQuestions = paper.getQuestionCount();
+        int unanswered = totalQuestions - attempt.getCorrectCount() - attempt.getWrongCount();
         if (unanswered < 0)
             unanswered = 0;
 
@@ -601,7 +600,7 @@ public class AttemptService {
                 attempt.getWrongCount(),
                 unanswered,
                 attempt.getScore(),
-                questionsPerPaper,
+                totalQuestions,
                 attempt.getStartedAt(),
                 attempt.getSubmittedAt(),
                 answerDetails);
@@ -622,7 +621,7 @@ public class AttemptService {
                         a.getCorrectCount(),
                         a.getWrongCount(),
                         a.getScore(),
-                        questionsPerPaper,
+                        a.getPaper().getQuestionCount(),
                         a.getStartedAt(),
                         a.getSubmittedAt()))
                 .toList();

@@ -173,6 +173,7 @@ export interface NextQuestionResponse {
   attemptExpired: boolean;
   allQuestionsAnswered: boolean;
   questionNumber?: number;
+  totalQuestions?: number;
   questionId?: string;
   questionText?: string;
   options?: QuestionOptionDto[];
