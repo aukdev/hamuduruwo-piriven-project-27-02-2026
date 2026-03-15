@@ -1,15 +1,27 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ShellComponent } from './layout/shell/shell.component';
+import { PublicShellComponent } from './layout/public-shell/public-shell.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
 
 const routes: Routes = [
-  /* ── Auth (no shell) ── */
+  /* ── Public pages (with public header + footer) ── */
   {
     path: '',
-    loadChildren: () =>
-      import('./features/auth/auth.module').then((m) => m.AuthModule),
+    component: PublicShellComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./features/auth/auth.module').then((m) => m.AuthModule),
+      },
+      {
+        path: '',
+        loadChildren: () =>
+          import('./features/public/public.module').then((m) => m.PublicModule),
+      },
+    ],
   },
 
   /* ── Student ── */

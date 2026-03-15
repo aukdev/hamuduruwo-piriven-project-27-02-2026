@@ -248,7 +248,7 @@ export class SuperadminSubjectsComponent implements OnInit {
   }
 
   loadTeachers(): void {
-    this.api.superGetUsers(0, 200).subscribe({
+    this.api.getUsers(0, 200).subscribe({
       next: (res) => {
         this.teachers = res.content.filter(
           (u) => u.role === 'TEACHER' && u.status === 'ACTIVE',

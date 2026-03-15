@@ -28,6 +28,7 @@ import {
   CreateUserRequest,
   StudentAttemptSummaryDto,
   AttemptDetailDto,
+  PublicStats,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -35,6 +36,11 @@ const BASE = environment.apiBaseUrl;
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   constructor(private http: HttpClient) {}
+
+  /* ── Public ── */
+  getPublicStats(): Observable<PublicStats> {
+    return this.http.get<PublicStats>(`${BASE}/api/public/stats`);
+  }
 
   /* ── Subjects ── */
   getSubjects(): Observable<SubjectDto[]> {

@@ -300,6 +300,14 @@ export interface OptionDetail {
   isSelected: boolean;
 }
 
+/* ── Public Stats ── */
+export interface PublicStats {
+  studentCount: number;
+  teacherCount: number;
+  paperCount: number;
+  subjectCount: number;
+}
+
 /* ── User Management ── */
 export interface UserUpdateRequest {
   fullName: string;
