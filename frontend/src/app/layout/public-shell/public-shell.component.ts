@@ -1,26 +1,13 @@
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { PublicHeaderComponent } from '../public-header/public-header.component';
+import { PublicFooterComponent } from '../public-footer/public-footer.component';
 
 @Component({
   selector: 'app-public-shell',
-  template: `
-    <app-public-header></app-public-header>
-    <main class="public-content">
-      <router-outlet></router-outlet>
-    </main>
-    <app-public-footer></app-public-footer>
-  `,
-  styles: [
-    `
-      .public-content {
-        min-height: 100vh;
-        padding-top: 68px;
-      }
-      @media (max-width: 768px) {
-        .public-content {
-          padding-top: 60px;
-        }
-      }
-    `,
-  ],
+  standalone: true,
+  imports: [RouterOutlet, PublicHeaderComponent, PublicFooterComponent],
+  templateUrl: './public-shell.component.html',
+  styleUrls: ['./public-shell.component.scss'],
 })
 export class PublicShellComponent {}

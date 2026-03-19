@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { QuestionDto } from '../../../core/models';
@@ -7,168 +11,15 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 
 @Component({
   selector: 'app-pending-approvals',
-  template: `
-    <app-page-header
-      title="ප්‍රශ්න අනුමැතිය"
-      subtitle="සමාලෝචනය බලාපොරොත්තුවෙන් සිටින ප්‍රශ්න"
-    >
-    </app-page-header>
-
-    <app-skeleton
-      *ngIf="loading"
-      type="question-list"
-      [count]="4"
-    ></app-skeleton>
-
-    <div class="questions-list" *ngIf="!loading">
-      <mat-card class="question-card" *ngFor="let q of questions">
-        <div class="question-card__header">
-          <span class="status-badge status-PENDING_REVIEW">සමාලෝචනයට</span>
-          <span class="chip">{{ q.subjectName }}</span>
-          <span class="chip year">{{ q.year }}</span>
-          <span class="chip author">{{ q.createdByEmail }}</span>
-        </div>
-
-        <p class="question-text">{{ q.questionText }}</p>
-
-        <div class="options-list">
-          <div
-            class="option"
-            *ngFor="let opt of q.options; let i = index"
-            [class.correct]="opt.isCorrect"
-          >
-            <span class="option-letter">{{ ['A', 'B', 'C', 'D'][i] }}</span>
-            <span>{{ opt.optionText }}</span>
-            <mat-icon class="correct-mark" *ngIf="opt.isCorrect"
-              >check_circle</mat-icon
-            >
-          </div>
-        </div>
-
-        <div class="question-card__actions">
-          <button mat-flat-button color="primary" (click)="approve(q)">
-            <mat-icon>check</mat-icon> අනුමත කරන්න
-          </button>
-          <button mat-stroked-button color="warn" (click)="reject(q)">
-            <mat-icon>close</mat-icon> ප්‍රතික්ෂේප කරන්න
-          </button>
-        </div>
-      </mat-card>
-    </div>
-
-    <app-empty-state
-      *ngIf="!loading && questions.length === 0"
-      icon="check_circle"
-      title="සමාලෝචනයට ප්‍රශ්න නොමැත"
-      message="සියලුම ප්‍රශ්න සමාලෝචනය කර ඇත."
-    >
-    </app-empty-state>
-
-    <!-- Pagination -->
-    <mat-paginator
-      *ngIf="totalElements > pageSize"
-      [length]="totalElements"
-      [pageSize]="pageSize"
-      [pageIndex]="currentPage"
-      (page)="onPageChange($event)"
-      [hidePageSize]="true"
-    >
-    </mat-paginator>
-  `,
-  styles: [
-    `
-      .questions-list {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-      .question-card {
-        padding: 24px !important;
-      }
-      .question-card__header {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 12px;
-      }
-      .chip {
-        font-size: 12px;
-        font-weight: 600;
-        padding: 2px 8px;
-        background: rgba(11, 61, 145, 0.08);
-        border-radius: 4px;
-        color: var(--color-primary);
-      }
-      .chip.author {
-        background: rgba(0, 0, 0, 0.05);
-        color: #666;
-      }
-      .chip.year {
-        background: rgba(46, 125, 50, 0.08);
-        color: var(--color-success);
-      }
-      .question-text {
-        font-size: 15px;
-        line-height: 1.7;
-        color: var(--color-text-primary);
-        margin-bottom: 16px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid #f0f0f5;
-      }
-      .options-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 20px;
-      }
-      .option {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 14px;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        font-size: 14px;
-        color: #333;
-
-        &.correct {
-          border-color: var(--color-success);
-          background: rgba(46, 125, 50, 0.04);
-        }
-      }
-      .option-letter {
-        width: 28px;
-        height: 28px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        font-weight: 700;
-        font-size: 12px;
-        background: #e8eaf6;
-        color: var(--color-primary);
-
-        .correct & {
-          background: #e8f5e9;
-          color: var(--color-success);
-        }
-      }
-      .correct-mark {
-        color: var(--color-success);
-        font-size: 18px;
-        width: 18px;
-        height: 18px;
-        margin-left: auto;
-      }
-      .question-card__actions {
-        display: flex;
-        gap: 12px;
-        padding-top: 12px;
-        border-top: 1px solid #f0f0f5;
-      }
-    `,
+  standalone: true,
+  imports: [
+    ...SHARED_IMPORTS,
+    SkeletonComponent,
+    PageHeaderComponent,
+    EmptyStateComponent,
   ],
+  templateUrl: './pending-approvals.component.html',
+  styleUrls: ['./pending-approvals.component.scss'],
 })
 export class PendingApprovalsComponent implements OnInit {
   questions: QuestionDto[] = [];

@@ -7,183 +7,19 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { SubjectDto, QuestionDto, PaperDto } from '../../../core/models';
 
 @Component({
   selector: 'app-question-create',
-  template: `
-    <app-page-header
-      [title]="isEdit ? 'ප්‍රශ්නය සංස්කරණය' : 'නව ප්‍රශ්නයක් සාදන්න'"
-      subtitle="ප්‍රශ්න හතරක් විකල්ප සමඟ ඇතුළත් කරන්න"
-    >
-      <button mat-stroked-button routerLink="/teacher/questions">
-        <mat-icon>arrow_back</mat-icon> ආපසු
-      </button>
-    </app-page-header>
-
-    <mat-card class="form-card">
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <!-- Subject -->
-        <mat-form-field appearance="outline" *ngIf="!isEdit">
-          <mat-label>විෂය තෝරන්න</mat-label>
-          <mat-select
-            formControlName="subjectId"
-            (selectionChange)="onSubjectChange($event.value)"
-          >
-            <mat-option *ngFor="let s of subjects" [value]="s.id">{{
-              s.name
-            }}</mat-option>
-          </mat-select>
-          <mat-error>විෂයක් තෝරන්න</mat-error>
-        </mat-form-field>
-
-        <!-- Paper -->
-        <mat-form-field appearance="outline" *ngIf="!isEdit">
-          <mat-label>ප්‍රශ්න පත්‍රය තෝරන්න</mat-label>
-          <mat-select formControlName="paperId">
-            <mat-option *ngFor="let p of papers" [value]="p.id">
-              {{ p.year }} - {{ p.subjectName }} ({{ p.assignedQuestions }}/{{
-                p.questionCount
-              }})
-            </mat-option>
-          </mat-select>
-          <mat-hint *ngIf="loadingPapers"
-            >ප්‍රශ්න පත්‍ර පූරණය වෙමින්...</mat-hint
-          >
-          <mat-error>ප්‍රශ්න පත්‍රයක් තෝරන්න</mat-error>
-        </mat-form-field>
-
-        <!-- Question Text -->
-        <mat-form-field appearance="outline">
-          <mat-label>ප්‍රශ්නය</mat-label>
-          <textarea
-            matInput
-            formControlName="questionText"
-            rows="4"
-            placeholder="ප්‍රශ්නය ඇතුළත් කරන්න..."
-          ></textarea>
-          <mat-error>ප්‍රශ්නය අවශ්‍යයි</mat-error>
-        </mat-form-field>
-
-        <!-- Options -->
-        <div class="options-section">
-          <h3 class="section-title">විකල්ප (හරියටම එකක් නිවැරදි විය යුතුය)</h3>
-
-          <div formArrayName="options">
-            <div
-              *ngFor="let opt of optionsArray.controls; let i = index"
-              [formGroupName]="i"
-              class="option-form-row"
-              [class.correct-option]="opt.get('isCorrect')?.value"
-            >
-              <div class="option-form-row__label">{{ optLabels[i] }}</div>
-
-              <mat-form-field appearance="outline" class="option-input">
-                <mat-label>විකල්ප {{ optLabels[i] }}</mat-label>
-                <input
-                  matInput
-                  formControlName="optionText"
-                  [placeholder]="'විකල්ප ' + optLabels[i] + ' ඇතුළත් කරන්න'"
-                />
-                <mat-error>විකල්පය අවශ්‍යයි</mat-error>
-              </mat-form-field>
-
-              <mat-checkbox
-                formControlName="isCorrect"
-                color="primary"
-                (change)="onCorrectChange(i)"
-              >
-                නිවැරදි
-              </mat-checkbox>
-            </div>
-          </div>
-
-          <mat-error
-            *ngIf="form.hasError('exactlyOneCorrect') && form.touched"
-            style="font-size:12px; margin-top: 8px;"
-          >
-            හරියටම එක් නිවැරදි විකල්පයක් තෝරන්න
-          </mat-error>
-        </div>
-
-        <!-- Actions -->
-        <div class="form-actions mt-24">
-          <button
-            mat-flat-button
-            color="primary"
-            type="submit"
-            [disabled]="saving"
-          >
-            <mat-spinner *ngIf="saving" diameter="20"></mat-spinner>
-            <span *ngIf="!saving">{{
-              isEdit ? 'යාවත්කාලීන කරන්න' : 'සුරකින්න (කෙටුම්පත)'
-            }}</span>
-          </button>
-        </div>
-      </form>
-    </mat-card>
-  `,
-  styles: [
-    `
-      .form-card {
-        padding: 32px !important;
-        max-width: 800px;
-      }
-      .options-section {
-        margin-top: 16px;
-      }
-      .option-form-row {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 12px;
-        padding: 12px 16px;
-        border: 1px solid #e0e3eb;
-        border-radius: 12px;
-        transition: all 0.2s;
-
-        &.correct-option {
-          background: rgba(46, 125, 50, 0.04);
-          border-color: #2e7d32;
-        }
-      }
-      .option-form-row__label {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: #f6f7fb;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        font-size: 15px;
-        color: #0b3d91;
-        flex-shrink: 0;
-      }
-      .correct-option .option-form-row__label {
-        background: #2e7d32;
-        color: #fff;
-      }
-      .option-input {
-        flex: 1;
-        margin-bottom: 0 !important;
-      }
-      .form-actions {
-        display: flex;
-        gap: 12px;
-      }
-      @media (max-width: 600px) {
-        .option-form-row {
-          flex-wrap: wrap;
-        }
-        .option-input {
-          width: 100%;
-        }
-      }
-    `,
-  ],
+  standalone: true,
+  imports: [...SHARED_IMPORTS, PageHeaderComponent, LoadingOverlayComponent],
+  templateUrl: './question-create.component.html',
+  styleUrls: ['./question-create.component.scss'],
 })
 export class QuestionCreateComponent implements OnInit {
   form!: FormGroup;

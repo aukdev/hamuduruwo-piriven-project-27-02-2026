@@ -1,0 +1,17 @@
+import { Routes } from '@angular/router';
+import { SuperadminDashboardComponent } from './dashboard/superadmin-dashboard.component';
+import { SuperadminApprovalsComponent } from './approvals/superadmin-approvals.component';
+import { SuperadminUsersComponent } from './users/superadmin-users.component';
+import { SuperadminPapersComponent } from './papers/superadmin-papers.component';
+import { SuperadminSubjectsComponent } from './subjects/superadmin-subjects.component';
+import { StudentAnswersComponent } from '../../shared/components/student-answers/student-answers.component';
+
+export const SUPERADMIN_ROUTES: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: SuperadminDashboardComponent },
+  { path: 'approvals', component: SuperadminApprovalsComponent },
+  { path: 'users', component: SuperadminUsersComponent },
+  { path: 'papers', component: SuperadminPapersComponent },
+  { path: 'subjects', component: SuperadminSubjectsComponent },
+  { path: 'student-answers', component: StudentAnswersComponent },
+];

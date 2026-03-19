@@ -1,0 +1,237 @@
+<app-page-header
+  title="ශිෂ්‍ය පිළිතුරු බැලීම"
+  subtitle="සිසුන් දීපු පිළිතුරු හා ප්‍රතිඵල විස්තරාත්මකව බලන්න"
+>
+</app-page-header>
+
+<app-loading-overlay [show]="loading"></app-loading-overlay>
+
+<!-- Filter Section -->
+<mat-card class="filter-card" *ngIf="!selectedAttempt">
+  <div class="filter-row">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>වර්ෂය අනුව පෙරන්න</mat-label>
+      <mat-select
+        [(value)]="selectedYear"
+        (selectionChange)="onYearChange()"
+      >
+        <mat-option [value]="null">සියල්ල</mat-option>
+        <mat-option *ngFor="let y of years" [value]="y">{{ y }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="filter-field"
+      *ngIf="selectedYear && papers.length > 0"
+    >
+      <mat-label>පත්‍රය අනුව පෙරන්න</mat-label>
+      <mat-select
+        [(value)]="selectedPaperId"
+        (selectionChange)="onPaperChange()"
+      >
+        <mat-option [value]="null">සියල්ල</mat-option>
+        <mat-option *ngFor="let p of papers" [value]="p.id">
+          {{ p.subjectName }} ({{ p.year }})
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="clearFilters()"
+      *ngIf="selectedYear || selectedPaperId"
+    >
+      <mat-icon>clear</mat-icon> පෙරහන ඉවත් කරන්න
+    </button>
+  </div>
+</mat-card>
+
+<!-- Back button when viewing detail -->
+<div class="back-bar" *ngIf="selectedAttempt">
+  <button mat-stroked-button (click)="closeDetail()">
+    <mat-icon>arrow_back</mat-icon> ආපසු යන්න
+  </button>
+</div>
+
+<!-- Attempts List -->
+<div class="attempts-list" *ngIf="!loading && !selectedAttempt">
+  <mat-card
+    class="attempt-card"
+    *ngFor="let a of attempts"
+    (click)="viewDetail(a.attemptId)"
+  >
+    <div class="attempt-card__main">
+      <div class="attempt-avatar">{{ getInitials(a.studentName) }}</div>
+      <div class="attempt-info">
+        <h4>{{ a.studentName }}</h4>
+        <span class="attempt-email">{{ a.studentEmail }}</span>
+        <div class="attempt-meta">
+          <span class="meta-chip subject">{{ a.subjectName }}</span>
+          <span class="meta-chip year">{{ a.year }}</span>
+          <span class="meta-chip attempt-no"
+            >{{ a.attemptNo }} වන උත්සාහය</span
+          >
+        </div>
+      </div>
+      <div class="attempt-score">
+        <div
+          class="score-circle"
+          [class.good]="a.score >= 30"
+          [class.great]="a.score >= 35"
+          [class.low]="a.score < 20"
+        >
+          {{ a.score }}/{{ a.totalQuestions }}
+        </div>
+        <span class="score-label">ලකුණු</span>
+      </div>
+      <div class="attempt-stats">
+        <div class="stat correct">
+          <mat-icon>check_circle</mat-icon> {{ a.correctCount }}
+        </div>
+        <div class="stat wrong">
+          <mat-icon>cancel</mat-icon> {{ a.wrongCount }}
+        </div>
+      </div>
+      <div class="attempt-date">
+        {{ a.submittedAt | date: 'yyyy-MM-dd HH:mm' }}
+      </div>
+      <mat-icon class="view-icon">chevron_right</mat-icon>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && !selectedAttempt && attempts.length === 0"
+  icon="quiz"
+  title="පිළිතුරු නොමැත"
+  message="තවම කිසිදු ශිෂ්‍යයෙකු විභාගයක් සම්පූර්ණ කර නැත."
+>
+</app-empty-state>
+
+<!-- Paginator -->
+<mat-paginator
+  *ngIf="!selectedAttempt && attempts.length > 0"
+  [length]="totalElements"
+  [pageSize]="pageSize"
+  [pageIndex]="currentPage"
+  (page)="onPageChange($event)"
+  [hidePageSize]="true"
+>
+</mat-paginator>
+
+<!-- Attempt Detail View -->
+<div class="detail-view" *ngIf="selectedAttempt">
+  <mat-card class="detail-header-card">
+    <div class="detail-header">
+      <div class="detail-student">
+        <div class="detail-avatar">
+          {{ getInitials(selectedAttempt.studentName) }}
+        </div>
+        <div>
+          <h3>{{ selectedAttempt.studentName }}</h3>
+          <span class="detail-email">{{
+            selectedAttempt.studentEmail
+          }}</span>
+        </div>
+      </div>
+      <div class="detail-paper">
+        <span class="detail-subject">{{
+          selectedAttempt.subjectName
+        }}</span>
+        <span class="detail-year">{{ selectedAttempt.year }}</span>
+        <span class="detail-attempt"
+          >{{ selectedAttempt.attemptNo }} වන උත්සාහය</span
+        >
+      </div>
+      <div class="detail-scores">
+        <div
+          class="score-big"
+          [class.good]="selectedAttempt.score >= 30"
+          [class.great]="selectedAttempt.score >= 35"
+          [class.low]="selectedAttempt.score < 20"
+        >
+          {{ selectedAttempt.score }}/{{ selectedAttempt.totalQuestions }}
+        </div>
+        <div class="score-breakdown">
+          <span class="correct-label"
+            ><mat-icon>check_circle</mat-icon> නිවැරදි:
+            {{ selectedAttempt.correctCount }}</span
+          >
+          <span class="wrong-label"
+            ><mat-icon>cancel</mat-icon> වැරදි:
+            {{ selectedAttempt.wrongCount }}</span
+          >
+          <span
+            class="unanswered-label"
+            *ngIf="selectedAttempt.unansweredCount > 0"
+            ><mat-icon>help_outline</mat-icon> පිළිතුරු නොදුන්:
+            {{ selectedAttempt.unansweredCount }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Questions & Answers -->
+  <div class="questions-list">
+    <mat-card
+      class="question-card"
+      *ngFor="let ans of selectedAttempt.answers; let i = index"
+      [class.correct]="ans.isCorrect"
+      [class.wrong]="!ans.isCorrect && !ans.isUnanswered"
+      [class.unanswered]="ans.isUnanswered"
+      [class.timeout]="ans.isTimeout"
+    >
+      <div class="question-header">
+        <span class="question-number"
+          >ප්‍රශ්නය {{ ans.questionNumber }}</span
+        >
+        <span class="question-status" *ngIf="ans.isCorrect">
+          <mat-icon>check_circle</mat-icon> නිවැරදි
+        </span>
+        <span
+          class="question-status wrong"
+          *ngIf="!ans.isCorrect && !ans.isUnanswered && !ans.isTimeout"
+        >
+          <mat-icon>cancel</mat-icon> වැරදි
+        </span>
+        <span class="question-status timeout" *ngIf="ans.isTimeout">
+          <mat-icon>timer_off</mat-icon> කාලය ඉකුත් විය
+        </span>
+        <span class="question-status unanswered" *ngIf="ans.isUnanswered">
+          <mat-icon>help_outline</mat-icon> පිළිතුරු නොදුන්
+        </span>
+        <span class="time-taken" *ngIf="ans.timeTakenSeconds != null">
+          {{ ans.timeTakenSeconds }}s
+        </span>
+      </div>
+
+      <p class="question-text">{{ ans.questionText }}</p>
+
+      <div class="options-list">
+        <div
+          class="option-item"
+          *ngFor="let opt of ans.options"
+          [class.correct-option]="opt.isCorrect"
+          [class.selected-option]="opt.isSelected"
+          [class.wrong-selected]="opt.isSelected && !opt.isCorrect"
+        >
+          <span class="option-letter">{{
+            getOptionLetter(opt.optionOrder)
+          }}</span>
+          <span class="option-text">{{ opt.optionText }}</span>
+          <mat-icon class="option-icon" *ngIf="opt.isCorrect"
+            >check_circle</mat-icon
+          >
+          <mat-icon
+            class="option-icon wrong-icon"
+            *ngIf="opt.isSelected && !opt.isCorrect"
+            >cancel</mat-icon
+          >
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

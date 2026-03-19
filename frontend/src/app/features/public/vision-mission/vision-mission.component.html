@@ -1,0 +1,57 @@
+<div class="page">
+  <section class="page-hero">
+    <h1>දැක්ම හා මෙහෙවර / Vision & Mission</h1>
+    <p>අපගේ අරමුණු හා ප්‍රතිඥාව</p>
+  </section>
+
+  <div class="page-body">
+    <!-- Vision -->
+    <section class="vm-card vm-card--vision">
+      <div class="vm-card__icon">
+        <mat-icon>visibility</mat-icon>
+      </div>
+      <h2>දැක්ම / Vision</h2>
+      <blockquote>
+        ශ්‍රී ලංකාවේ පිරිවෙන් අධ්‍යාපනය ඩිජිටල් තාක්ෂණය මගින් ශක්තිමත් කර, සෑම
+        සිසුවෙකුටම ගුණාත්මක විභාග පුහුණුවක් ලබා දීම.
+      </blockquote>
+      <p class="text-en">
+        To strengthen Pirivena education in Sri Lanka through digital
+        technology, providing quality examination practice to every student.
+      </p>
+    </section>
+
+    <!-- Mission -->
+    <section class="vm-card vm-card--mission">
+      <div class="vm-card__icon">
+        <mat-icon>flag</mat-icon>
+      </div>
+      <h2>මෙහෙවර / Mission</h2>
+      <blockquote>
+        නුතන තාක්ෂණය හා සම්භාව්‍ය පිරිවෙන් අධ්‍යාපනය සම්බන්ධ කරමින්, සිසුන්ට,
+        ගුරුවරුන්ට හා පරිපාලකයින්ට ඉතා පහසු, විශ්වසනීය හා ඵලදායී MCQ පුහුණු
+        පද්ධතියක් ලබා දීම.
+      </blockquote>
+      <p class="text-en">
+        To provide an easy, reliable, and effective MCQ practice system for
+        students, teachers, and administrators by combining modern technology
+        with classical Pirivena education.
+      </p>
+    </section>
+
+    <!-- Core Values -->
+    <section class="values">
+      <h2 class="values__title">මූලික වටිනාකම් / Core Values</h2>
+      <div class="values__grid">
+        <div class="value-card" *ngFor="let v of values">
+          <div class="value-card__icon" [style.background]="v.bg">
+            <mat-icon [style.color]="v.color">{{ v.icon }}</mat-icon>
+          </div>
+          <h3>{{ v.title }}</h3>
+          <p class="value-card__title-en">{{ v.titleEn }}</p>
+          <p>{{ v.desc }}</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

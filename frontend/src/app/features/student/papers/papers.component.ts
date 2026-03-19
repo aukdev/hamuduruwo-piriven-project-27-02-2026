@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { PaperDto } from '../../../core/models';
@@ -8,151 +12,15 @@ import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialo
 
 @Component({
   selector: 'app-papers',
-  template: `
-    <app-page-header
-      [title]="year + ' වර්ෂයේ ප්‍රශ්න පත්‍ර'"
-      subtitle="ප්‍රශ්න පත්‍රයක් තෝරා විභාගය අරඹන්න"
-    >
-      <button mat-stroked-button routerLink="/student/years">
-        <mat-icon>arrow_back</mat-icon> ආපසු
-      </button>
-    </app-page-header>
-
-    <app-skeleton *ngIf="loading" type="card-grid" [count]="6"></app-skeleton>
-
-    <div class="papers-grid" *ngIf="!loading">
-      <mat-card
-        class="paper-card"
-        *ngFor="let paper of papers"
-        (click)="confirmStart(paper)"
-      >
-        <div class="paper-card__header">
-          <div class="paper-card__no">
-            {{ paper.subjectName?.charAt(0) }}
-          </div>
-          <mat-chip-listbox>
-            <mat-chip
-              [class.ready]="paper.assignedQuestions >= paper.questionCount"
-              highlighted
-            >
-              {{
-                paper.assignedQuestions >= paper.questionCount
-                  ? 'සූදානම්'
-                  : 'ප්‍රශ්න අඩුයි'
-              }}
-            </mat-chip>
-          </mat-chip-listbox>
-        </div>
-        <h3 class="paper-card__title">{{ paper.subjectName }}</h3>
-        <div class="paper-card__meta">
-          <span
-            ><mat-icon>quiz</mat-icon> ප්‍රශ්න {{ paper.questionCount }}</span
-          >
-          <span
-            ><mat-icon>timer</mat-icon> මිනිත්තු
-            {{ paper.durationSeconds / 60 }}</span
-          >
-        </div>
-        <div class="paper-card__assigned">
-          <span
-            >ප්‍රශ්න සංඛ්‍යාව: {{ paper.assignedQuestions }}/{{
-              paper.questionCount
-            }}</span
-          >
-          <mat-progress-bar
-            mode="determinate"
-            [value]="(paper.assignedQuestions / paper.questionCount) * 100"
-          >
-          </mat-progress-bar>
-        </div>
-      </mat-card>
-    </div>
-
-    <app-empty-state
-      *ngIf="!loading && papers.length === 0"
-      icon="description"
-      title="ප්‍රශ්න පත්‍ර නොමැත"
-      message="මෙම වර්ෂයට ප්‍රශ්න පත්‍ර තවම එකතු කර නැත."
-    >
-    </app-empty-state>
-  `,
-  styles: [
-    `
-      .papers-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 16px;
-      }
-      .paper-card {
-        padding: 24px !important;
-        cursor: pointer;
-        transition: all 0.2s;
-
-        &:hover {
-          transform: translateY(-3px);
-        }
-      }
-      .paper-card__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 12px;
-      }
-      .paper-card__no {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        background: linear-gradient(
-          135deg,
-          var(--color-primary),
-          var(--color-primary-light)
-        );
-        color: var(--color-accent);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 800;
-        font-size: 18px;
-      }
-      .ready {
-        background: var(--color-success) !important;
-        color: #fff !important;
-      }
-      .paper-card__title {
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--color-text-primary);
-        margin-bottom: 12px;
-      }
-      .paper-card__meta {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 16px;
-
-        span {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          font-size: 12px;
-          color: var(--color-text-secondary);
-
-          mat-icon {
-            font-size: 16px;
-            width: 16px;
-            height: 16px;
-          }
-        }
-      }
-      .paper-card__assigned {
-        span {
-          font-size: 12px;
-          color: var(--color-text-secondary);
-          display: block;
-          margin-bottom: 6px;
-        }
-      }
-    `,
+  standalone: true,
+  imports: [
+    ...SHARED_IMPORTS,
+    SkeletonComponent,
+    PageHeaderComponent,
+    EmptyStateComponent,
   ],
+  templateUrl: './papers.component.html',
+  styleUrls: ['./papers.component.scss'],
 })
 export class PapersComponent implements OnInit {
   year = 0;

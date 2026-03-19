@@ -1,0 +1,132 @@
+<app-page-header
+  title="පරිශීලක කළමනාකරණය"
+  subtitle="සියලු පරිශීලකයින් බැලීම, සංස්කරණය, මුරපද යළි පිහිටුවීම"
+>
+</app-page-header>
+
+<div class="actions-bar">
+  <button mat-raised-button color="primary" (click)="createUser()">
+    <mat-icon>person_add</mat-icon> නව පරිශීලකයෙකු එක් කරන්න
+  </button>
+</div>
+
+<app-loading-overlay [show]="loading"></app-loading-overlay>
+
+<!-- Filter tabs -->
+<mat-tab-group
+  (selectedTabChange)="filterByTab($event.index)"
+  class="mb-16"
+>
+  <mat-tab label="සියල්ලම ({{ totalElements }})"></mat-tab>
+  <mat-tab label="ගුරුවරුන්"></mat-tab>
+  <mat-tab label="ශිෂ්‍යයින්"></mat-tab>
+  <mat-tab label="පරිපාලකයින්"></mat-tab>
+</mat-tab-group>
+
+<div class="users-list" *ngIf="!loading">
+  <mat-card class="user-card" *ngFor="let u of filteredUsers">
+    <div class="user-main">
+      <div class="user-avatar">{{ getInitials(u.fullName) }}</div>
+      <div class="user-info">
+        <h4>{{ u.fullName }}</h4>
+        <span class="user-email">{{ u.email }}</span>
+        <div class="user-meta">
+          <span class="role-badge role-{{ u.role }}">{{
+            getRoleLabel(u.role)
+          }}</span>
+          <span
+            class="status-chip"
+            [class.active]="u.status === 'ACTIVE'"
+            [class.deactivated]="u.status === 'DEACTIVATED'"
+          >
+            {{ u.status === 'ACTIVE' ? 'සක්‍රිය' : 'අක්‍රිය' }}
+          </span>
+          <span
+            class="verify-badge unverified"
+            *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
+          >
+            <mat-icon>warning_amber</mat-icon> සත්‍යාපනය නැත
+          </span>
+          <span
+            class="verify-badge verified"
+            *ngIf="u.role === 'TEACHER' && u.teacherVerified"
+          >
+            <mat-icon>verified</mat-icon> සත්‍යාපිත
+          </span>
+          <span class="date-chip">{{
+            u.createdAt | date: 'yyyy-MM-dd'
+          }}</span>
+        </div>
+      </div>
+      <div class="user-actions">
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="සංස්කරණය"
+          (click)="editUser(u)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          matTooltip="මුරපදය යළි පිහිටුවීම"
+          (click)="resetPassword(u)"
+        >
+          <mat-icon>lock_reset</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="ගුරු සත්‍යාපනය"
+          (click)="verifyTeacher(u)"
+          *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
+        >
+          <mat-icon>verified_user</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          matTooltip="අක්‍රිය කරන්න"
+          (click)="deactivateUser(u)"
+          *ngIf="u.status === 'ACTIVE' && u.role !== 'SUPER_ADMIN'"
+        >
+          <mat-icon>block</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="සක්‍රිය කරන්න"
+          (click)="activateUser(u)"
+          *ngIf="u.status === 'DEACTIVATED'"
+        >
+          <mat-icon>check_circle</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          matTooltip="ස්ථිරවම මකා දැමීම"
+          (click)="deleteUser(u)"
+          *ngIf="u.role !== 'SUPER_ADMIN'"
+        >
+          <mat-icon>delete_forever</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && filteredUsers.length === 0"
+  icon="people"
+  title="පරිශීලකයින් නොමැත"
+  message="මෙම ප්‍රවර්ගයේ පරිශීලකයින් නොමැත."
+></app-empty-state>
+
+<mat-paginator
+  [length]="totalElements"
+  [pageSize]="pageSize"
+  [pageIndex]="currentPage"
+  (page)="onPageChange($event)"
+  [hidePageSize]="true"
+>
+</mat-paginator>

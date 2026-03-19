@@ -1,0 +1,9 @@
+<div
+  class="timer"
+  [class.warning]="remainingSeconds <= warningThreshold"
+  [class.danger]="remainingSeconds <= dangerThreshold"
+>
+  <mat-icon class="timer__icon">timer</mat-icon>
+  <span class="timer__value">{{ displayTime }}</span>
+  <span class="timer__label" *ngIf="label">{{ label }}</span>
+</div>

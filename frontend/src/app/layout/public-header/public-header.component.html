@@ -1,0 +1,96 @@
+<header class="ph" [class.ph--scrolled]="scrolled">
+  <div class="ph__inner">
+    <!-- Logo -->
+    <a routerLink="/" class="ph__brand">
+      <div class="ph__logo">
+        <mat-icon>school</mat-icon>
+      </div>
+      <span class="ph__brand-text">පිරිවෙන් MCQ</span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="ph__nav">
+      <a
+        routerLink="/"
+        routerLinkActive="ph__nav-link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="ph__nav-link"
+        >මුල් පිටුව</a
+      >
+      <a
+        routerLink="/about"
+        routerLinkActive="ph__nav-link--active"
+        class="ph__nav-link"
+        >අපි ගැන</a
+      >
+      <a
+        routerLink="/vision-mission"
+        routerLinkActive="ph__nav-link--active"
+        class="ph__nav-link"
+        >දැක්ම හා මෙහෙවර</a
+      >
+      <a
+        routerLink="/contact"
+        routerLinkActive="ph__nav-link--active"
+        class="ph__nav-link"
+        >සම්බන්ධ වන්න</a
+      >
+    </nav>
+
+    <!-- Auth Buttons -->
+    <div class="ph__actions">
+      <a
+        mat-stroked-button
+        routerLink="/login"
+        class="ph__btn ph__btn--login"
+      >
+        <mat-icon>login</mat-icon>
+        පිවිසීම
+      </a>
+      <a
+        mat-flat-button
+        color="primary"
+        routerLink="/register"
+        class="ph__btn ph__btn--register"
+      >
+        <mat-icon>person_add</mat-icon>
+        ලියාපදිංචිය
+      </a>
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button
+      mat-icon-button
+      class="ph__hamburger"
+      (click)="mobileMenuOpen = !mobileMenuOpen"
+    >
+      <mat-icon>{{ mobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div
+    class="ph__mobile"
+    *ngIf="mobileMenuOpen"
+    (click)="mobileMenuOpen = false"
+  >
+    <a routerLink="/" class="ph__mobile-link">මුල් පිටුව / Home</a>
+    <a routerLink="/about" class="ph__mobile-link">අපි ගැන / About</a>
+    <a routerLink="/vision-mission" class="ph__mobile-link"
+      >දැක්ම හා මෙහෙවර</a
+    >
+    <a routerLink="/contact" class="ph__mobile-link"
+      >සම්බන්ධ වන්න / Contact</a
+    >
+    <mat-divider></mat-divider>
+    <a routerLink="/login" class="ph__mobile-link ph__mobile-link--primary">
+      <mat-icon>login</mat-icon> පිවිසීම / Login
+    </a>
+    <a
+      routerLink="/register"
+      class="ph__mobile-link ph__mobile-link--accent"
+    >
+      <mat-icon>person_add</mat-icon> ලියාපදිංචිය / Register
+    </a>
+  </div>
+</header>

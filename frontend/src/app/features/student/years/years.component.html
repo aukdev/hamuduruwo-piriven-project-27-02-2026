@@ -1,0 +1,31 @@
+<app-page-header
+  title="වර්ෂය තෝරන්න"
+  subtitle="අතීත ප්‍රශ්න පත්‍ර වර්ෂ / Select Year"
+></app-page-header>
+
+<app-skeleton
+  *ngIf="loading"
+  type="card-grid"
+  [count]="8"
+  gridMinWidth="160px"
+></app-skeleton>
+
+<div class="years-grid" *ngIf="!loading">
+  <mat-card
+    class="year-card"
+    *ngFor="let year of years"
+    (click)="selectYear(year)"
+  >
+    <div class="year-card__number">{{ year }}</div>
+    <div class="year-card__label">වර්ෂය</div>
+    <mat-icon class="year-card__icon">calendar_today</mat-icon>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && years.length === 0"
+  icon="event_busy"
+  title="වර්ෂ නොමැත"
+  message="ලබා ගත හැකි ප්‍රශ්න පත්‍ර වර්ෂ නොමැත."
+>
+</app-empty-state>

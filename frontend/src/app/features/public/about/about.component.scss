@@ -1,0 +1,118 @@
+.page-hero {
+  background: linear-gradient(135deg, #0b3d91, #152e6e);
+  padding: 60px 24px 48px;
+  text-align: center;
+  h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  p {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+.page-body {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+.section {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  margin-bottom: 64px;
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+.section--reverse {
+  flex-direction: row-reverse;
+}
+.section__content {
+  flex: 1;
+  h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0b3d91;
+    margin-bottom: 4px;
+  }
+  h3 {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 16px;
+  }
+  p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #444;
+    margin-bottom: 12px;
+  }
+}
+.section__content--full {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.text-en {
+  font-size: 13px !important;
+  color: #777 !important;
+  font-style: italic;
+}
+.section__image {
+  flex: 0 0 360px;
+  img {
+    width: 100%;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    object-fit: cover;
+    height: 280px;
+  }
+}
+.audience-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+.audience-card {
+  background: #f8f9fc;
+  border-radius: 12px;
+  padding: 24px 20px;
+  border: 1px solid #e8eaf0;
+  mat-icon {
+    color: #0b3d91;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    margin-bottom: 10px;
+  }
+  h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+  }
+  p {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #555770;
+  }
+}
+@media (max-width: 768px) {
+  .page-hero h1 {
+    font-size: 28px;
+  }
+  .section {
+    flex-direction: column !important;
+    gap: 24px;
+  }
+  .section__image {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .audience-cards {
+    grid-template-columns: 1fr;
+  }
+}

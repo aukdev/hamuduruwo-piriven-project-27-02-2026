@@ -1,0 +1,55 @@
+.form-card {
+  padding: 32px !important;
+  max-width: 800px;
+}
+.options-section {
+  margin-top: 16px;
+}
+.option-form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  border: 1px solid #e0e3eb;
+  border-radius: 12px;
+  transition: all 0.2s;
+
+  &.correct-option {
+    background: rgba(46, 125, 50, 0.04);
+    border-color: #2e7d32;
+  }
+}
+.option-form-row__label {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f6f7fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  color: #0b3d91;
+  flex-shrink: 0;
+}
+.correct-option .option-form-row__label {
+  background: #2e7d32;
+  color: #fff;
+}
+.option-input {
+  flex: 1;
+  margin-bottom: 0 !important;
+}
+.form-actions {
+  display: flex;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .option-form-row {
+    flex-wrap: wrap;
+  }
+  .option-input {
+    width: 100%;
+  }
+}

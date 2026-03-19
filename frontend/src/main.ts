@@ -1,7 +1,17 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { AppModule } from './app/app.module';
+import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
+import { jwtInterceptor } from './app/core/interceptors/jwt.interceptor';
+import { errorInterceptor } from './app/core/interceptors/error.interceptor';
 
-
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([jwtInterceptor, errorInterceptor])),
+    provideAnimations(),
+  ],
+}).catch((err) => console.error(err));

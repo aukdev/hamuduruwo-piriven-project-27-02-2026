@@ -1,0 +1,117 @@
+<app-loading-overlay [show]="loading"></app-loading-overlay>
+
+<div *ngIf="question && !loading">
+  <app-page-header
+    [title]="'ප්‍රශ්න විස්තර'"
+    [subtitle]="'#' + question.id"
+  >
+    <button mat-stroked-button routerLink="/teacher/questions">
+      <mat-icon>arrow_back</mat-icon> ආපසු
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      *ngIf="question.status === 'DRAFT' || question.status === 'REJECTED'"
+      [routerLink]="['/teacher/questions/edit', question.id]"
+    >
+      <mat-icon>edit</mat-icon> සංස්කරණය
+    </button>
+  </app-page-header>
+
+  <mat-card class="detail-card">
+    <div class="detail-meta">
+      <span class="status-badge status-{{ question.status }}">{{
+        getStatusLabel(question.status)
+      }}</span>
+      <span class="meta-chip">{{ question.subjectName }}</span>
+      <span class="meta-chip meta-chip--year">{{ question.year }}</span>
+      <span class="meta-chip">{{
+        question.createdAt | date: 'yyyy-MM-dd HH:mm'
+      }}</span>
+    </div>
+
+    <!-- Paper Assignment -->
+    <div class="paper-info" *ngIf="question.paperId">
+      <mat-icon>description</mat-icon>
+      <span>ප්‍රශ්න පත්‍රයට පවරා ඇත</span>
+    </div>
+    <div
+      class="paper-assign"
+      *ngIf="
+        !question.paperId &&
+        (question.status === 'DRAFT' || question.status === 'REJECTED')
+      "
+    >
+      <mat-icon color="warn">warning</mat-icon>
+      <span>ප්‍රශ්න පත්‍රයකට පවරා නැත</span>
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="showAssignPanel = !showAssignPanel"
+      >
+        <mat-icon>link</mat-icon> පත්‍රයකට පවරන්න
+      </button>
+    </div>
+
+    <!-- Paper Assign Panel -->
+    <div class="assign-panel" *ngIf="showAssignPanel">
+      <mat-form-field appearance="outline">
+        <mat-label>විෂය තෝරන්න</mat-label>
+        <mat-select
+          [(value)]="selectedSubjectId"
+          (selectionChange)="onAssignSubjectChange($event.value)"
+        >
+          <mat-option *ngFor="let s of subjects" [value]="s.id">{{
+            s.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>ප්‍රශ්න පත්‍රය</mat-label>
+        <mat-select [(value)]="selectedPaperId">
+          <mat-option *ngFor="let p of papers" [value]="p.id">
+            {{ p.year }} - {{ p.subjectName }} ({{ p.assignedQuestions }}/{{
+              p.questionCount
+            }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        mat-flat-button
+        color="primary"
+        [disabled]="!selectedPaperId || assigning"
+        (click)="assignToPaper()"
+      >
+        <mat-icon>check</mat-icon> පවරන්න
+      </button>
+    </div>
+
+    <h3 class="question-text">{{ question.questionText }}</h3>
+
+    <div class="options-grid">
+      <div
+        class="option-item"
+        *ngFor="let opt of question.options; let i = index"
+        [class.correct]="opt.isCorrect"
+      >
+        <span class="option-letter">{{ getLetters()[i] }}</span>
+        <span class="option-text">{{ opt.optionText }}</span>
+        <mat-icon class="correct-icon" *ngIf="opt.isCorrect"
+          >check_circle</mat-icon
+        >
+      </div>
+    </div>
+
+    <!-- Rejection Reason -->
+    <div
+      class="rejection-box"
+      *ngIf="question.status === 'REJECTED' && question.rejectionReason"
+    >
+      <mat-icon>warning</mat-icon>
+      <div>
+        <strong>ප්‍රතික්ෂේප හේතුව</strong>
+        <p>{{ question.rejectionReason }}</p>
+      </div>
+    </div>
+  </mat-card>
+</div>

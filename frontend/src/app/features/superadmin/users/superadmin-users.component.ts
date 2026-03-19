@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
+import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import {
@@ -15,241 +20,16 @@ import { CreateUserDialogComponent } from '../../../shared/components/create-use
 /* ────────── Main Users Component ────────── */
 @Component({
   selector: 'app-superadmin-users',
-  template: `
-    <app-page-header
-      title="පරිශීලක කළමනාකරණය"
-      subtitle="සියලු පරිශීලකයින් බැලීම, සංස්කරණය, මුරපද යළි පිහිටුවීම"
-    >
-    </app-page-header>
-
-    <div class="actions-bar">
-      <button mat-raised-button color="primary" (click)="createUser()">
-        <mat-icon>person_add</mat-icon> නව පරිශීලකයෙකු එක් කරන්න
-      </button>
-    </div>
-
-    <app-loading-overlay [show]="loading"></app-loading-overlay>
-
-    <!-- Filter tabs -->
-    <mat-tab-group
-      (selectedTabChange)="filterByTab($event.index)"
-      class="mb-16"
-    >
-      <mat-tab label="සියල්ලම ({{ totalElements }})"></mat-tab>
-      <mat-tab label="ගුරුවරුන්"></mat-tab>
-      <mat-tab label="ශිෂ්‍යයින්"></mat-tab>
-      <mat-tab label="පරිපාලකයින්"></mat-tab>
-    </mat-tab-group>
-
-    <div class="users-list" *ngIf="!loading">
-      <mat-card class="user-card" *ngFor="let u of filteredUsers">
-        <div class="user-main">
-          <div class="user-avatar">{{ getInitials(u.fullName) }}</div>
-          <div class="user-info">
-            <h4>{{ u.fullName }}</h4>
-            <span class="user-email">{{ u.email }}</span>
-            <div class="user-meta">
-              <span class="role-badge role-{{ u.role }}">{{
-                getRoleLabel(u.role)
-              }}</span>
-              <span
-                class="status-chip"
-                [class.active]="u.status === 'ACTIVE'"
-                [class.deactivated]="u.status === 'DEACTIVATED'"
-              >
-                {{ u.status === 'ACTIVE' ? 'සක්‍රිය' : 'අක්‍රිය' }}
-              </span>
-              <span
-                class="verify-badge unverified"
-                *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
-              >
-                <mat-icon>warning_amber</mat-icon> සත්‍යාපනය නැත
-              </span>
-              <span
-                class="verify-badge verified"
-                *ngIf="u.role === 'TEACHER' && u.teacherVerified"
-              >
-                <mat-icon>verified</mat-icon> සත්‍යාපිත
-              </span>
-              <span class="date-chip">{{
-                u.createdAt | date: 'yyyy-MM-dd'
-              }}</span>
-            </div>
-          </div>
-          <div class="user-actions">
-            <button
-              mat-icon-button
-              color="primary"
-              matTooltip="සංස්කරණය"
-              (click)="editUser(u)"
-            >
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              matTooltip="මුරපදය යළි පිහිටුවීම"
-              (click)="resetPassword(u)"
-            >
-              <mat-icon>lock_reset</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="primary"
-              matTooltip="ගුරු සත්‍යාපනය"
-              (click)="verifyTeacher(u)"
-              *ngIf="u.role === 'TEACHER' && !u.teacherVerified"
-            >
-              <mat-icon>verified_user</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="warn"
-              matTooltip="අක්‍රිය කරන්න"
-              (click)="deactivateUser(u)"
-              *ngIf="u.status === 'ACTIVE' && u.role !== 'SUPER_ADMIN'"
-            >
-              <mat-icon>block</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="primary"
-              matTooltip="සක්‍රිය කරන්න"
-              (click)="activateUser(u)"
-              *ngIf="u.status === 'DEACTIVATED'"
-            >
-              <mat-icon>check_circle</mat-icon>
-            </button>
-            <button
-              mat-icon-button
-              color="warn"
-              matTooltip="ස්ථිරවම මකා දැමීම"
-              (click)="deleteUser(u)"
-              *ngIf="u.role !== 'SUPER_ADMIN'"
-            >
-              <mat-icon>delete_forever</mat-icon>
-            </button>
-          </div>
-        </div>
-      </mat-card>
-    </div>
-
-    <app-empty-state
-      *ngIf="!loading && filteredUsers.length === 0"
-      icon="people"
-      title="පරිශීලකයින් නොමැත"
-      message="මෙම ප්‍රවර්ගයේ පරිශීලකයින් නොමැත."
-    ></app-empty-state>
-
-    <mat-paginator
-      [length]="totalElements"
-      [pageSize]="pageSize"
-      [pageIndex]="currentPage"
-      (page)="onPageChange($event)"
-      [hidePageSize]="true"
-    >
-    </mat-paginator>
-  `,
-  styles: [
-    `
-      .users-list {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-      .user-card {
-        padding: 18px 22px !important;
-      }
-      .user-main {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-      }
-      .user-avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #0b3d91, #1565c0);
-        color: #fff;
-        font-weight: 700;
-        font-size: 15px;
-        flex-shrink: 0;
-      }
-      .user-info {
-        flex: 1;
-        min-width: 200px;
-      }
-      .user-info h4 {
-        margin: 0;
-        font-size: 15px;
-        font-weight: 600;
-        color: #1a1a2e;
-      }
-      .user-email {
-        font-size: 13px;
-        color: #666;
-      }
-      .user-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 6px;
-      }
-      .status-chip {
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-weight: 600;
-        &.active {
-          background: #e8f5e9;
-          color: #2e7d32;
-        }
-        &.deactivated {
-          background: #fce4ec;
-          color: #c62828;
-        }
-      }
-      .verify-badge {
-        display: flex;
-        align-items: center;
-        gap: 3px;
-        font-size: 11px;
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-weight: 600;
-        mat-icon {
-          font-size: 14px;
-          width: 14px;
-          height: 14px;
-        }
-        &.unverified {
-          background: #fff3e0;
-          color: #e65100;
-        }
-        &.verified {
-          background: #e8f5e9;
-          color: #2e7d32;
-        }
-      }
-      .date-chip {
-        font-size: 11px;
-        color: #999;
-        padding: 2px 8px;
-        background: #f5f5f5;
-        border-radius: 4px;
-      }
-      .user-actions {
-        display: flex;
-        gap: 2px;
-        flex-shrink: 0;
-      }
-      .actions-bar {
-        margin-bottom: 16px;
-      }
-    `,
+  standalone: true,
+  imports: [
+    ...SHARED_IMPORTS,
+    SkeletonComponent,
+    PageHeaderComponent,
+    LoadingOverlayComponent,
+    EmptyStateComponent,
   ],
+  templateUrl: './superadmin-users.component.html',
+  styleUrls: ['./superadmin-users.component.scss'],
 })
 export class SuperadminUsersComponent implements OnInit {
   users: UserDto[] = [];

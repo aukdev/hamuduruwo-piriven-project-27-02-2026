@@ -1,0 +1,40 @@
+<mat-toolbar class="navbar">
+  <button
+    mat-icon-button
+    (click)="toggleSidenav()"
+    class="navbar__menu-btn"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div class="navbar__brand" routerLink="/">
+    <div class="navbar__logo">
+      <mat-icon class="navbar__logo-icon">school</mat-icon>
+    </div>
+    <div class="navbar__brand-text hide-mobile">
+      <span class="navbar__app-name">පිරිවෙන් MCQ</span>
+      <span class="navbar__app-sub">අතීත ප්‍රශ්න පත්‍ර පද්ධතිය</span>
+    </div>
+  </div>
+
+  <span class="navbar__spacer"></span>
+
+  <span class="role-badge role-{{ user?.role }}" *ngIf="user">
+    {{ getRoleSinhala(user.role) }}
+  </span>
+
+  <button mat-icon-button [matMenuTriggerFor]="profileMenu" *ngIf="user">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #profileMenu="matMenu">
+    <div class="profile-menu-header">
+      <strong>{{ user?.fullName }}</strong>
+      <small>{{ user?.email }}</small>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>පිටවීම</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

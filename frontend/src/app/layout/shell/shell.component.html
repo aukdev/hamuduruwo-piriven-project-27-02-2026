@@ -1,0 +1,16 @@
+<app-navbar></app-navbar>
+<mat-sidenav-container class="shell-container">
+  <mat-sidenav
+    #sidenav
+    [mode]="isMobile ? 'over' : 'side'"
+    [opened]="!isMobile"
+    class="shell-sidenav"
+  >
+    <app-sidebar></app-sidebar>
+  </mat-sidenav>
+  <mat-sidenav-content class="shell-content">
+    <div class="shell-content__inner">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

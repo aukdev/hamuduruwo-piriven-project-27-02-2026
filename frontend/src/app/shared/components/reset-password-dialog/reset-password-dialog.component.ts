@@ -1,72 +1,36 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogModule,
+} from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { UserDto } from '../../../core/models';
 
 @Component({
   selector: 'app-reset-password-dialog',
-  template: `
-    <h2 mat-dialog-title>මුරපදය යළි පිහිටුවීම</h2>
-    <mat-dialog-content>
-      <p class="user-label">{{ data.fullName }} ({{ data.email }})</p>
-      <form [formGroup]="form" class="reset-form">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>නව මුරපදය</mat-label>
-          <input
-            matInput
-            formControlName="newPassword"
-            [type]="hidePassword ? 'password' : 'text'"
-          />
-          <button
-            mat-icon-button
-            matSuffix
-            type="button"
-            [attr.aria-label]="
-              hidePassword ? 'මුරපදය පෙන්වන්න' : 'මුරපදය සඟවන්න'
-            "
-            [attr.aria-pressed]="!hidePassword"
-            (click)="togglePasswordVisibility()"
-          >
-            <mat-icon>{{
-              hidePassword ? 'visibility' : 'visibility_off'
-            }}</mat-icon>
-          </button>
-          <mat-hint>අවම අක්ෂර 6ක්</mat-hint>
-          <mat-error *ngIf="form.get('newPassword')?.hasError('required')"
-            >මුරපදය අවශ්‍යයි</mat-error
-          >
-          <mat-error *ngIf="form.get('newPassword')?.hasError('minlength')"
-            >අවම අක්ෂර 6ක් අවශ්‍යයි</mat-error
-          >
-        </mat-form-field>
-      </form>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>අවලංගු</button>
-      <button
-        mat-raised-button
-        color="warn"
-        [disabled]="form.invalid"
-        (click)="reset()"
-      >
-        මුරපදය යළි පිහිටුවන්න
-      </button>
-    </mat-dialog-actions>
-  `,
-  styles: [
-    `
-      .reset-form {
-        min-width: 350px;
-      }
-      .full-width {
-        width: 100%;
-      }
-      .user-label {
-        color: #555;
-        margin-bottom: 12px;
-      }
-    `,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
   ],
+  templateUrl: './reset-password-dialog.component.html',
+  styleUrls: ['./reset-password-dialog.component.scss'],
 })
 export class ResetPasswordDialogComponent {
   form: FormGroup;

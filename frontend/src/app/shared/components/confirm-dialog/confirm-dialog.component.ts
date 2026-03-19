@@ -1,5 +1,14 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogModule,
+} from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 export interface ConfirmDialogData {
   title: string;
@@ -14,48 +23,17 @@ export interface ConfirmDialogData {
 
 @Component({
   selector: 'app-confirm-dialog',
-  template: `
-    <h2 mat-dialog-title>{{ data.title }}</h2>
-    <mat-dialog-content>
-      <p>{{ data.message }}</p>
-      <mat-form-field
-        *ngIf="data.inputLabel"
-        class="w-100"
-        appearance="outline"
-      >
-        <mat-label>{{ data.inputLabel }}</mat-label>
-        <textarea matInput [(ngModel)]="inputValue" rows="3"></textarea>
-      </mat-form-field>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="onCancel()">
-        {{ data.cancelText || 'අවලංගු කරන්න' }}
-      </button>
-      <button
-        mat-flat-button
-        [color]="data.dangerous ? 'warn' : 'primary'"
-        [disabled]="
-          (data.showInput || data.inputRequired) && !inputValue?.trim()
-        "
-        (click)="onConfirm()"
-      >
-        {{ data.confirmText || 'තහවුරු කරන්න' }}
-      </button>
-    </mat-dialog-actions>
-  `,
-  styles: [
-    `
-      mat-dialog-content p {
-        font-size: 14px;
-        color: #555770;
-        margin-bottom: 16px;
-        line-height: 1.6;
-      }
-      mat-dialog-actions {
-        padding: 12px 24px 16px;
-      }
-    `,
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
+  templateUrl: './confirm-dialog.component.html',
+  styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent {
   inputValue = '';

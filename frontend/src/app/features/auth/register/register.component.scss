@@ -1,0 +1,127 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #f6f7fb 0%, #e8eaf6 100%);
+  padding: 24px;
+}
+.auth-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  border: 1px solid #e0e3eb;
+}
+.auth-card__header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0b3d91;
+    margin: 16px 0 8px;
+  }
+  p {
+    font-size: 13px;
+  }
+}
+.auth-card__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #0b3d91, #315aa7);
+  cursor: pointer;
+
+  mat-icon {
+    color: #f4b400;
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+.role-selection {
+  margin-bottom: 20px;
+}
+.role-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #555770;
+  margin-bottom: 8px;
+  display: block;
+}
+.role-group {
+  display: flex;
+  gap: 12px;
+}
+.role-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid #e0e3eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: #0b3d91;
+  }
+  &.selected {
+    border-color: #0b3d91;
+    background: rgba(11, 61, 145, 0.04);
+  }
+}
+.role-option__info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  mat-icon {
+    color: #0b3d91;
+    font-size: 24px;
+  }
+  strong {
+    font-size: 13px;
+    display: block;
+    color: #1a1a2e;
+  }
+  small {
+    font-size: 11px;
+    color: #555770;
+  }
+}
+.auth-submit-btn {
+  height: 48px !important;
+  font-size: 16px;
+  margin-top: 8px;
+}
+.btn-spinner {
+  display: inline-block;
+}
+.auth-card__footer {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #555770;
+
+  a {
+    font-weight: 600;
+  }
+}
+mat-form-field {
+  margin-bottom: 4px;
+}
+
+@media (max-width: 480px) {
+  .role-group {
+    flex-direction: column;
+  }
+}
