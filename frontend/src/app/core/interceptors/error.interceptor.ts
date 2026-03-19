@@ -1,23 +1,43 @@
 import { inject } from '@angular/core';
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthService } from '../services/auth.service';
-import { NotificationService } from '../services/notification.service';
+
+const TOKEN_KEY = 'piriven_token';
+const USER_KEY = 'piriven_user';
+
+function showError(
+  snackBar: MatSnackBar,
+  message: string,
+  duration = 5000,
+): void {
+  snackBar.open(message, '✕', {
+    duration,
+    panelClass: ['snack-error'],
+    horizontalPosition: 'end',
+    verticalPosition: 'top',
+  });
+}
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(AuthService);
-  const notify = inject(NotificationService);
+  const router = inject(Router);
+  const snackBar = inject(MatSnackBar);
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       if (error.status === 401) {
-        auth.logout();
-        notify.error('සැසිය කල් ඉකුත් විය. නැවත පිවිසෙන්න.');
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(USER_KEY);
+        router.navigate(['/login']);
+        showError(snackBar, 'සැසිය කල් ඉකුත් විය. නැවත පිවිසෙන්න.');
       } else if (error.status === 403) {
-        notify.error('මෙම ක්‍රියාව සඳහා අවසර නැත.');
+        showError(snackBar, 'මෙම ක්‍රියාව සඳහා අවසර නැත.');
       } else if (error.status === 0) {
-        notify.error('සේවාදායකය සම්බන්ධ කළ නොහැක.');
+        showError(snackBar, 'සේවාදායකය සම්බන්ධ කළ නොහැක.');
       }
+
       return throwError(() => error);
     }),
   );

@@ -1,10 +1,9 @@
-import { inject } from '@angular/core';
 import { HttpInterceptorFn } from '@angular/common/http';
-import { AuthService } from '../services/auth.service';
+
+const TOKEN_KEY = 'piriven_token';
 
 export const jwtInterceptor: HttpInterceptorFn = (req, next) => {
-  const auth = inject(AuthService);
-  const token = auth.token;
+  const token = localStorage.getItem(TOKEN_KEY);
   if (token) {
     req = req.clone({
       setHeaders: { Authorization: `Bearer ${token}` },
