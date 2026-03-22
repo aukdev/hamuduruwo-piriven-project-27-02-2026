@@ -6,9 +6,9 @@
 .sk-card,
 .sk-user-card,
 .sk-question-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 12px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
   padding: 20px 24px;
 }
 .sk-card__header {
@@ -25,9 +25,9 @@
   gap: 16px;
 }
 .sk-grid-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 12px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
   padding: 24px;
 }
 .sk-grid-card__footer {
@@ -41,18 +41,18 @@
   gap: 16px;
 }
 .sk-stat-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 12px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 16px;
 }
 .sk-table {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 12px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
   overflow: hidden;
 }
 .sk-table-row {
@@ -99,7 +99,7 @@
   gap: 10px;
   padding: 10px 14px;
   border-radius: 8px;
-  border: 1px solid #e8eaf0;
+  border: 1px solid var(--color-border);
 }
 .sk-question-actions {
   display: flex;
@@ -118,9 +118,9 @@
   margin: 0 auto;
 }
 .sk-result-hero {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 12px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
   padding: 40px;
   text-align: center;
   display: flex;
@@ -135,9 +135,9 @@
   margin-bottom: 16px;
 }
 .sk-result-stat {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 12px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
   padding: 20px;
   text-align: center;
   display: flex;

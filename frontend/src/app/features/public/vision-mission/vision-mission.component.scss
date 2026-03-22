@@ -1,5 +1,5 @@
 .page-hero {
-  background: linear-gradient(135deg, #0b3d91, #152e6e);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   padding: 60px 24px 48px;
   text-align: center;
   h1 {
@@ -19,11 +19,11 @@
   padding: 60px 24px 80px;
 }
 .vm-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 40px;
   margin-bottom: 32px;
-  border: 1px solid #e8eaf0;
+  border: 1px solid var(--color-border);
   text-align: center;
 }
 .vm-card__icon {
@@ -36,9 +36,9 @@
   margin: 0 auto 20px;
 }
 .vm-card--vision .vm-card__icon {
-  background: rgba(11, 61, 145, 0.08);
+  background: var(--color-bg-active);
   mat-icon {
-    color: #0b3d91;
+    color: var(--color-primary);
     font-size: 32px;
     width: 32px;
     height: 32px;
@@ -47,7 +47,7 @@
 .vm-card--mission .vm-card__icon {
   background: rgba(244, 180, 0, 0.1);
   mat-icon {
-    color: #f4b400;
+    color: var(--color-accent);
     font-size: 32px;
     width: 32px;
     height: 32px;
@@ -56,13 +56,13 @@
 .vm-card h2 {
   font-size: 22px;
   font-weight: 800;
-  color: #0b3d91;
+  color: var(--color-primary);
   margin-bottom: 16px;
 }
 .vm-card blockquote {
   font-size: 16px;
   line-height: 1.9;
-  color: #333;
+  color: var(--color-text-primary);
   margin: 0 0 12px;
   padding: 0;
   border: none;
@@ -79,7 +79,7 @@
 .values__title {
   font-size: 24px;
   font-weight: 800;
-  color: #0b3d91;
+  color: var(--color-primary);
   text-align: center;
   margin-bottom: 32px;
 }
@@ -89,10 +89,10 @@
   gap: 20px;
 }
 .value-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 14px;
   padding: 28px 24px;
-  border: 1px solid #e8eaf0;
+  border: 1px solid var(--color-border);
   text-align: center;
 }
 .value-card__icon {
@@ -112,7 +112,7 @@
 .value-card h3 {
   font-size: 15px;
   font-weight: 700;
-  color: #1a1a2e;
+  color: var(--color-text-primary);
   margin-bottom: 2px;
 }
 .value-card__title-en {
@@ -123,7 +123,7 @@
 .value-card p:last-child {
   font-size: 13px;
   line-height: 1.7;
-  color: #555770;
+  color: var(--color-text-secondary);
 }
 @media (max-width: 768px) {
   .page-hero h1 {

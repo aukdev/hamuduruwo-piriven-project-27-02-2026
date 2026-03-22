@@ -1,26 +1,26 @@
 @use "@angular/material" as mat;
 
-/* ── Deep Blue primary palette ── */
-$piriven-blue: (
-  50: #e2e8f3,
-  100: #b6c5e0,
-  200: #869ecc,
-  300: #5677b7,
-  400: #315aa7,
-  500: #0b3d91,
-  600: #0a3789,
-  700: #082f7e,
-  800: #062774,
-  900: #031a62,
-  A100: #92a8ff,
-  A200: #5f7fff,
-  A400: #2c56ff,
-  A700: #1242ff,
+/* ── Deep Maroon primary palette ── */
+$piriven-maroon: (
+  50: #f5e8e7,
+  100: #e6c5c2,
+  200: #d49f9a,
+  300: #c27972,
+  400: #b55d54,
+  500: #7b2d26,
+  600: #702823,
+  700: #62221d,
+  800: #551c18,
+  900: #5a1a15,
+  A100: #ffb3ad,
+  A200: #ff867d,
+  A400: #ff594d,
+  A700: #ff4336,
   contrast: (
     50: rgba(0, 0, 0, 0.87),
     100: rgba(0, 0, 0, 0.87),
     200: rgba(0, 0, 0, 0.87),
-    300: #ffffff,
+    300: rgba(0, 0, 0, 0.87),
     400: #ffffff,
     500: #ffffff,
     600: #ffffff,
@@ -28,24 +28,24 @@ $piriven-blue: (
     800: #ffffff,
     900: #ffffff,
     A100: rgba(0, 0, 0, 0.87),
-    A200: #ffffff,
+    A200: rgba(0, 0, 0, 0.87),
     A400: #ffffff,
     A700: #ffffff,
   ),
 );
 
-/* ── Golden Yellow accent palette ── */
+/* ── Gold accent palette ── */
 $piriven-gold: (
-  50: #fef5e0,
-  100: #fce6b3,
-  200: #fad580,
-  300: #f8c44d,
-  400: #f7b826,
-  500: #f4b400,
-  600: #f3ad00,
-  700: #f1a400,
-  800: #ef9c00,
-  900: #ec8c00,
+  50: #fbf5e3,
+  100: #f5e6b8,
+  200: #eed589,
+  300: #e7c45a,
+  400: #e2b836,
+  500: #d4a017,
+  600: #cf9814,
+  700: #c98e11,
+  800: #c3840d,
+  900: #b97307,
   A100: #ffffff,
   A200: #fff1dc,
   A400: #ffddaa,
@@ -60,7 +60,7 @@ $piriven-gold: (
     600: rgba(0, 0, 0, 0.87),
     700: rgba(0, 0, 0, 0.87),
     800: rgba(0, 0, 0, 0.87),
-    900: rgba(0, 0, 0, 0.87),
+    900: #ffffff,
     A100: rgba(0, 0, 0, 0.87),
     A200: rgba(0, 0, 0, 0.87),
     A400: rgba(0, 0, 0, 0.87),
@@ -68,7 +68,7 @@ $piriven-gold: (
   ),
 );
 
-$piriven-primary: mat.define-palette($piriven-blue, 500);
+$piriven-primary: mat.define-palette($piriven-maroon, 500);
 $piriven-accent: mat.define-palette($piriven-gold, 500);
 $piriven-warn: mat.define-palette(mat.$red-palette);
 

@@ -42,7 +42,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0b3d91;
+  background: var(--color-primary);
   color: #fff;
   font-weight: 700;
   font-size: 14px;
@@ -59,7 +59,7 @@
 }
 .attempt-email {
   font-size: 12px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 .attempt-meta {
   display: flex;
@@ -75,7 +75,7 @@
 }
 .meta-chip.subject {
   background: #e3f2fd;
-  color: #1565c0;
+  color: var(--color-info);
 }
 .meta-chip.year {
   background: #f3e5f5;
@@ -176,7 +176,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0b3d91;
+  background: var(--color-primary);
   color: #fff;
   font-weight: 700;
   font-size: 16px;
@@ -188,7 +188,7 @@
 }
 .detail-email {
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 .detail-paper {
   display: flex;
@@ -206,7 +206,7 @@
 }
 .detail-subject {
   background: #e3f2fd;
-  color: #1565c0;
+  color: var(--color-info);
 }
 .detail-year {
   background: #f3e5f5;
@@ -296,7 +296,7 @@
 .question-number {
   font-weight: 700;
   font-size: 14px;
-  color: #333;
+  color: var(--color-text-primary);
 }
 .question-status {
   display: flex;
@@ -328,7 +328,7 @@
 .question-text {
   font-size: 14px;
   line-height: 1.6;
-  color: #333;
+  color: var(--color-text-primary);
   margin: 8px 0 12px;
 }
 
@@ -370,7 +370,7 @@
   font-weight: 700;
   font-size: 12px;
   background: #e0e0e0;
-  color: #333;
+  color: var(--color-text-primary);
   flex-shrink: 0;
 }
 .correct-option .option-letter {

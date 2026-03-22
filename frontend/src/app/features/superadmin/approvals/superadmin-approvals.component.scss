@@ -17,13 +17,13 @@
   font-size: 12px;
   font-weight: 600;
   padding: 2px 8px;
-  background: rgba(11, 61, 145, 0.08);
+  background: var(--color-bg-active);
   border-radius: 4px;
-  color: #0b3d91;
+  color: var(--color-primary);
 }
 .chip.author {
   background: rgba(0, 0, 0, 0.05);
-  color: #666;
+  color: var(--color-text-muted);
 }
 .chip.year {
   background: rgba(46, 125, 50, 0.08);
@@ -32,7 +32,7 @@
 .question-text {
   font-size: 15px;
   line-height: 1.7;
-  color: #1a1a2e;
+  color: var(--color-text-primary);
   margin-bottom: 16px;
   padding-bottom: 12px;
   border-bottom: 1px solid #f0f0f5;
@@ -51,7 +51,7 @@
   border-radius: 8px;
   border: 1px solid #e0e0e0;
   font-size: 14px;
-  color: #333;
+  color: var(--color-text-primary);
 
   &.correct {
     border-color: #2e7d32;
@@ -67,8 +67,8 @@
   border-radius: 50%;
   font-weight: 700;
   font-size: 12px;
-  background: #e8eaf6;
-  color: #0b3d91;
+  background: var(--color-divider);
+  color: var(--color-primary);
 
   .correct & {
     background: #e8f5e9;

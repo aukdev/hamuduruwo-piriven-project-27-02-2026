@@ -1,6 +1,6 @@
 /* ── Stats Counter Band ── */
 .stats {
-  background: linear-gradient(135deg, #0b3d91, #152e6e);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   padding: 48px 24px;
 }
 .stats__inner {
@@ -18,7 +18,7 @@
   gap: 4px;
 }
 .stats__icon {
-  color: #f4b400;
+  color: var(--color-accent);
   font-size: 36px;
   width: 36px;
   height: 36px;
@@ -64,12 +64,12 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #315aa7, #4a7cd8);
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
   display: flex;
   align-items: center;
   justify-content: center;
   mat-icon {
-    color: #f4b400;
+    color: var(--color-accent);
     font-size: 22px;
     width: 22px;
     height: 22px;
@@ -96,7 +96,7 @@
   color: #fff;
   margin-bottom: 16px;
   padding-bottom: 8px;
-  border-bottom: 2px solid #f4b400;
+  border-bottom: 2px solid var(--color-accent);
   display: inline-block;
 }
 .ft__links {
@@ -109,7 +109,7 @@
     font-size: 13px;
     transition: color 0.2s;
     &:hover {
-      color: #f4b400;
+      color: var(--color-accent);
     }
   }
 }
@@ -125,7 +125,7 @@
   font-size: 13px;
   color: rgba(255, 255, 255, 0.6);
   mat-icon {
-    color: #f4b400;
+    color: var(--color-accent);
     font-size: 18px;
     width: 18px;
     height: 18px;

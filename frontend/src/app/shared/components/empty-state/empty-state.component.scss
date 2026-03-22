@@ -10,17 +10,17 @@
   font-size: 64px;
   width: 64px;
   height: 64px;
-  color: #c1c5d0;
+  color: #c5b5a5;
   margin-bottom: 16px;
 }
 .empty-state__title {
   font-size: 18px;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--color-text-primary);
   margin-bottom: 8px;
 }
 .empty-state__message {
   font-size: 14px;
-  color: #555770;
+  color: var(--color-text-secondary);
   max-width: 400px;
 }

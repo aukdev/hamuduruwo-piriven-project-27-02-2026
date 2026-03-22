@@ -1,5 +1,5 @@
 .page-hero {
-  background: linear-gradient(135deg, #0b3d91, #152e6e);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   padding: 60px 24px 48px;
   text-align: center;
   h1 {
@@ -19,10 +19,10 @@
   padding: 48px 24px 80px;
 }
 .legal-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 16px;
   padding: 40px;
-  border: 1px solid #e8eaf0;
+  border: 1px solid var(--color-border);
 }
 .updated {
   font-size: 12px;
@@ -36,13 +36,13 @@
   h2 {
     font-size: 17px;
     font-weight: 700;
-    color: #0b3d91;
+    color: var(--color-primary);
     margin-bottom: 12px;
   }
   p {
     font-size: 14px;
     line-height: 1.8;
-    color: #444;
+    color: var(--color-text-secondary);
     margin-bottom: 10px;
   }
   ul {
@@ -51,12 +51,12 @@
     li {
       font-size: 14px;
       line-height: 1.8;
-      color: #444;
+      color: var(--color-text-secondary);
       margin-bottom: 6px;
     }
   }
   a {
-    color: #0b3d91;
+    color: var(--color-primary);
     font-weight: 600;
   }
 }

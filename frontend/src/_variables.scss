@@ -3,26 +3,26 @@
    Change these variables to restyle the entire app.
    ══════════════════════════════════════════════════════ */
 
-/* ── Brand Colors ── */
-$primary: #0b3d91;
-$primary-light: #315aa7;
-$primary-dark: #031a62;
-$accent: #f4b400;
-$accent-light: #fce6b3;
+/* ── Brand Colors (Deep Maroon + Gold) ── */
+$primary: #7b2d26;
+$primary-light: #9e4a3f;
+$primary-dark: #5a1a15;
+$accent: #d4a017;
+$accent-light: #f5e6b8;
 $warn: #d32f2f;
 $success: #2e7d32;
 $info: #1565c0;
 
 /* ── Neutrals / Surface ── */
-$bg-page: #f6f7fb;
+$bg-page: #faf7f5;
 $bg-card: #ffffff;
-$bg-hover: rgba(11, 61, 145, 0.03);
-$bg-active: rgba(11, 61, 145, 0.06);
-$text-primary: #1a1a2e;
-$text-secondary: #555770;
-$text-muted: #999aab;
-$border-color: #e0e3eb;
-$divider: #f0f0f5;
+$bg-hover: rgba(123, 45, 38, 0.03);
+$bg-active: rgba(123, 45, 38, 0.06);
+$text-primary: #2c1810;
+$text-secondary: #6b4f45;
+$text-muted: #a08878;
+$border-color: #e5dad4;
+$divider: #f0e8e3;
 
 /* ── Semantic Badge Colors ── */
 $badge-active-bg: #e8f5e9;
@@ -76,18 +76,18 @@ $bp-wide: 1400px;
 
 /* ── Gradients ── */
 $gradient-primary: linear-gradient(135deg, $primary, $primary-light);
-$gradient-page: linear-gradient(160deg, $bg-page 0%, #e8eaf6 100%);
+$gradient-page: linear-gradient(160deg, $bg-page 0%, #ede5df 100%);
 
 /* ── Role Badge Colors ── */
-$role-student-bg: rgba(11, 61, 145, 0.08);
+$role-student-bg: rgba(123, 45, 38, 0.08);
 $role-student-fg: $primary;
 $role-teacher-bg: rgba(46, 125, 50, 0.08);
 $role-teacher-fg: $success;
-$role-admin-bg: rgba(244, 180, 0, 0.12);
-$role-admin-fg: #e65100;
+$role-admin-bg: rgba(212, 160, 23, 0.12);
+$role-admin-fg: #b8860b;
 $role-superadmin-bg: rgba(198, 40, 40, 0.08);
 $role-superadmin-fg: #c62828;
 
 /* ── Skeleton ── */
-$skeleton-base: #e8eaf0;
-$skeleton-shine: #f4f5f8;
+$skeleton-base: #e8ddd6;
+$skeleton-shine: #f5ede8;

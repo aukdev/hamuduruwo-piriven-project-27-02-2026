@@ -13,7 +13,7 @@
   position: relative;
 
   &:hover {
-    border-color: #0b3d91;
+    border-color: var(--color-primary);
     transform: translateY(-2px);
   }
 }
@@ -33,10 +33,10 @@
     height: 26px;
   }
   &.questions {
-    background: linear-gradient(135deg, #0b3d91, #1565c0);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-info));
   }
   &.users {
-    background: linear-gradient(135deg, #f4b400, #ff8f00);
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent));
   }
   &.papers {
     background: linear-gradient(135deg, #2e7d32, #43a047);
@@ -46,12 +46,12 @@ h4 {
   margin: 0 0 4px;
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--color-text-primary);
 }
 p {
   margin: 0;
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-muted);
   line-height: 1.5;
 }
 .arrow {
@@ -66,16 +66,16 @@ p {
   display: flex;
   gap: 14px;
   align-items: flex-start;
-  background: rgba(11, 61, 145, 0.03);
-  border-left: 4px solid #0b3d91;
+  background: var(--color-bg-hover);
+  border-left: 4px solid var(--color-primary);
 
   > mat-icon {
-    color: #0b3d91;
+    color: var(--color-primary);
     margin-top: 2px;
   }
   strong {
     font-size: 14px;
-    color: #0b3d91;
+    color: var(--color-primary);
   }
   p {
     margin: 4px 0 0;

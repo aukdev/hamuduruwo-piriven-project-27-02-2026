@@ -48,7 +48,7 @@
   gap: 8px;
   font-size: 15px;
   font-weight: 600;
-  color: #0b3d91;
+  color: var(--color-primary);
   margin: 0 0 16px;
   mat-icon {
     font-size: 20px;
@@ -62,7 +62,7 @@
 }
 .progress-label {
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-muted);
   font-weight: 400;
   white-space: nowrap;
 }
@@ -86,14 +86,14 @@
 }
 .position {
   font-weight: 700;
-  color: #0b3d91;
+  color: var(--color-primary);
   font-size: 14px;
   min-width: 30px;
 }
 .q-text {
   flex: 1;
   font-size: 13px;
-  color: #333;
+  color: var(--color-text-primary);
 }
 .options-grid {
   display: grid;
@@ -108,7 +108,7 @@
   gap: 6px;
   padding: 4px 10px;
   border-radius: 6px;
-  background: #fff;
+  background: var(--color-bg-card);
   border: 1px solid #e0e0e0;
   font-size: 12px;
   color: #555;
@@ -151,7 +151,7 @@
 }
 .option-number {
   font-weight: 700;
-  color: #0b3d91;
+  color: var(--color-primary);
   font-size: 16px;
   min-width: 20px;
   text-align: center;

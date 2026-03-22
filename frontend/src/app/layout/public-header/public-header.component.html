@@ -30,6 +30,12 @@
         >දැක්ම හා මෙහෙවර</a
       >
       <a
+        routerLink="/videos"
+        routerLinkActive="ph__nav-link--active"
+        class="ph__nav-link"
+        >වීඩියෝ</a
+      >
+      <a
         routerLink="/contact"
         routerLinkActive="ph__nav-link--active"
         class="ph__nav-link"
@@ -39,11 +45,19 @@
 
     <!-- Auth Buttons -->
     <div class="ph__actions">
-      <a
-        mat-stroked-button
-        routerLink="/login"
-        class="ph__btn ph__btn--login"
+      <button
+        mat-icon-button
+        class="ph__theme-toggle"
+        (click)="toggleTheme()"
+        [attr.aria-label]="
+          (isDark$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+        "
       >
+        <mat-icon>{{
+          (isDark$ | async) ? "light_mode" : "dark_mode"
+        }}</mat-icon>
+      </button>
+      <a mat-stroked-button routerLink="/login" class="ph__btn ph__btn--login">
         <mat-icon>login</mat-icon>
         පිවිසීම
       </a>
@@ -64,7 +78,7 @@
       class="ph__hamburger"
       (click)="mobileMenuOpen = !mobileMenuOpen"
     >
-      <mat-icon>{{ mobileMenuOpen ? 'close' : 'menu' }}</mat-icon>
+      <mat-icon>{{ mobileMenuOpen ? "close" : "menu" }}</mat-icon>
     </button>
   </div>
 
@@ -76,20 +90,14 @@
   >
     <a routerLink="/" class="ph__mobile-link">මුල් පිටුව / Home</a>
     <a routerLink="/about" class="ph__mobile-link">අපි ගැන / About</a>
-    <a routerLink="/vision-mission" class="ph__mobile-link"
-      >දැක්ම හා මෙහෙවර</a
-    >
-    <a routerLink="/contact" class="ph__mobile-link"
-      >සම්බන්ධ වන්න / Contact</a
-    >
+    <a routerLink="/vision-mission" class="ph__mobile-link">දැක්ම හා මෙහෙවර</a>
+    <a routerLink="/videos" class="ph__mobile-link">වීඩියෝ / Videos</a>
+    <a routerLink="/contact" class="ph__mobile-link">සම්බන්ධ වන්න / Contact</a>
     <mat-divider></mat-divider>
     <a routerLink="/login" class="ph__mobile-link ph__mobile-link--primary">
       <mat-icon>login</mat-icon> පිවිසීම / Login
     </a>
-    <a
-      routerLink="/register"
-      class="ph__mobile-link ph__mobile-link--accent"
-    >
+    <a routerLink="/register" class="ph__mobile-link ph__mobile-link--accent">
       <mat-icon>person_add</mat-icon> ලියාපදිංචිය / Register
     </a>
   </div>

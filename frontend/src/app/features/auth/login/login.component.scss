@@ -3,17 +3,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(160deg, #f6f7fb 0%, #e8eaf6 100%);
+  background: linear-gradient(160deg, var(--color-bg-page) 0%, var(--color-divider) 100%);
   padding: 24px;
 }
 .auth-card {
-  background: #fff;
+  background: var(--color-bg-card);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   padding: 40px;
   width: 100%;
   max-width: 440px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
 }
 .auth-card__header {
   text-align: center;
@@ -22,7 +22,7 @@
   h1 {
     font-size: 24px;
     font-weight: 700;
-    color: #0b3d91;
+    color: var(--color-primary);
     margin: 16px 0 8px;
   }
   p {
@@ -36,11 +36,11 @@
   width: 56px;
   height: 56px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #0b3d91, #315aa7);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
   cursor: pointer;
 
   mat-icon {
-    color: #f4b400;
+    color: var(--color-accent);
     font-size: 28px;
     width: 28px;
     height: 28px;
@@ -58,7 +58,7 @@
   text-align: center;
   margin-top: 24px;
   font-size: 14px;
-  color: #555770;
+  color: var(--color-text-secondary);
 
   a {
     font-weight: 600;

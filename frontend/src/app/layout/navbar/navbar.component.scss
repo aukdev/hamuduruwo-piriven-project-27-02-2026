@@ -27,10 +27,14 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #0b3d91, #315aa7);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-light)
+  );
 }
 .navbar__logo-icon {
-  color: #f4b400;
+  color: var(--color-accent);
   font-size: 24px;
 }
 .navbar__brand-text {
@@ -40,16 +44,23 @@
 .navbar__app-name {
   font-size: 16px;
   font-weight: 700;
-  color: #0b3d91;
+  color: var(--color-primary);
   line-height: 1.2;
 }
 .navbar__app-sub {
   font-size: 10px;
-  color: #555770;
+  color: var(--color-text-secondary);
   line-height: 1.2;
 }
 .navbar__spacer {
   flex: 1;
+}
+.navbar__theme-btn {
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
+  &:hover {
+    color: var(--color-accent);
+  }
 }
 .profile-menu-header {
   padding: 12px 16px;
@@ -58,11 +69,11 @@
 
   strong {
     font-size: 14px;
-    color: #1a1a2e;
+    color: var(--color-text-primary);
   }
   small {
     font-size: 12px;
-    color: #555770;
+    color: var(--color-text-secondary);
     margin-top: 2px;
   }
 }

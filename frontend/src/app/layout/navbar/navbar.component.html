@@ -1,9 +1,5 @@
 <mat-toolbar class="navbar">
-  <button
-    mat-icon-button
-    (click)="toggleSidenav()"
-    class="navbar__menu-btn"
-  >
+  <button mat-icon-button (click)="toggleSidenav()" class="navbar__menu-btn">
     <mat-icon>menu</mat-icon>
   </button>
 
@@ -18,6 +14,17 @@
   </div>
 
   <span class="navbar__spacer"></span>
+
+  <button
+    mat-icon-button
+    (click)="toggleTheme()"
+    class="navbar__theme-btn"
+    [attr.aria-label]="
+      (isDark$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+    "
+  >
+    <mat-icon>{{ (isDark$ | async) ? "light_mode" : "dark_mode" }}</mat-icon>
+  </button>
 
   <span class="role-badge role-{{ user?.role }}" *ngIf="user">
     {{ getRoleSinhala(user.role) }}

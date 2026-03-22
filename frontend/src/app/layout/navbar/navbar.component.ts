@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -27,9 +28,13 @@ import { Subscription } from 'rxjs';
 export class NavbarComponent implements OnInit, OnDestroy {
   sidenavOpen = true;
   user = this.auth.currentUser;
+  isDark$ = this.themeService.isDark$;
   private sub!: Subscription;
 
-  constructor(private auth: AuthService) {}
+  constructor(
+    private auth: AuthService,
+    private themeService: ThemeService,
+  ) {}
 
   ngOnInit(): void {
     this.sub = this.auth.currentUser$.subscribe((u) => (this.user = u));
@@ -57,5 +62,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.auth.logout();
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggle();
   }
 }

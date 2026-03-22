@@ -18,7 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #0b3d91, #1565c0);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-info));
   color: #fff;
   font-weight: 700;
   font-size: 15px;
@@ -32,11 +32,11 @@
   margin: 0;
   font-size: 15px;
   font-weight: 600;
-  color: #1a1a2e;
+  color: var(--color-text-primary);
 }
 .user-email {
   font-size: 13px;
-  color: #666;
+  color: var(--color-text-muted);
 }
 .user-meta {
   display: flex;

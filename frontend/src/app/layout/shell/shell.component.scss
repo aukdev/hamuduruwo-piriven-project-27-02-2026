@@ -7,10 +7,10 @@
 }
 .shell-sidenav {
   width: 260px;
-  background: #ffffff;
+  background: var(--color-bg-card);
 }
 .shell-content {
-  background: #f6f7fb;
+  background: var(--color-bg-page);
 }
 .shell-content__inner {
   padding: 24px;

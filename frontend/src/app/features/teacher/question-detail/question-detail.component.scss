@@ -23,7 +23,7 @@
 .question-text {
   font-size: 17px;
   line-height: 1.8;
-  color: #1a1a2e;
+  color: var(--color-text-primary);
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid #eee;
@@ -57,8 +57,8 @@
   border-radius: 50%;
   font-weight: 700;
   font-size: 14px;
-  background: #e8eaf6;
-  color: #0b3d91;
+  background: var(--color-divider);
+  color: var(--color-primary);
 
   .correct & {
     background: #e8f5e9;
@@ -68,7 +68,7 @@
 .option-text {
   flex: 1;
   font-size: 14px;
-  color: #333;
+  color: var(--color-text-primary);
 }
 .correct-icon {
   color: #2e7d32;
@@ -149,7 +149,7 @@
   padding: 16px;
   background: #f8f9fb;
   border-radius: 10px;
-  border: 1px solid #e0e3eb;
+  border: 1px solid var(--color-border);
 
   mat-form-field {
     flex: 1;

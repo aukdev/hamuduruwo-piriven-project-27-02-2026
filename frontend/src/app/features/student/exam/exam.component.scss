@@ -11,7 +11,7 @@
   gap: 12px;
 }
 .exam-badge {
-  background: #0b3d91;
+  background: var(--color-primary);
   color: #fff;
   padding: 6px 16px;
   border-radius: 20px;
@@ -26,14 +26,14 @@
   padding: 32px !important;
   position: relative;
   margin-bottom: 24px;
-  border-left: 4px solid #0b3d91 !important;
+  border-left: 4px solid var(--color-primary) !important;
 }
 .question-number-badge {
   position: absolute;
   top: -12px;
   left: 20px;
-  background: #f4b400;
-  color: #1a1a2e;
+  background: var(--color-accent);
+  color: var(--color-text-primary);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -47,7 +47,7 @@
   font-size: 18px;
   font-weight: 600;
   line-height: 1.8;
-  color: #1a1a2e;
+  color: var(--color-text-primary);
 }
 .exam-options {
   margin-bottom: 24px;
