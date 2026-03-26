@@ -4,34 +4,35 @@
 ></app-page-header>
 
 <div class="dashboard-grid">
-  <!-- Quick Actions -->
-  <mat-card
-    class="action-card"
-    (click)="router.navigate(['/student/years'])"
-  >
+  <!-- Past Papers Card -->
+  <mat-card class="action-card" (click)="router.navigate(['/student/years'])">
     <div
       class="action-card__icon-wrap"
-      style="background: rgba(11,61,145,0.1);"
+      style="background: rgba(11, 61, 145, 0.1)"
     >
-      <mat-icon style="color: #0B3D91;">quiz</mat-icon>
+      <mat-icon style="color: #0b3d91">history_edu</mat-icon>
     </div>
     <div class="action-card__info">
-      <h3>විභාගයක් අරඹන්න</h3>
-      <p>අතීත ප්‍රශ්න පත්‍ර තෝරා පුහුණු වන්න</p>
+      <h3>අතීත ප්‍රශ්න පත්‍ර</h3>
+      <p>2017 සිට අතීත ප්‍රශ්න පත්‍ර වලින් පුහුණු වන්න</p>
     </div>
     <mat-icon class="action-card__arrow">chevron_right</mat-icon>
   </mat-card>
 
-  <mat-card class="action-card highlight-card">
+  <!-- Practice Questions Card -->
+  <mat-card
+    class="action-card highlight-card"
+    (click)="router.navigate(['/student/practice'])"
+  >
     <div
       class="action-card__icon-wrap"
-      style="background: rgba(244,180,0,0.15);"
+      style="background: rgba(244, 180, 0, 0.15)"
     >
-      <mat-icon style="color: #F4B400;">emoji_events</mat-icon>
+      <mat-icon style="color: #f4b400">school</mat-icon>
     </div>
     <div class="action-card__info">
-      <h3>පුහුණුව ආරම්භ කරන්න</h3>
-      <p>වර්ෂ 2017 සිට 2025 දක්වා ප්‍රශ්න පත්‍ර ලබා ගත හැක</p>
+      <h3>පුහුණු ප්‍රශ්න</h3>
+      <p>ගුරුවරුන් සැකසූ පුහුණු ප්‍රශ්න පත්‍ර වලින් පුහුණු වන්න</p>
     </div>
     <mat-icon class="action-card__arrow">chevron_right</mat-icon>
   </mat-card>

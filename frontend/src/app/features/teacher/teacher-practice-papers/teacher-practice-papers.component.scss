@@ -1,0 +1,128 @@
+.form-card {
+  padding: 24px !important;
+}
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0 0 16px;
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+.ml-auto {
+  margin-left: auto;
+}
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  mat-form-field {
+    flex: 1;
+    min-width: 180px;
+  }
+  .title-field {
+    flex: 2;
+  }
+}
+.papers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+.paper-card {
+  padding: 20px !important;
+}
+.paper-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.paper-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.paper-subject {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.08);
+  padding: 3px 10px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+.status-draft {
+  background-color: #e0e0e0 !important;
+  color: #555 !important;
+}
+.status-pending_approval {
+  background-color: #fff3e0 !important;
+  color: #e65100 !important;
+}
+.status-approved {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+}
+.status-rejected {
+  background-color: #ffebee !important;
+  color: #c62828 !important;
+}
+.paper-card__stats {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 12px;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+}
+.stat-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+}
+.stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+mat-progress-bar {
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+.paper-card__rejection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #c62828;
+  margin-bottom: 12px;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+.paper-card__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 600px) {
+  .papers-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-row {
+    flex-direction: column;
+  }
+}

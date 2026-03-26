@@ -23,6 +23,7 @@ import {
   PaperCreateRequest,
   PaperUpdateRequest,
   PaperQuestionCreateRequest,
+  PaperRejectRequest,
   UserUpdateRequest,
   ResetPasswordRequest,
   CreateUserRequest,
@@ -348,6 +349,77 @@ export class ApiService {
     return this.http.delete<void>(
       `${BASE}/api/admin/papers/${paperId}/questions/${questionId}`,
     );
+  }
+
+  /* ── Admin / Practice Paper Approvals ── */
+  getPendingPracticePapers(
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<PaperDto>> {
+    return this.http.get<PagedResponse<PaperDto>>(
+      `${BASE}/api/admin/papers/practice/pending`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  approvePracticePaper(paperId: string): Observable<PaperDto> {
+    return this.http.post<PaperDto>(
+      `${BASE}/api/admin/papers/practice/${paperId}/approve`,
+      {},
+    );
+  }
+
+  rejectPracticePaper(
+    paperId: string,
+    req: PaperRejectRequest,
+  ): Observable<PaperDto> {
+    return this.http.post<PaperDto>(
+      `${BASE}/api/admin/papers/practice/${paperId}/reject`,
+      req,
+    );
+  }
+
+  /* ── Teacher / Practice Papers ── */
+  createPracticePaper(req: PaperCreateRequest): Observable<PaperDto> {
+    return this.http.post<PaperDto>(`${BASE}/api/teacher/papers/practice`, req);
+  }
+
+  getTeacherPracticePapers(
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<PaperDto>> {
+    return this.http.get<PagedResponse<PaperDto>>(
+      `${BASE}/api/teacher/papers/practice`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getTeacherPracticePaperDetail(paperId: string): Observable<PaperDetailDto> {
+    return this.http.get<PaperDetailDto>(
+      `${BASE}/api/teacher/papers/practice/${paperId}`,
+    );
+  }
+
+  submitPracticePaperForApproval(paperId: string): Observable<PaperDto> {
+    return this.http.post<PaperDto>(
+      `${BASE}/api/teacher/papers/practice/${paperId}/submit`,
+      {},
+    );
+  }
+
+  /* ── Student / Practice Papers ── */
+  getPracticeSubjects(): Observable<SubjectDto[]> {
+    return this.http.get<SubjectDto[]>(`${BASE}/api/papers/practice/subjects`);
+  }
+
+  getPracticePapersBySubject(subjectId: string): Observable<PaperDto[]> {
+    return this.http.get<PaperDto[]>(`${BASE}/api/papers/practice`, {
+      params: { subjectId },
+    });
   }
 
   /* ── Super Admin / Questions ── */

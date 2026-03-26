@@ -1,5 +1,6 @@
 package com.piriven.mcq.paper.controller;
 
+import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.paper.dto.*;
 import com.piriven.mcq.paper.service.PaperService;
 import com.piriven.mcq.security.CurrentUser;
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class AdminPaperController {
 
     private final PaperService paperService;
+
+    // ==================== Past Paper CRUD ====================
 
     @PostMapping
     public ResponseEntity<PaperDto> createPaper(
@@ -72,5 +75,29 @@ public class AdminPaperController {
             @PathVariable UUID questionId) {
         paperService.removeQuestionFromPaper(paperId, questionId);
         return ResponseEntity.noContent().build();
+    }
+
+    // ==================== Practice Paper Approval ====================
+
+    @GetMapping("/practice/pending")
+    public ResponseEntity<PagedResponse<PaperDto>> getPendingPracticePapers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(paperService.getPendingPracticePapers(page, size));
+    }
+
+    @PostMapping("/practice/{paperId}/approve")
+    public ResponseEntity<PaperDto> approvePracticePaper(
+            @PathVariable UUID paperId,
+            @CurrentUser UserPrincipal currentUser) {
+        return ResponseEntity.ok(paperService.approvePracticePaper(paperId, currentUser.getId()));
+    }
+
+    @PostMapping("/practice/{paperId}/reject")
+    public ResponseEntity<PaperDto> rejectPracticePaper(
+            @PathVariable UUID paperId,
+            @Valid @RequestBody PaperRejectRequest request,
+            @CurrentUser UserPrincipal currentUser) {
+        return ResponseEntity.ok(paperService.rejectPracticePaper(paperId, request.reason(), currentUser.getId()));
     }
 }

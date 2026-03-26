@@ -5,11 +5,13 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { SubjectManagementComponent } from './subject-management/subject-management.component';
 import { PaperManagementComponent } from './paper-management/paper-management.component';
 import { StudentAnswersComponent } from '../../shared/components/student-answers/student-answers.component';
+import { PracticePaperApprovalsComponent } from '../../shared/components/practice-paper-approvals/practice-paper-approvals.component';
 
 export const ADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: AdminDashboardComponent },
   { path: 'approvals', component: PendingApprovalsComponent },
+  { path: 'practice-approvals', component: PracticePaperApprovalsComponent },
   { path: 'users', component: UserManagementComponent },
   { path: 'subjects', component: SubjectManagementComponent },
   { path: 'papers', component: PaperManagementComponent },

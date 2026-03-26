@@ -1,0 +1,67 @@
+<app-page-header
+  title="පුහුණු පත්‍ර අනුමැතිය"
+  subtitle="ගුරුවරුන් ඉදිරිපත් කළ පුහුණු ප්‍රශ්න පත්‍ර සමාලෝචනය"
+>
+</app-page-header>
+
+<app-skeleton *ngIf="loading" type="card-grid" [count]="4"></app-skeleton>
+
+<div class="papers-list" *ngIf="!loading">
+  <mat-card class="paper-card" *ngFor="let p of papers">
+    <div class="paper-card__header">
+      <span class="status-badge">අනුමතිය බලාපොරොත්තුයි</span>
+      <span class="chip subject">{{ p.subjectName }}</span>
+    </div>
+
+    <h3 class="paper-title">{{ p.title }}</h3>
+
+    <div class="paper-meta">
+      <div class="meta-item" *ngIf="p.createdByName">
+        <mat-icon>person</mat-icon>
+        <span>{{ p.createdByName }} ({{ p.createdByEmail }})</span>
+      </div>
+      <div class="meta-item">
+        <mat-icon>quiz</mat-icon>
+        <span>ප්‍රශ්න: {{ p.assignedQuestions }}/{{ p.questionCount }}</span>
+      </div>
+      <div class="meta-item">
+        <mat-icon>timer</mat-icon>
+        <span>කාලය: මිනිත්තු {{ p.durationSeconds / 60 }}</span>
+      </div>
+    </div>
+
+    <mat-progress-bar
+      mode="determinate"
+      [value]="
+        p.questionCount > 0 ? (p.assignedQuestions / p.questionCount) * 100 : 0
+      "
+    ></mat-progress-bar>
+
+    <div class="paper-card__actions">
+      <button mat-flat-button color="primary" (click)="approve(p)">
+        <mat-icon>check</mat-icon> අනුමත කරන්න
+      </button>
+      <button mat-stroked-button color="warn" (click)="reject(p)">
+        <mat-icon>close</mat-icon> ප්‍රතික්ෂේප කරන්න
+      </button>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && papers.length === 0"
+  icon="check_circle"
+  title="අනුමතියට පත්‍ර නොමැත"
+  message="සියලුම පුහුණු ප්‍රශ්න පත්‍ර සමාලෝචනය කර ඇත."
+>
+</app-empty-state>
+
+<mat-paginator
+  *ngIf="totalElements > pageSize"
+  [length]="totalElements"
+  [pageSize]="pageSize"
+  [pageIndex]="currentPage"
+  (page)="onPageChange($event)"
+  [hidePageSize]="true"
+>
+</mat-paginator>

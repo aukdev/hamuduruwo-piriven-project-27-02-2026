@@ -45,9 +45,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
             route: '/student/dashboard',
           },
           {
-            icon: 'calendar_today',
-            label: 'වර්ෂ තෝරන්න',
+            icon: 'history_edu',
+            label: 'අතීත ප්‍රශ්න පත්‍ර',
             route: '/student/years',
+          },
+          {
+            icon: 'school',
+            label: 'පුහුණු ප්‍රශ්න',
+            route: '/student/practice',
           },
         ];
       case 'TEACHER':
@@ -61,6 +66,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
             icon: 'description',
             label: 'ප්‍රශ්න පත්‍ර',
             route: '/teacher/papers',
+          },
+          {
+            icon: 'school',
+            label: 'පුහුණු පත්‍ර',
+            route: '/teacher/practice-papers',
           },
           {
             icon: 'add_circle',
@@ -83,8 +93,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
           { icon: 'dashboard', label: 'මුල් පිටුව', route: '/admin/dashboard' },
           {
             icon: 'pending_actions',
-            label: 'අනුමත කිරීම්',
+            label: 'ප්‍රශ්න අනුමැතිය',
             route: '/admin/approvals',
+          },
+          {
+            icon: 'rate_review',
+            label: 'පුහුණු පත්‍ර අනුමැතිය',
+            route: '/admin/practice-approvals',
           },
           {
             icon: 'description',
@@ -112,8 +127,13 @@ export class SidebarComponent implements OnInit, OnDestroy {
           },
           {
             icon: 'pending_actions',
-            label: 'අනුමත කිරීම්',
+            label: 'ප්‍රශ්න අනුමැතිය',
             route: '/superadmin/approvals',
+          },
+          {
+            icon: 'rate_review',
+            label: 'පුහුණු පත්‍ර අනුමැතිය',
+            route: '/superadmin/practice-approvals',
           },
           {
             icon: 'description',

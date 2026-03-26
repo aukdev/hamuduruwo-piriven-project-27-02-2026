@@ -1,5 +1,6 @@
 package com.piriven.mcq.paper.controller;
 
+import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.paper.dto.*;
 import com.piriven.mcq.paper.service.PaperService;
 import com.piriven.mcq.security.CurrentUser;
@@ -21,6 +22,8 @@ import java.util.UUID;
 public class TeacherPaperController {
 
     private final PaperService paperService;
+
+    // ==================== Past Paper Operations ====================
 
     @GetMapping
     public ResponseEntity<List<PaperDto>> getMyPapers(@CurrentUser UserPrincipal currentUser) {
@@ -55,5 +58,37 @@ public class TeacherPaperController {
             @CurrentUser UserPrincipal currentUser) {
         PaperDto paper = paperService.createPaperByTeacher(request, currentUser.getId());
         return ResponseEntity.status(HttpStatus.CREATED).body(paper);
+    }
+
+    // ==================== Practice Paper Operations ====================
+
+    @PostMapping("/practice")
+    public ResponseEntity<PaperDto> createPracticePaper(
+            @Valid @RequestBody PaperCreateRequest request,
+            @CurrentUser UserPrincipal currentUser) {
+        PaperDto paper = paperService.createPracticePaper(request, currentUser.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(paper);
+    }
+
+    @GetMapping("/practice")
+    public ResponseEntity<PagedResponse<PaperDto>> getMyPracticePapers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @CurrentUser UserPrincipal currentUser) {
+        return ResponseEntity.ok(paperService.getTeacherPracticePapers(currentUser.getId(), page, size));
+    }
+
+    @GetMapping("/practice/{paperId}")
+    public ResponseEntity<PaperDetailDto> getPracticePaperDetail(
+            @PathVariable UUID paperId,
+            @CurrentUser UserPrincipal currentUser) {
+        return ResponseEntity.ok(paperService.getTeacherPracticePaperDetail(paperId, currentUser.getId()));
+    }
+
+    @PostMapping("/practice/{paperId}/submit")
+    public ResponseEntity<PaperDto> submitForApproval(
+            @PathVariable UUID paperId,
+            @CurrentUser UserPrincipal currentUser) {
+        return ResponseEntity.ok(paperService.submitPracticePaperForApproval(paperId, currentUser.getId()));
     }
 }

@@ -101,23 +101,38 @@ export interface QuestionDto {
 }
 
 /* ── Paper ── */
+export type PaperType = 'PAST_PAPER' | 'PRACTICE';
+export type PaperStatus =
+  | 'DRAFT'
+  | 'PENDING_APPROVAL'
+  | 'APPROVED'
+  | 'REJECTED';
+
 export interface PaperDto {
   id: string;
-  year: number;
+  year: number | null;
   subjectId: string;
   subjectName: string;
   durationSeconds: number;
   questionCount: number;
   assignedQuestions: number;
+  paperType: PaperType;
+  title?: string;
+  status: PaperStatus;
+  createdByEmail?: string;
+  createdByName?: string;
 }
 
 export interface PaperDetailDto {
   id: string;
-  year: number;
+  year: number | null;
   subjectId: string;
   subjectName: string;
   durationSeconds: number;
   questionCount: number;
+  paperType: PaperType;
+  title?: string;
+  status: PaperStatus;
   questions: PaperQuestionInfo[];
 }
 
@@ -136,10 +151,15 @@ export interface PaperOptionInfo {
 }
 
 export interface PaperCreateRequest {
-  year: number;
+  year?: number;
   subjectId: string;
   questionCount: number;
   durationSeconds: number;
+  title?: string;
+}
+
+export interface PaperRejectRequest {
+  reason: string;
 }
 
 export interface PaperUpdateRequest {
