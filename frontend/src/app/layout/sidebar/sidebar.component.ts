@@ -63,11 +63,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
             route: '/teacher/dashboard',
           },
           {
-            icon: 'description',
-            label: 'ප්‍රශ්න පත්‍ර',
-            route: '/teacher/papers',
-          },
-          {
             icon: 'school',
             label: 'පුහුණු පත්‍ර',
             route: '/teacher/practice-papers',

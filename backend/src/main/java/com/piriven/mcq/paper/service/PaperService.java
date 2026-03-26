@@ -412,7 +412,7 @@ public class PaperService {
         return papers.stream().map(this::toDto).toList();
     }
 
-    // ==================== Teacher Past Paper Operations ====================
+    // ==================== Teacher Past Papers (Read-only) ====================
 
     @Transactional(readOnly = true)
     public List<PaperDto> getTeacherPapers(UUID teacherId) {
@@ -431,80 +431,6 @@ public class PaperService {
         }
         List<Paper> papers = paperRepository.findBySubjectIdWithSubject(subjectId);
         return papers.stream().map(this::toDto).toList();
-    }
-
-    @Transactional
-    public PaperDto updatePaperByTeacher(UUID paperId, PaperUpdateRequest request, UUID teacherId) {
-        Paper paper = paperRepository.findById(paperId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
-
-        // For practice papers, teacher must own it
-        if (paper.getPaperType() == PaperType.PRACTICE) {
-            if (paper.getCreatedBy() == null || !paper.getCreatedBy().getId().equals(teacherId)) {
-                throw new BusinessException("You can only update your own practice papers", HttpStatus.FORBIDDEN);
-            }
-            if (paper.getStatus() != PaperStatus.DRAFT && paper.getStatus() != PaperStatus.REJECTED) {
-                throw new BusinessException("Can only update DRAFT or REJECTED practice papers");
-            }
-        } else {
-            // For past papers, teacher must be assigned to subject
-            if (!subjectService.isTeacherAssignedToSubject(teacherId, paper.getSubject().getId())) {
-                throw new BusinessException("Teacher is not assigned to this paper's subject", HttpStatus.FORBIDDEN);
-            }
-        }
-
-        long assignedCount = paperQuestionRepository.countByPaperId(paperId);
-        if (request.questionCount() < assignedCount) {
-            throw new BusinessException(
-                    "Cannot reduce question count below assigned questions (" + assignedCount + ")",
-                    HttpStatus.CONFLICT);
-        }
-
-        paper.setQuestionCount(request.questionCount());
-        paper.setDurationSeconds(request.durationSeconds());
-        paper = paperRepository.save(paper);
-        return toDto(paper);
-    }
-
-    @Transactional
-    public PaperDto createPaperByTeacher(PaperCreateRequest request, UUID teacherId) {
-        if (!subjectService.isTeacherAssignedToSubject(teacherId, request.subjectId())) {
-            throw new BusinessException("Teacher is not assigned to this subject", HttpStatus.FORBIDDEN);
-        }
-
-        Subject subject = subjectRepository.findById(request.subjectId())
-                .orElseThrow(() -> new ResourceNotFoundException("Subject", "id", request.subjectId()));
-
-        if (request.year() != null && paperRepository.existsByYearAndSubjectIdAndPaperType(request.year(),
-                request.subjectId(), PaperType.PAST_PAPER)) {
-            throw new BusinessException(
-                    "Paper already exists for year " + request.year() + " and subject '" + subject.getName() + "'",
-                    HttpStatus.CONFLICT);
-        }
-
-        Paper paper = Paper.builder()
-                .year(request.year())
-                .subject(subject)
-                .paperType(PaperType.PAST_PAPER)
-                .status(PaperStatus.APPROVED)
-                .durationSeconds(request.durationSeconds() > 0 ? request.durationSeconds() : 1200)
-                .questionCount(request.questionCount())
-                .build();
-
-        paper = paperRepository.save(paper);
-        return toDto(paper);
-    }
-
-    @Transactional(readOnly = true)
-    public PaperDetailDto getTeacherPaperDetail(UUID paperId, UUID teacherId) {
-        Paper paper = paperRepository.findById(paperId)
-                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
-
-        if (!subjectService.isTeacherAssignedToSubject(teacherId, paper.getSubject().getId())) {
-            throw new BusinessException("Teacher is not assigned to this paper's subject", HttpStatus.FORBIDDEN);
-        }
-
-        return getPaperDetail(paperId);
     }
 
     // ==================== Helpers ====================

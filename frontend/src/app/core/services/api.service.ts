@@ -52,7 +52,7 @@ export class ApiService {
     return this.http.get<SubjectDto[]>(`${BASE}/api/teacher/subjects`);
   }
 
-  /* ── Teacher / Papers ── */
+  /* ── Teacher / Papers (read-only, for question assignment) ── */
   getTeacherPapers(): Observable<PaperDto[]> {
     return this.http.get<PaperDto[]>(`${BASE}/api/teacher/papers`);
   }
@@ -61,26 +61,6 @@ export class ApiService {
     return this.http.get<PaperDto[]>(`${BASE}/api/teacher/papers`, {
       params: { subjectId },
     });
-  }
-
-  getTeacherPaperDetail(paperId: string): Observable<PaperDetailDto> {
-    return this.http.get<PaperDetailDto>(
-      `${BASE}/api/teacher/papers/${paperId}`,
-    );
-  }
-
-  updateTeacherPaper(
-    paperId: string,
-    req: PaperUpdateRequest,
-  ): Observable<PaperDto> {
-    return this.http.put<PaperDto>(
-      `${BASE}/api/teacher/papers/${paperId}`,
-      req,
-    );
-  }
-
-  createTeacherPaper(req: PaperCreateRequest): Observable<PaperDto> {
-    return this.http.post<PaperDto>(`${BASE}/api/teacher/papers`, req);
   }
 
   /* ── Papers ── */

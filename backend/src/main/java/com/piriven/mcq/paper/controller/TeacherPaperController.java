@@ -23,7 +23,8 @@ public class TeacherPaperController {
 
     private final PaperService paperService;
 
-    // ==================== Past Paper Operations ====================
+    // ==================== Past Papers (Read-only, for question assignment)
+    // ====================
 
     @GetMapping
     public ResponseEntity<List<PaperDto>> getMyPapers(@CurrentUser UserPrincipal currentUser) {
@@ -35,29 +36,6 @@ public class TeacherPaperController {
             @RequestParam UUID subjectId,
             @CurrentUser UserPrincipal currentUser) {
         return ResponseEntity.ok(paperService.getTeacherPapersBySubject(currentUser.getId(), subjectId));
-    }
-
-    @GetMapping("/{paperId}")
-    public ResponseEntity<PaperDetailDto> getPaperDetail(
-            @PathVariable UUID paperId,
-            @CurrentUser UserPrincipal currentUser) {
-        return ResponseEntity.ok(paperService.getTeacherPaperDetail(paperId, currentUser.getId()));
-    }
-
-    @PutMapping("/{paperId}")
-    public ResponseEntity<PaperDto> updatePaper(
-            @PathVariable UUID paperId,
-            @Valid @RequestBody PaperUpdateRequest request,
-            @CurrentUser UserPrincipal currentUser) {
-        return ResponseEntity.ok(paperService.updatePaperByTeacher(paperId, request, currentUser.getId()));
-    }
-
-    @PostMapping
-    public ResponseEntity<PaperDto> createPaper(
-            @Valid @RequestBody PaperCreateRequest request,
-            @CurrentUser UserPrincipal currentUser) {
-        PaperDto paper = paperService.createPaperByTeacher(request, currentUser.getId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(paper);
     }
 
     // ==================== Practice Paper Operations ====================
