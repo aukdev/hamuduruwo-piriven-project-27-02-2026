@@ -6,6 +6,7 @@ import com.piriven.mcq.common.exception.ResourceNotFoundException;
 import com.piriven.mcq.common.util.PaginationUtil;
 import com.piriven.mcq.paper.entity.Paper;
 import com.piriven.mcq.paper.entity.PaperQuestion;
+import com.piriven.mcq.paper.entity.PaperType;
 import com.piriven.mcq.paper.repository.PaperQuestionRepository;
 import com.piriven.mcq.paper.repository.PaperRepository;
 import com.piriven.mcq.question.dto.*;
@@ -68,13 +69,20 @@ public class QuestionService {
 
         validateOptions(request.options());
 
+        boolean isPracticePaper = paper.getPaperType() == PaperType.PRACTICE;
+
+        // Practice paper questions are auto-approved (paper-level approval is the gate)
+        QuestionStatus initialStatus = isPracticePaper ? QuestionStatus.APPROVED : QuestionStatus.DRAFT;
+
         Question question = Question.builder()
                 .subject(subject)
                 .createdBy(teacher)
                 .questionText(request.questionText())
                 .year(paper.getYear())
                 .paper(paper)
-                .status(QuestionStatus.DRAFT)
+                .status(initialStatus)
+                .approvedBy(isPracticePaper ? teacher : null)
+                .approvedAt(isPracticePaper ? LocalDateTime.now() : null)
                 .build();
 
         for (QuestionOptionRequest optReq : request.options()) {
@@ -87,6 +95,20 @@ public class QuestionService {
         }
 
         question = questionRepository.save(question);
+
+        // Auto-assign to paper_questions for practice papers
+        if (isPracticePaper) {
+            long currentCount = paperQuestionRepository.countByPaperId(paper.getId());
+            if (currentCount < paper.getQuestionCount()) {
+                PaperQuestion pq = PaperQuestion.builder()
+                        .paper(paper)
+                        .question(question)
+                        .position((int) currentCount + 1)
+                        .build();
+                paperQuestionRepository.save(pq);
+            }
+        }
+
         return toDto(question, true);
     }
 

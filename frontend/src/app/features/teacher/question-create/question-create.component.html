@@ -28,14 +28,15 @@
       <mat-label>ප්‍රශ්න පත්‍රය තෝරන්න</mat-label>
       <mat-select formControlName="paperId">
         <mat-option *ngFor="let p of papers" [value]="p.id">
-          {{ p.year }} - {{ p.subjectName }} ({{ p.assignedQuestions }}/{{
-            p.questionCount
-          }})
+          {{
+            p.paperType === "PRACTICE"
+              ? p.title
+              : p.year + " - " + p.subjectName
+          }}
+          ({{ p.assignedQuestions }}/{{ p.questionCount }})
         </mat-option>
       </mat-select>
-      <mat-hint *ngIf="loadingPapers"
-        >ප්‍රශ්න පත්‍ර පූරණය වෙමින්...</mat-hint
-      >
+      <mat-hint *ngIf="loadingPapers">ප්‍රශ්න පත්‍ර පූරණය වෙමින්...</mat-hint>
       <mat-error>ප්‍රශ්න පත්‍රයක් තෝරන්න</mat-error>
     </mat-form-field>
 
@@ -86,7 +87,7 @@
 
       <mat-error
         *ngIf="form.hasError('exactlyOneCorrect') && form.touched"
-        style="font-size:12px; margin-top: 8px;"
+        style="font-size: 12px; margin-top: 8px"
       >
         හරියටම එක් නිවැරදි විකල්පයක් තෝරන්න
       </mat-error>
@@ -94,15 +95,10 @@
 
     <!-- Actions -->
     <div class="form-actions mt-24">
-      <button
-        mat-flat-button
-        color="primary"
-        type="submit"
-        [disabled]="saving"
-      >
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving">
         <mat-spinner *ngIf="saving" diameter="20"></mat-spinner>
         <span *ngIf="!saving">{{
-          isEdit ? 'යාවත්කාලීන කරන්න' : 'සුරකින්න (කෙටුම්පත)'
+          isEdit ? "යාවත්කාලීන කරන්න" : "සුරකින්න (කෙටුම්පත)"
         }}</span>
       </button>
     </div>

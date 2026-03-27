@@ -6,12 +6,17 @@ import { SubjectManagementComponent } from './subject-management/subject-managem
 import { PaperManagementComponent } from './paper-management/paper-management.component';
 import { StudentAnswersComponent } from '../../shared/components/student-answers/student-answers.component';
 import { PracticePaperApprovalsComponent } from '../../shared/components/practice-paper-approvals/practice-paper-approvals.component';
+import { PracticePaperReviewComponent } from '../../shared/components/practice-paper-review/practice-paper-review.component';
 
 export const ADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: AdminDashboardComponent },
   { path: 'approvals', component: PendingApprovalsComponent },
   { path: 'practice-approvals', component: PracticePaperApprovalsComponent },
+  {
+    path: 'practice-approvals/:paperId',
+    component: PracticePaperReviewComponent,
+  },
   { path: 'users', component: UserManagementComponent },
   { path: 'subjects', component: SubjectManagementComponent },
   { path: 'papers', component: PaperManagementComponent },

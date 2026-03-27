@@ -31,6 +31,7 @@ export class QuestionCreateComponent implements OnInit {
   loadingPapers = false;
   optLabels = ['A', 'B', 'C', 'D'];
   private existingQuestion?: QuestionDto;
+  private fromPracticePaper = false;
 
   constructor(
     private fb: FormBuilder,
@@ -53,14 +54,36 @@ export class QuestionCreateComponent implements OnInit {
       // Pre-select paper if navigated from papers page
       const qPaperId = this.route.snapshot.queryParams['paperId'];
       if (qPaperId) {
-        this.api.getTeacherPapers().subscribe((papers) => {
-          const target = papers.find((p) => p.id === qPaperId);
+        // Load both past papers and practice papers to find the target
+        this.api.getTeacherPapers().subscribe((pastPapers) => {
+          const target = pastPapers.find((p) => p.id === qPaperId);
           if (target) {
             this.form.patchValue({ subjectId: target.subjectId });
-            this.papers = papers.filter(
-              (p) => p.subjectId === target.subjectId,
-            );
-            this.form.patchValue({ paperId: qPaperId });
+            this.onSubjectChange(target.subjectId);
+            // Wait for papers to load, then set paperId
+            this.api
+              .getTeacherPapersBySubject(target.subjectId)
+              .subscribe((allPapers) => {
+                this.papers = allPapers;
+                this.form.patchValue({ paperId: qPaperId });
+              });
+          } else {
+            // Maybe it's a practice paper - load practice papers too
+            this.api.getTeacherPracticePapers().subscribe((res) => {
+              const practicePaper = res.content.find(
+                (p: any) => p.id === qPaperId,
+              );
+              if (practicePaper) {
+                this.fromPracticePaper = true;
+                this.form.patchValue({ subjectId: practicePaper.subjectId });
+                this.api
+                  .getTeacherPapersBySubject(practicePaper.subjectId)
+                  .subscribe((allPapers) => {
+                    this.papers = allPapers;
+                    this.form.patchValue({ paperId: qPaperId });
+                  });
+              }
+            });
           }
         });
       }
@@ -202,7 +225,11 @@ export class QuestionCreateComponent implements OnInit {
           next: () => {
             this.saving = false;
             this.notify.success('ප්‍රශ්නය සාර්ථකව සාදන ලදී!');
-            this.router.navigate(['/teacher/questions']);
+            if (this.fromPracticePaper) {
+              this.router.navigate(['/teacher/practice-papers']);
+            } else {
+              this.router.navigate(['/teacher/questions']);
+            }
           },
           error: (err) => {
             this.saving = false;

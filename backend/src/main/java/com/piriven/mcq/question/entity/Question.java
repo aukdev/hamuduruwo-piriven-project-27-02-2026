@@ -35,7 +35,7 @@ public class Question {
     @Column(name = "question_text", nullable = false, columnDefinition = "TEXT")
     private String questionText;
 
-    @Column(name = "year", nullable = false)
+    @Column(name = "year")
     private Integer year;
 
     @ManyToOne(fetch = FetchType.LAZY)

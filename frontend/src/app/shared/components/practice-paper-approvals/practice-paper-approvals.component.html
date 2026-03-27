@@ -38,6 +38,9 @@
     ></mat-progress-bar>
 
     <div class="paper-card__actions">
+      <button mat-flat-button color="accent" [routerLink]="[p.id]">
+        <mat-icon>visibility</mat-icon> සමාලෝචනය කරන්න
+      </button>
       <button mat-flat-button color="primary" (click)="approve(p)">
         <mat-icon>check</mat-icon> අනුමත කරන්න
       </button>
