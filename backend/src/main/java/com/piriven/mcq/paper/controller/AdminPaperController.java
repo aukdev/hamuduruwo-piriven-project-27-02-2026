@@ -79,6 +79,14 @@ public class AdminPaperController {
 
     // ==================== Practice Paper Approval ====================
 
+    @GetMapping("/practice")
+    public ResponseEntity<PagedResponse<PaperDto>> getAllPracticePapers(
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(paperService.getAllPracticePapers(status, page, size));
+    }
+
     @GetMapping("/practice/pending")
     public ResponseEntity<PagedResponse<PaperDto>> getPendingPracticePapers(
             @RequestParam(defaultValue = "0") int page,

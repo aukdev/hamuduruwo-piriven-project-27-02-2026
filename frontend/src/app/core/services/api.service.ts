@@ -332,6 +332,21 @@ export class ApiService {
   }
 
   /* ── Admin / Practice Paper Approvals ── */
+  getAllPracticePapers(
+    status?: string,
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<PaperDto>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (status) {
+      params = params.set('status', status);
+    }
+    return this.http.get<PagedResponse<PaperDto>>(
+      `${BASE}/api/admin/papers/practice`,
+      { params },
+    );
+  }
+
   getPendingPracticePapers(
     page = 0,
     size = 20,

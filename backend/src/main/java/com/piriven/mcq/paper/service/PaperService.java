@@ -352,6 +352,20 @@ public class PaperService {
         return buildPagedResponse(paperPage);
     }
 
+    @Transactional(readOnly = true)
+    public PagedResponse<PaperDto> getAllPracticePapers(String status, int page, int size) {
+        Page<Paper> paperPage;
+        if (status != null && !status.isBlank()) {
+            PaperStatus paperStatus = PaperStatus.valueOf(status);
+            paperPage = paperRepository.findByPaperTypeAndStatus(
+                    PaperType.PRACTICE, paperStatus, PageRequest.of(page, Math.min(size, 100)));
+        } else {
+            paperPage = paperRepository.findByPaperType(
+                    PaperType.PRACTICE, PageRequest.of(page, Math.min(size, 100)));
+        }
+        return buildPagedResponse(paperPage);
+    }
+
     @Transactional
     public PaperDto approvePracticePaper(UUID paperId, UUID adminId) {
         Paper paper = paperRepository.findById(paperId)

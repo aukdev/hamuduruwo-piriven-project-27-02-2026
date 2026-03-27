@@ -27,6 +27,8 @@ export class PracticePaperApprovalsComponent implements OnInit {
   currentPage = 0;
   pageSize = 10;
   totalElements = 0;
+  selectedTab = 0;
+  statusFilter: string | undefined = 'PENDING_APPROVAL';
 
   constructor(
     private api: ApiService,
@@ -38,10 +40,27 @@ export class PracticePaperApprovalsComponent implements OnInit {
     this.loadPapers();
   }
 
+  onTabChange(index: number): void {
+    this.selectedTab = index;
+    this.currentPage = 0;
+    switch (index) {
+      case 0:
+        this.statusFilter = 'PENDING_APPROVAL';
+        break;
+      case 1:
+        this.statusFilter = 'APPROVED';
+        break;
+      case 2:
+        this.statusFilter = undefined;
+        break;
+    }
+    this.loadPapers();
+  }
+
   loadPapers(): void {
     this.loading = true;
     this.api
-      .getPendingPracticePapers(this.currentPage, this.pageSize)
+      .getAllPracticePapers(this.statusFilter, this.currentPage, this.pageSize)
       .subscribe({
         next: (res: any) => {
           this.papers = res.content;

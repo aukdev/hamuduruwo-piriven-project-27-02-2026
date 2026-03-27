@@ -1,3 +1,6 @@
+.approvals-tabs {
+  margin-bottom: 20px;
+}
 .papers-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
@@ -19,6 +22,23 @@
   border-radius: 12px;
   background: #fff3e0;
   color: #e65100;
+
+  &.status-pending {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  &.status-approved {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  &.status-rejected {
+    background: #ffebee;
+    color: #c62828;
+  }
+  &.status-draft {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
 }
 .chip {
   font-size: 12px;

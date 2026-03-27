@@ -14,11 +14,24 @@
   <div class="paper-info">
     <div class="info-row">
       <span class="chip subject">{{ paper.subjectName }}</span>
-      <span class="chip status">{{
-        paper.status === "PENDING_APPROVAL"
-          ? "අනුමතිය බලාපොරොත්තුයි"
-          : paper.status
-      }}</span>
+      <span
+        class="chip status"
+        [ngClass]="{
+          'status-pending': paper.status === 'PENDING_APPROVAL',
+          'status-approved': paper.status === 'APPROVED',
+          'status-rejected': paper.status === 'REJECTED',
+          'status-draft': paper.status === 'DRAFT',
+        }"
+        >{{
+          paper.status === "PENDING_APPROVAL"
+            ? "අනුමතිය බලාපොරොත්තුයි"
+            : paper.status === "APPROVED"
+              ? "අනුමත කළ"
+              : paper.status === "REJECTED"
+                ? "ප්‍රතික්ෂේප කළ"
+                : "කෙටුම්පත"
+        }}</span
+      >
     </div>
     <div class="info-stats">
       <div class="stat">
@@ -44,11 +57,21 @@
   </div>
 
   <!-- Action Buttons -->
-  <div class="paper-actions" *ngIf="paper.status === 'PENDING_APPROVAL'">
-    <button mat-flat-button color="primary" (click)="approve()">
+  <div class="paper-actions">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="approve()"
+      *ngIf="paper.status === 'PENDING_APPROVAL'"
+    >
       <mat-icon>check</mat-icon> අනුමත කරන්න
     </button>
-    <button mat-stroked-button color="warn" (click)="reject()">
+    <button
+      mat-stroked-button
+      color="warn"
+      (click)="reject()"
+      *ngIf="paper.status === 'PENDING_APPROVAL'"
+    >
       <mat-icon>close</mat-icon> ප්‍රතික්ෂේප කරන්න
     </button>
     <button
@@ -129,10 +152,7 @@
       <div class="question-header">
         <span class="question-number">{{ q.position }}</span>
         <span class="question-text">{{ q.questionText }}</span>
-        <div
-          class="question-actions"
-          *ngIf="paper.status === 'PENDING_APPROVAL'"
-        >
+        <div class="question-actions">
           <button mat-icon-button matTooltip="සංස්කරණය" (click)="startEdit(q)">
             <mat-icon>edit</mat-icon>
           </button>
