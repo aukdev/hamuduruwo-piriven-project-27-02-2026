@@ -69,7 +69,7 @@
 }
 .stat-label {
   font-size: 11px;
-  color: #888;
+  color: var(--color-text-muted);
   text-transform: uppercase;
 }
 .stat-value {

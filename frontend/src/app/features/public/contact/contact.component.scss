@@ -1,5 +1,9 @@
 .page-hero {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
   padding: 60px 24px 48px;
   text-align: center;
   h1 {
@@ -65,7 +69,7 @@
   margin-bottom: 2px;
 }
 .text-muted {
-  color: #888 !important;
+  color: var(--color-text-muted) !important;
   font-size: 12px !important;
 }
 .form-section {
@@ -115,7 +119,7 @@
 }
 .text-en {
   font-size: 12px !important;
-  color: #888 !important;
+  color: var(--color-text-muted) !important;
 }
 @media (max-width: 768px) {
   .page-hero h1 {

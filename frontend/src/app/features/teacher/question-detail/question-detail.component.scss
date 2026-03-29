@@ -12,9 +12,9 @@
   font-size: 12px;
   font-weight: 600;
   padding: 3px 10px;
-  background: #f0f0f5;
+  background: var(--color-divider);
   border-radius: 6px;
-  color: #555;
+  color: var(--color-text-secondary);
 }
 .meta-chip--year {
   background: rgba(46, 125, 50, 0.08);
@@ -26,7 +26,7 @@
   color: var(--color-text-primary);
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--color-border);
 }
 .options-grid {
   display: flex;
@@ -39,8 +39,8 @@
   gap: 12px;
   padding: 14px 16px;
   border-radius: 10px;
-  border: 1px solid #e0e0e0;
-  background: #fafafa;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-page);
   transition: all 0.15s;
 
   &.correct {
@@ -94,7 +94,7 @@
   }
   p {
     margin: 0;
-    color: #555;
+    color: var(--color-text-secondary);
     font-size: 13px;
     line-height: 1.6;
   }
@@ -147,12 +147,39 @@
   flex-wrap: wrap;
   margin-bottom: 16px;
   padding: 16px;
-  background: #f8f9fb;
+  background: var(--color-bg-page);
   border-radius: 10px;
   border: 1px solid var(--color-border);
 
   mat-form-field {
     flex: 1;
     min-width: 200px;
+  }
+}
+
+/* Dark theme overrides */
+:host-context(.dark-theme) {
+  .meta-chip {
+    background: var(--color-divider);
+  }
+  .meta-chip--year {
+    background: rgba(46, 125, 50, 0.1);
+  }
+  .option-item {
+    background: var(--color-bg-card);
+    border-color: var(--color-border);
+    &.correct {
+      background: rgba(46, 125, 50, 0.06);
+      border-color: rgba(46, 125, 50, 0.3);
+    }
+  }
+  .rejection-box {
+    background: rgba(198, 40, 40, 0.08);
+  }
+  .paper-info {
+    background: rgba(46, 125, 50, 0.08);
+  }
+  .paper-assign {
+    background: rgba(255, 152, 0, 0.08);
   }
 }

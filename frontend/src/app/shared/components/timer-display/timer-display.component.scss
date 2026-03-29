@@ -5,7 +5,7 @@
   padding: 8px 16px;
   border-radius: 24px;
   background: var(--color-divider);
-  color: #283593;
+  color: var(--color-info);
   font-weight: 700;
   font-size: 16px;
   transition: all 0.3s ease;
@@ -36,5 +36,18 @@
   }
   50% {
     transform: scale(1.05);
+  }
+}
+
+/* Dark theme overrides */
+:host-context(.dark-theme) {
+  .timer {
+    background: rgba(40, 53, 147, 0.15);
+  }
+  .timer.warning {
+    background: rgba(230, 81, 0, 0.15);
+  }
+  .timer.danger {
+    background: rgba(198, 40, 40, 0.15);
   }
 }

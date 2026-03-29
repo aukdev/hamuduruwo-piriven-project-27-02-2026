@@ -1,5 +1,9 @@
 .page-hero {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
   padding: 60px 24px 48px;
   text-align: center;
   h1 {
@@ -70,7 +74,7 @@
 }
 .text-en {
   font-size: 13px;
-  color: #888;
+  color: var(--color-text-muted);
   font-style: italic;
 }
 .values {
@@ -117,7 +121,7 @@
 }
 .value-card__title-en {
   font-size: 11px;
-  color: #999;
+  color: var(--color-text-muted);
   margin-bottom: 8px;
 }
 .value-card p:last-child {

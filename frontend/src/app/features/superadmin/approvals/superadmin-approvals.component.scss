@@ -35,7 +35,7 @@
   color: var(--color-text-primary);
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f5;
+  border-bottom: 1px solid var(--color-divider);
 }
 .options-list {
   display: flex;
@@ -49,7 +49,7 @@
   gap: 10px;
   padding: 10px 14px;
   border-radius: 8px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   font-size: 14px;
   color: var(--color-text-primary);
 
@@ -86,5 +86,19 @@
   display: flex;
   gap: 12px;
   padding-top: 12px;
-  border-top: 1px solid #f0f0f5;
+  border-top: 1px solid var(--color-divider);
+}
+
+/* Dark theme overrides */
+:host-context(.dark-theme) {
+  .option {
+    border-color: var(--color-border);
+    &.correct {
+      background: rgba(46, 125, 50, 0.06);
+      border-color: rgba(46, 125, 50, 0.3);
+    }
+  }
+  .option-letter .correct & {
+    background: rgba(46, 125, 50, 0.15);
+  }
 }

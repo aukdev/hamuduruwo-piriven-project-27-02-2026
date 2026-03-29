@@ -60,8 +60,8 @@
   margin-bottom: 12px;
 }
 .status-draft {
-  background-color: #e0e0e0 !important;
-  color: #555 !important;
+  background-color: var(--color-border) !important;
+  color: var(--color-text-secondary) !important;
 }
 .status-pending_approval {
   background-color: #fff3e0 !important;
@@ -86,7 +86,7 @@
 }
 .stat-label {
   font-size: 11px;
-  color: #888;
+  color: var(--color-text-muted);
   text-transform: uppercase;
 }
 .stat-value {
@@ -124,5 +124,21 @@ mat-progress-bar {
   }
   .form-row {
     flex-direction: column;
+  }
+}
+
+/* Dark theme overrides */
+:host-context(.dark-theme) {
+  .status-draft {
+    background-color: var(--color-divider) !important;
+  }
+  .status-pending_approval {
+    background-color: rgba(230, 81, 0, 0.12) !important;
+  }
+  .status-approved {
+    background-color: rgba(46, 125, 50, 0.12) !important;
+  }
+  .status-rejected {
+    background-color: rgba(198, 40, 40, 0.12) !important;
   }
 }

@@ -1,5 +1,9 @@
 .page-hero {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
   padding: 60px 24px 48px;
   text-align: center;
   h1 {
@@ -40,7 +44,7 @@
   }
   h3 {
     font-size: 14px;
-    color: #888;
+    color: var(--color-text-muted);
     margin-bottom: 16px;
   }
   p {

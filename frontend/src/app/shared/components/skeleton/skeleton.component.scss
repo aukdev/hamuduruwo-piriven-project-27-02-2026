@@ -59,9 +59,9 @@
   display: flex;
   gap: 16px;
   padding: 14px 20px;
-  border-bottom: 1px solid #f0f0f5;
+  border-bottom: 1px solid var(--color-divider);
   &.header {
-    background: #f8f9fb;
+    background: var(--color-bg-page);
   }
 }
 .sk-user-card {
@@ -106,7 +106,7 @@
   gap: 12px;
   margin-top: 16px;
   padding-top: 12px;
-  border-top: 1px solid #f0f0f5;
+  border-top: 1px solid var(--color-divider);
 }
 .sk-dash-header {
   display: flex;
