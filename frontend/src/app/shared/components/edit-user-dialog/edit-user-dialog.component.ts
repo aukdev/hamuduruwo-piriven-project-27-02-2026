@@ -48,6 +48,9 @@ export class EditUserDialogComponent {
       role: [data.role, [Validators.required]],
       status: [data.status, [Validators.required]],
       teacherVerified: [data.teacherVerified],
+      pirivenName: [data.pirivenName || ''],
+      pirivenAddress: [data.pirivenAddress || ''],
+      phoneNumber: [data.phoneNumber || ''],
     });
   }
 

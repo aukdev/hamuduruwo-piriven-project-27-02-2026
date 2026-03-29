@@ -13,10 +13,7 @@
 <app-loading-overlay [show]="loading"></app-loading-overlay>
 
 <!-- Filter tabs -->
-<mat-tab-group
-  (selectedTabChange)="filterByTab($event.index)"
-  class="mb-16"
->
+<mat-tab-group (selectedTabChange)="filterByTab($event.index)" class="mb-16">
   <mat-tab label="සියල්ලම ({{ totalElements }})"></mat-tab>
   <mat-tab label="ගුරුවරුන්"></mat-tab>
   <mat-tab label="ශිෂ්‍යයින්"></mat-tab>
@@ -39,7 +36,7 @@
             [class.active]="u.status === 'ACTIVE'"
             [class.deactivated]="u.status === 'DEACTIVATED'"
           >
-            {{ u.status === 'ACTIVE' ? 'සක්‍රිය' : 'අක්‍රිය' }}
+            {{ u.status === "ACTIVE" ? "සක්‍රිය" : "අක්‍රිය" }}
           </span>
           <span
             class="verify-badge unverified"
@@ -53,9 +50,24 @@
           >
             <mat-icon>verified</mat-icon> සත්‍යාපිත
           </span>
-          <span class="date-chip">{{
-            u.createdAt | date: 'yyyy-MM-dd'
-          }}</span>
+          <span class="date-chip">{{ u.createdAt | date: "yyyy-MM-dd" }}</span>
+        </div>
+        <div
+          class="teacher-details"
+          *ngIf="
+            u.role === 'TEACHER' &&
+            (u.pirivenName || u.pirivenAddress || u.phoneNumber)
+          "
+        >
+          <span *ngIf="u.pirivenName"
+            ><mat-icon>account_balance</mat-icon> {{ u.pirivenName }}</span
+          >
+          <span *ngIf="u.pirivenAddress"
+            ><mat-icon>location_on</mat-icon> {{ u.pirivenAddress }}</span
+          >
+          <span *ngIf="u.phoneNumber"
+            ><mat-icon>phone</mat-icon> {{ u.phoneNumber }}</span
+          >
         </div>
       </div>
       <div class="user-actions">

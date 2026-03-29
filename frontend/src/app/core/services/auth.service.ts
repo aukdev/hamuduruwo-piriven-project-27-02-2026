@@ -75,7 +75,13 @@ export class AuthService {
   register(req: RegisterRequest): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiBaseUrl}/api/auth/register`, req)
-      .pipe(tap((res) => this.handleAuth(res)));
+      .pipe(
+        tap((res) => {
+          if (res.token) {
+            this.handleAuth(res);
+          }
+        }),
+      );
   }
 
   logout(): void {
@@ -108,7 +114,7 @@ export class AuthService {
   }
 
   private handleAuth(res: AuthResponse): void {
-    localStorage.setItem(TOKEN_KEY, res.token);
+    localStorage.setItem(TOKEN_KEY, res.token!);
     const user: CurrentUser = {
       userId: res.userId,
       email: res.email,

@@ -9,6 +9,48 @@
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="role-selection">
+        <label class="role-label">භූමිකාව තෝරන්න (Select Role)</label>
+        <mat-radio-group formControlName="role" class="role-group">
+          <div
+            class="role-option"
+            [class.selected]="form.get('role')?.value === 'STUDENT'"
+            (click)="form.get('role')?.setValue('STUDENT')"
+          >
+            <mat-radio-button value="STUDENT"></mat-radio-button>
+            <div class="role-option__info">
+              <mat-icon>school</mat-icon>
+              <div>
+                <strong>ශිෂ්‍යයා / Student</strong>
+                <small>විභාග සඳහා</small>
+              </div>
+            </div>
+          </div>
+          <div
+            class="role-option"
+            [class.selected]="form.get('role')?.value === 'TEACHER'"
+            (click)="form.get('role')?.setValue('TEACHER')"
+          >
+            <mat-radio-button value="TEACHER"></mat-radio-button>
+            <div class="role-option__info">
+              <mat-icon>assignment_ind</mat-icon>
+              <div>
+                <strong>ගුරුවරයා / Teacher</strong>
+                <small>ප්‍රශ්න සාදන්න</small>
+              </div>
+            </div>
+          </div>
+        </mat-radio-group>
+        <mat-error
+          *ngIf="
+            form.get('role')?.touched && form.get('role')?.hasError('required')
+          "
+          style="font-size: 12px; margin-top: 4px"
+        >
+          භූමිකාව තෝරන්න
+        </mat-error>
+      </div>
+
       <mat-form-field appearance="outline">
         <mat-label>සම්පූර්ණ නම</mat-label>
         <input
@@ -57,7 +99,7 @@
           (click)="hidePassword = !hidePassword"
         >
           <mat-icon>{{
-            hidePassword ? 'visibility_off' : 'visibility'
+            hidePassword ? "visibility_off" : "visibility"
           }}</mat-icon>
         </button>
         <mat-error *ngIf="form.get('password')?.hasError('required')"
@@ -68,48 +110,47 @@
         >
       </mat-form-field>
 
-      <div class="role-selection">
-        <label class="role-label">භූමිකාව තෝරන්න (Select Role)</label>
-        <mat-radio-group formControlName="role" class="role-group">
-          <div
-            class="role-option"
-            [class.selected]="form.get('role')?.value === 'STUDENT'"
-            (click)="form.get('role')?.setValue('STUDENT')"
+      <!-- Teacher-only fields -->
+      <ng-container *ngIf="isTeacher">
+        <mat-form-field appearance="outline">
+          <mat-label>පිරිවෙන් නම</mat-label>
+          <input
+            matInput
+            formControlName="pirivenName"
+            placeholder="පිරිවෙන් නම ඇතුළත් කරන්න"
+          />
+          <mat-icon matPrefix>account_balance</mat-icon>
+          <mat-error *ngIf="form.get('pirivenName')?.hasError('required')"
+            >පිරිවෙන් නම අවශ්‍යයි</mat-error
           >
-            <mat-radio-button value="STUDENT"></mat-radio-button>
-            <div class="role-option__info">
-              <mat-icon>school</mat-icon>
-              <div>
-                <strong>ශිෂ්‍යයා / Student</strong>
-                <small>විභාග සඳහා</small>
-              </div>
-            </div>
-          </div>
-          <div
-            class="role-option"
-            [class.selected]="form.get('role')?.value === 'TEACHER'"
-            (click)="form.get('role')?.setValue('TEACHER')"
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>පිරිවෙන් ලිපිනය</mat-label>
+          <input
+            matInput
+            formControlName="pirivenAddress"
+            placeholder="පිරිවෙන් ලිපිනය ඇතුළත් කරන්න"
+          />
+          <mat-icon matPrefix>location_on</mat-icon>
+          <mat-error *ngIf="form.get('pirivenAddress')?.hasError('required')"
+            >පිරිවෙන් ලිපිනය අවශ්‍යයි</mat-error
           >
-            <mat-radio-button value="TEACHER"></mat-radio-button>
-            <div class="role-option__info">
-              <mat-icon>assignment_ind</mat-icon>
-              <div>
-                <strong>ගුරුවරයා / Teacher</strong>
-                <small>ප්‍රශ්න සාදන්න</small>
-              </div>
-            </div>
-          </div>
-        </mat-radio-group>
-        <mat-error
-          *ngIf="
-            form.get('role')?.touched &&
-            form.get('role')?.hasError('required')
-          "
-          style="font-size:12px; margin-top:4px;"
-        >
-          භූමිකාව තෝරන්න
-        </mat-error>
-      </div>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>දුරකථන අංකය</mat-label>
+          <input
+            matInput
+            formControlName="phoneNumber"
+            placeholder="07XXXXXXXX"
+          />
+          <mat-icon matPrefix>phone</mat-icon>
+          <mat-error *ngIf="form.get('phoneNumber')?.hasError('required')"
+            >දුරකථන අංකය අවශ්‍යයි</mat-error
+          >
+        </mat-form-field>
+      </ng-container>
 
       <button
         mat-flat-button

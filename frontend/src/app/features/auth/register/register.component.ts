@@ -28,8 +28,34 @@ export class RegisterComponent {
       fullName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
-      role: ['', Validators.required],
+      role: ['STUDENT', Validators.required],
+      pirivenName: [''],
+      pirivenAddress: [''],
+      phoneNumber: [''],
     });
+
+    this.form.get('role')?.valueChanges.subscribe((role) => {
+      const pirivenName = this.form.get('pirivenName')!;
+      const pirivenAddress = this.form.get('pirivenAddress')!;
+      const phoneNumber = this.form.get('phoneNumber')!;
+
+      if (role === 'TEACHER') {
+        pirivenName.setValidators([Validators.required]);
+        pirivenAddress.setValidators([Validators.required]);
+        phoneNumber.setValidators([Validators.required]);
+      } else {
+        pirivenName.clearValidators();
+        pirivenAddress.clearValidators();
+        phoneNumber.clearValidators();
+      }
+      pirivenName.updateValueAndValidity();
+      pirivenAddress.updateValueAndValidity();
+      phoneNumber.updateValueAndValidity();
+    });
+  }
+
+  get isTeacher(): boolean {
+    return this.form.get('role')?.value === 'TEACHER';
   }
 
   onSubmit(): void {
@@ -38,11 +64,26 @@ export class RegisterComponent {
       return;
     }
     this.loading = true;
-    this.auth.register(this.form.value).subscribe({
-      next: () => {
+
+    const payload = { ...this.form.value };
+    if (!this.isTeacher) {
+      delete payload.pirivenName;
+      delete payload.pirivenAddress;
+      delete payload.phoneNumber;
+    }
+
+    this.auth.register(payload).subscribe({
+      next: (res) => {
         this.loading = false;
-        this.notify.success('ලියාපදිංචිය සාර්ථකයි!');
-        this.auth.navigateByRole();
+        if (res.token) {
+          this.notify.success('ලියාපදිංචිය සාර්ථකයි!');
+          this.auth.navigateByRole();
+        } else {
+          this.notify.success(
+            'ලියාපදිංචිය සාර්ථකයි! පරිපාලක අනුමැතියෙන් පසු ඔබට පිවිසිය හැකිය.',
+          );
+          this.router.navigate(['/login']);
+        }
       },
       error: (err: HttpErrorResponse) => {
         this.loading = false;

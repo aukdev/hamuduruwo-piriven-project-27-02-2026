@@ -142,6 +142,9 @@ public class UserService {
         if (request.teacherVerified() != null) {
             user.setTeacherVerified(request.teacherVerified());
         }
+        user.setPirivenName(request.pirivenName());
+        user.setPirivenAddress(request.pirivenAddress());
+        user.setPhoneNumber(request.phoneNumber());
 
         user = userRepository.save(user);
         return toDto(user);
@@ -173,6 +176,9 @@ public class UserService {
                 user.getRole().name(),
                 user.getStatus().name(),
                 user.isTeacherVerified(),
+                user.getPirivenName(),
+                user.getPirivenAddress(),
+                user.getPhoneNumber(),
                 user.getCreatedAt());
     }
 }

@@ -95,3 +95,23 @@
 .actions-bar {
   margin-bottom: 16px;
 }
+.teacher-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}

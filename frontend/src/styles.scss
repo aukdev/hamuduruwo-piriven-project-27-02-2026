@@ -206,6 +206,10 @@
     --mdc-checkbox-selected-checkmark-color: #0f1419;
     --mdc-checkbox-unselected-hover-icon-color: var(--color-primary);
   }
+  .mat-mdc-checkbox .mdc-form-field,
+  .mat-mdc-checkbox .mdc-label {
+    color: var(--color-text-primary);
+  }
   .mat-mdc-radio-button {
     --mdc-radio-unselected-icon-color: var(--color-text-muted);
     --mdc-radio-selected-icon-color: var(--color-primary);

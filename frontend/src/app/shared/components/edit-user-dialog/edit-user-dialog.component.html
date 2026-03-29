@@ -31,6 +31,21 @@
     >
       ගුරු සත්‍යාපනය කර ඇත
     </mat-checkbox>
+
+    <ng-container *ngIf="form.get('role')?.value === 'TEACHER'">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>පිරිවෙන් නම</mat-label>
+        <input matInput formControlName="pirivenName" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>පිරිවෙන් ලිපිනය</mat-label>
+        <input matInput formControlName="pirivenAddress" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>දුරකථන අංකය</mat-label>
+        <input matInput formControlName="phoneNumber" />
+      </mat-form-field>
+    </ng-container>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

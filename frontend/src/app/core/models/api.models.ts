@@ -9,10 +9,13 @@ export interface RegisterRequest {
   password: string;
   fullName: string;
   role: 'TEACHER' | 'STUDENT';
+  pirivenName?: string;
+  pirivenAddress?: string;
+  phoneNumber?: string;
 }
 
 export interface AuthResponse {
-  token: string;
+  token: string | null;
   tokenType: string;
   userId: string;
   email: string;
@@ -30,6 +33,9 @@ export interface UserDto {
   role: AppRole;
   status: 'ACTIVE' | 'DEACTIVATED';
   teacherVerified: boolean;
+  pirivenName?: string;
+  pirivenAddress?: string;
+  phoneNumber?: string;
   createdAt: string;
 }
 
@@ -337,6 +343,9 @@ export interface UserUpdateRequest {
   role: AppRole;
   status: 'ACTIVE' | 'DEACTIVATED';
   teacherVerified: boolean;
+  pirivenName?: string;
+  pirivenAddress?: string;
+  phoneNumber?: string;
 }
 
 export interface ResetPasswordRequest {
