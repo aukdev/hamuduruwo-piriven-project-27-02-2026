@@ -9,12 +9,27 @@
 <!-- Filter Section -->
 <mat-card class="filter-card" *ngIf="!selectedAttempt">
   <div class="filter-row">
-    <mat-form-field appearance="outline" class="filter-field">
-      <mat-label>වර්ෂය අනුව පෙරන්න</mat-label>
-      <mat-select
-        [(value)]="selectedYear"
-        (selectionChange)="onYearChange()"
+    <mat-button-toggle-group
+      [value]="selectedPaperType"
+      (change)="selectedPaperType = $event.value; onPaperTypeChange()"
+      class="paper-type-toggle"
+    >
+      <mat-button-toggle [value]="null">සියල්ල</mat-button-toggle>
+      <mat-button-toggle value="PAST_PAPER"
+        >පසුගිය ප්‍රශ්න පත්‍ර</mat-button-toggle
       >
+      <mat-button-toggle value="PRACTICE"
+        >පුහුණු ප්‍රශ්න පත්‍ර</mat-button-toggle
+      >
+    </mat-button-toggle-group>
+
+    <mat-form-field
+      appearance="outline"
+      class="filter-field"
+      *ngIf="selectedPaperType !== 'PRACTICE'"
+    >
+      <mat-label>වර්ෂය අනුව පෙරන්න</mat-label>
+      <mat-select [(value)]="selectedYear" (selectionChange)="onYearChange()">
         <mat-option [value]="null">සියල්ල</mat-option>
         <mat-option *ngFor="let y of years" [value]="y">{{ y }}</mat-option>
       </mat-select>
@@ -23,7 +38,9 @@
     <mat-form-field
       appearance="outline"
       class="filter-field"
-      *ngIf="selectedYear && papers.length > 0"
+      *ngIf="
+        selectedPaperType !== 'PRACTICE' && selectedYear && papers.length > 0
+      "
     >
       <mat-label>පත්‍රය අනුව පෙරන්න</mat-label>
       <mat-select
@@ -41,7 +58,7 @@
       mat-stroked-button
       color="primary"
       (click)="clearFilters()"
-      *ngIf="selectedYear || selectedPaperId"
+      *ngIf="selectedYear || selectedPaperId || selectedPaperType"
     >
       <mat-icon>clear</mat-icon> පෙරහන ඉවත් කරන්න
     </button>
@@ -70,9 +87,13 @@
         <div class="attempt-meta">
           <span class="meta-chip subject">{{ a.subjectName }}</span>
           <span class="meta-chip year">{{ a.year }}</span>
-          <span class="meta-chip attempt-no"
-            >{{ a.attemptNo }} වන උත්සාහය</span
+          <span class="meta-chip paper-type" *ngIf="a.paperType === 'PRACTICE'"
+            >පුහුණු</span
           >
+          <span class="meta-chip paper-title" *ngIf="a.paperTitle">{{
+            a.paperTitle
+          }}</span>
+          <span class="meta-chip attempt-no">{{ a.attemptNo }} වන උත්සාහය</span>
         </div>
       </div>
       <div class="attempt-score">
@@ -95,7 +116,7 @@
         </div>
       </div>
       <div class="attempt-date">
-        {{ a.submittedAt | date: 'yyyy-MM-dd HH:mm' }}
+        {{ a.submittedAt | date: "yyyy-MM-dd HH:mm" }}
       </div>
       <mat-icon class="view-icon">chevron_right</mat-icon>
     </div>
@@ -131,15 +152,11 @@
         </div>
         <div>
           <h3>{{ selectedAttempt.studentName }}</h3>
-          <span class="detail-email">{{
-            selectedAttempt.studentEmail
-          }}</span>
+          <span class="detail-email">{{ selectedAttempt.studentEmail }}</span>
         </div>
       </div>
       <div class="detail-paper">
-        <span class="detail-subject">{{
-          selectedAttempt.subjectName
-        }}</span>
+        <span class="detail-subject">{{ selectedAttempt.subjectName }}</span>
         <span class="detail-year">{{ selectedAttempt.year }}</span>
         <span class="detail-attempt"
           >{{ selectedAttempt.attemptNo }} වන උත්සාහය</span
@@ -185,9 +202,7 @@
       [class.timeout]="ans.isTimeout"
     >
       <div class="question-header">
-        <span class="question-number"
-          >ප්‍රශ්නය {{ ans.questionNumber }}</span
-        >
+        <span class="question-number">ප්‍රශ්නය {{ ans.questionNumber }}</span>
         <span class="question-status" *ngIf="ans.isCorrect">
           <mat-icon>check_circle</mat-icon> නිවැරදි
         </span>

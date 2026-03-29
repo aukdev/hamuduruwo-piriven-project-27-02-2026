@@ -49,4 +49,18 @@ public interface AttemptRepository extends JpaRepository<Attempt, UUID> {
                         "WHERE p.subject.id IN :subjectIds AND a.status IN ('SUBMITTED', 'EXPIRED') " +
                         "ORDER BY a.submittedAt DESC", countQuery = "SELECT COUNT(a) FROM Attempt a WHERE a.paper.subject.id IN :subjectIds AND a.status IN ('SUBMITTED', 'EXPIRED')")
         Page<Attempt> findCompletedAttemptsBySubjectIds(@Param("subjectIds") List<UUID> subjectIds, Pageable pageable);
+
+        @Query(value = "SELECT a FROM Attempt a JOIN FETCH a.student JOIN FETCH a.paper p JOIN FETCH p.subject " +
+                        "WHERE p.paperType = :paperType AND a.status IN ('SUBMITTED', 'EXPIRED') " +
+                        "ORDER BY a.submittedAt DESC", countQuery = "SELECT COUNT(a) FROM Attempt a JOIN a.paper p WHERE p.paperType = :paperType AND a.status IN ('SUBMITTED', 'EXPIRED')")
+        Page<Attempt> findCompletedAttemptsByPaperType(
+                        @Param("paperType") com.piriven.mcq.paper.entity.PaperType paperType, Pageable pageable);
+
+        @Query(value = "SELECT a FROM Attempt a JOIN FETCH a.student JOIN FETCH a.paper p JOIN FETCH p.subject " +
+                        "WHERE p.paperType = :paperType AND p.subject.id IN :subjectIds AND a.status IN ('SUBMITTED', 'EXPIRED') "
+                        +
+                        "ORDER BY a.submittedAt DESC", countQuery = "SELECT COUNT(a) FROM Attempt a JOIN a.paper p WHERE p.paperType = :paperType AND p.subject.id IN :subjectIds AND a.status IN ('SUBMITTED', 'EXPIRED')")
+        Page<Attempt> findCompletedAttemptsByPaperTypeAndSubjectIds(
+                        @Param("paperType") com.piriven.mcq.paper.entity.PaperType paperType,
+                        @Param("subjectIds") List<UUID> subjectIds, Pageable pageable);
 }

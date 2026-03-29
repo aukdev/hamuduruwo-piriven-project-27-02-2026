@@ -46,7 +46,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
           },
           {
             icon: 'history_edu',
-            label: 'අතීත ප්‍රශ්න පත්‍ර',
+            label: 'past-paper ප්‍රශ්න පත්‍ර',
             route: '/student/years',
           },
           {

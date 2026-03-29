@@ -25,7 +25,12 @@ public class TeacherAttemptController {
     public ResponseEntity<PagedResponse<StudentAttemptSummaryDto>> getMyStudentAttempts(
             @CurrentUser UserPrincipal currentUser,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String paperType) {
+        if (paperType != null && !paperType.isBlank()) {
+            return ResponseEntity.ok(
+                    attemptService.getTeacherStudentAttemptsByPaperType(currentUser.getId(), paperType, page, size));
+        }
         return ResponseEntity.ok(attemptService.getTeacherStudentAttempts(currentUser.getId(), page, size));
     }
 

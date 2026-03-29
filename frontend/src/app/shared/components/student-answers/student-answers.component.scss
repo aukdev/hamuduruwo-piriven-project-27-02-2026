@@ -85,6 +85,17 @@
   background: #fff3e0;
   color: #e65100;
 }
+.meta-chip.paper-type {
+  background: #e8eaf6;
+  color: #283593;
+}
+.meta-chip.paper-title {
+  background: #e0f7fa;
+  color: #00695c;
+}
+.paper-type-toggle {
+  margin-right: 8px;
+}
 .attempt-score {
   text-align: center;
   flex-shrink: 0;

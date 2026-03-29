@@ -160,12 +160,15 @@ export class ApiService {
   getTeacherStudentAttempts(
     page = 0,
     size = 20,
+    paperType?: string,
   ): Observable<PagedResponse<StudentAttemptSummaryDto>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (paperType) {
+      params = params.set('paperType', paperType);
+    }
     return this.http.get<PagedResponse<StudentAttemptSummaryDto>>(
       `${BASE}/api/teacher/student-attempts`,
-      {
-        params: new HttpParams().set('page', page).set('size', size),
-      },
+      { params },
     );
   }
 
@@ -466,12 +469,15 @@ export class ApiService {
   getStudentAttempts(
     page = 0,
     size = 20,
+    paperType?: string,
   ): Observable<PagedResponse<StudentAttemptSummaryDto>> {
+    let params = new HttpParams().set('page', page).set('size', size);
+    if (paperType) {
+      params = params.set('paperType', paperType);
+    }
     return this.http.get<PagedResponse<StudentAttemptSummaryDto>>(
       `${BASE}/api/admin/student-attempts`,
-      {
-        params: new HttpParams().set('page', page).set('size', size),
-      },
+      { params },
     );
   }
 

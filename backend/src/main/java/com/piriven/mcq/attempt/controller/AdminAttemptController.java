@@ -22,7 +22,11 @@ public class AdminAttemptController {
     @GetMapping
     public ResponseEntity<PagedResponse<StudentAttemptSummaryDto>> getAllAttempts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(required = false) String paperType) {
+        if (paperType != null && !paperType.isBlank()) {
+            return ResponseEntity.ok(attemptService.getAllStudentAttemptsByPaperType(paperType, page, size));
+        }
         return ResponseEntity.ok(attemptService.getAllStudentAttempts(page, size));
     }
 

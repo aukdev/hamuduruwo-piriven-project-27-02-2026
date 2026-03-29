@@ -485,6 +485,15 @@ public class AttemptService {
     }
 
     @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getAllStudentAttemptsByPaperType(String paperType, int page,
+            int size) {
+        com.piriven.mcq.paper.entity.PaperType type = com.piriven.mcq.paper.entity.PaperType.valueOf(paperType);
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperType(type,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
     public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByPaper(UUID paperId, int page, int size) {
         Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperId(paperId,
                 PaginationUtil.of(page, size));
@@ -524,6 +533,22 @@ public class AttemptService {
                     .content(List.of()).page(0).size(size).totalElements(0).totalPages(0).last(true).build();
         }
         Page<Attempt> attempts = attemptRepository.findCompletedAttemptsBySubjectIds(subjectIds,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getTeacherStudentAttemptsByPaperType(UUID teacherId,
+            String paperType, int page, int size) {
+        List<UUID> subjectIds = subjectService.getTeacherSubjects(teacherId).stream()
+                .map(SubjectDto::id)
+                .toList();
+        if (subjectIds.isEmpty()) {
+            return PagedResponse.<StudentAttemptSummaryDto>builder()
+                    .content(List.of()).page(0).size(size).totalElements(0).totalPages(0).last(true).build();
+        }
+        com.piriven.mcq.paper.entity.PaperType type = com.piriven.mcq.paper.entity.PaperType.valueOf(paperType);
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperTypeAndSubjectIds(type, subjectIds,
                 PaginationUtil.of(page, size));
         return buildAttemptSummaryPage(attempts);
     }
@@ -643,6 +668,8 @@ public class AttemptService {
                         a.getWrongCount(),
                         a.getScore(),
                         a.getPaper().getQuestionCount(),
+                        a.getPaper().getPaperType().name(),
+                        a.getPaper().getTitle(),
                         a.getStartedAt(),
                         a.getSubmittedAt()))
                 .toList();

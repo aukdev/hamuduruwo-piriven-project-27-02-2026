@@ -6,6 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { PageHeaderComponent } from '../page-header/page-header.component';
 import { LoadingOverlayComponent } from '../loading-overlay/loading-overlay.component';
 import { EmptyStateComponent } from '../empty-state/empty-state.component';
@@ -32,6 +33,7 @@ import {
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
+    MatButtonToggleModule,
     PageHeaderComponent,
     LoadingOverlayComponent,
     EmptyStateComponent,
@@ -52,6 +54,7 @@ export class StudentAnswersComponent implements OnInit {
   papers: PaperDto[] = [];
   selectedYear: number | null = null;
   selectedPaperId: string | null = null;
+  selectedPaperType: string | null = null;
   private isTeacher = false;
 
   constructor(
@@ -89,9 +92,18 @@ export class StudentAnswersComponent implements OnInit {
             this.pageSize,
           );
     } else {
+      const paperType = this.selectedPaperType ?? undefined;
       obs = this.isTeacher
-        ? this.api.getTeacherStudentAttempts(this.currentPage, this.pageSize)
-        : this.api.getStudentAttempts(this.currentPage, this.pageSize);
+        ? this.api.getTeacherStudentAttempts(
+            this.currentPage,
+            this.pageSize,
+            paperType,
+          )
+        : this.api.getStudentAttempts(
+            this.currentPage,
+            this.pageSize,
+            paperType,
+          );
     }
 
     obs.subscribe({
@@ -125,9 +137,18 @@ export class StudentAnswersComponent implements OnInit {
     this.loadAttempts();
   }
 
+  onPaperTypeChange(): void {
+    this.selectedYear = null;
+    this.selectedPaperId = null;
+    this.papers = [];
+    this.currentPage = 0;
+    this.loadAttempts();
+  }
+
   clearFilters(): void {
     this.selectedYear = null;
     this.selectedPaperId = null;
+    this.selectedPaperType = null;
     this.papers = [];
     this.currentPage = 0;
     this.loadAttempts();

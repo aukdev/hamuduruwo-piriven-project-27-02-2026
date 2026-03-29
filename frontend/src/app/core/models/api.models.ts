@@ -274,6 +274,8 @@ export interface StudentAttemptSummaryDto {
   wrongCount: number;
   score: number;
   totalQuestions: number;
+  paperType: string;
+  paperTitle: string;
   startedAt: string;
   submittedAt: string;
 }
