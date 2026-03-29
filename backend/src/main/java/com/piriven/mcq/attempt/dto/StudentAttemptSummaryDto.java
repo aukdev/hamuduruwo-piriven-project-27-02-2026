@@ -9,7 +9,7 @@ public record StudentAttemptSummaryDto(
                 String studentName,
                 String studentEmail,
                 UUID paperId,
-                int year,
+                Integer year,
                 String subjectName,
                 int attemptNo,
                 String status,

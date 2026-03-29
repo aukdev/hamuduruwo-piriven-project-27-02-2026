@@ -181,7 +181,7 @@ export interface PaperQuestionAssignRequest {
 export interface AttemptStartResponse {
   attemptId: string;
   attemptNo: number;
-  year: number;
+  year: number | null;
   subjectName: string;
   totalQuestions: number;
   durationSeconds: number;
@@ -218,7 +218,7 @@ export interface AttemptResultResponse {
   attemptId: string;
   attemptNo: number;
   status: string;
-  year: number;
+  year: number | null;
   subjectName: string;
   correctCount: number;
   wrongCount: number;
@@ -266,7 +266,7 @@ export interface StudentAttemptSummaryDto {
   studentName: string;
   studentEmail: string;
   paperId: string;
-  year: number;
+  year: number | null;
   subjectName: string;
   attemptNo: number;
   status: string;
@@ -285,7 +285,7 @@ export interface AttemptDetailDto {
   studentId: string;
   studentName: string;
   studentEmail: string;
-  year: number;
+  year: number | null;
   subjectName: string;
   attemptNo: number;
   status: string;

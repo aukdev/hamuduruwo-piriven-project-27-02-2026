@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record AttemptStartResponse(
-                UUID attemptId,
-                int attemptNo,
-                int year,
-                String subjectName,
-                int totalQuestions,
-                int durationSeconds,
-                LocalDateTime startedAt,
-                LocalDateTime expiresAt) {
+        UUID attemptId,
+        int attemptNo,
+        Integer year,
+        String subjectName,
+        int totalQuestions,
+        int durationSeconds,
+        LocalDateTime startedAt,
+        LocalDateTime expiresAt) {
 }
