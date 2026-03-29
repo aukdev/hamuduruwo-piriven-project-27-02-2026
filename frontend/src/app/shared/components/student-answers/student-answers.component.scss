@@ -11,6 +11,7 @@
 .filter-field {
   min-width: 200px;
 }
+
 .back-bar {
   margin-bottom: 16px;
 }
@@ -407,6 +408,22 @@
 
 /* Dark theme overrides */
 :host-context(.dark-theme) {
+  ::ng-deep .paper-type-toggle {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: #314651;
+    box-shadow: none;
+  }
+
+  ::ng-deep .paper-type-toggle .mat-button-toggle {
+    color: var(--color-text-secondary);
+  }
+
+  ::ng-deep .paper-type-toggle .mat-button-toggle-checked {
+    background: var(--color-primary);
+    color: #0f1419;
+    box-shadow: 0 10px 24px rgba(77, 184, 196, 0.2);
+  }
+
   .meta-chip {
     &.subject {
       background: rgba(46, 125, 50, 0.15);

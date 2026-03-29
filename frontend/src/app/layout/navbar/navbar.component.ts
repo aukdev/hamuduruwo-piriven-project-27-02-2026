@@ -29,6 +29,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
   sidenavOpen = true;
   user = this.auth.currentUser;
   isDark$ = this.themeService.isDark$;
+  publicNavLinks = [
+    { label: 'මුල් පිටුව', route: '/' },
+    { label: 'අපි ගැන', route: '/about' },
+    { label: 'දැක්ම හා මෙහෙවර', route: '/vision-mission' },
+    { label: 'වීඩියෝ', route: '/videos' },
+    { label: 'සම්බන්ධ වන්න', route: '/contact' },
+  ];
   private sub!: Subscription;
 
   constructor(

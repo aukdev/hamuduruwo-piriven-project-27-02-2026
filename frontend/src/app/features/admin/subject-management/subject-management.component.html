@@ -13,22 +13,14 @@
     <form [formGroup]="subjectForm" (ngSubmit)="createSubject()">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>විෂය නාමය</mat-label>
-        <input
-          matInput
-          formControlName="name"
-          placeholder="උදා: බුද්ධ ධර්මය"
-        />
+        <input matInput formControlName="name" placeholder="උදා: බුද්ධ ධර්මය" />
         <mat-error *ngIf="subjectForm.get('name')?.hasError('required')"
           >විෂය නාමය අවශ්‍යයි</mat-error
         >
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>විස්තරය (විකල්ප)</mat-label>
-        <textarea
-          matInput
-          formControlName="description"
-          rows="2"
-        ></textarea>
+        <textarea matInput formControlName="description" rows="2"></textarea>
       </mat-form-field>
       <button
         mat-flat-button
@@ -48,13 +40,13 @@
     </h3>
     <form [formGroup]="assignForm" (ngSubmit)="assignSubject()">
       <mat-form-field appearance="outline" class="full-width">
-        <mat-label>ගුරුවරයාගේ ID</mat-label>
-        <input
-          matInput
-          formControlName="teacherId"
-          placeholder="ගුරුවරයාගේ ID ඇතුළත් කරන්න"
-        />
-        <mat-error>ID අවශ්‍යයි</mat-error>
+        <mat-label>ගුරුවරයා</mat-label>
+        <mat-select formControlName="teacherId">
+          <mat-option *ngFor="let t of teachers" [value]="t.id">
+            {{ t.fullName }} ({{ t.email }})
+          </mat-option>
+        </mat-select>
+        <mat-error>ගුරුවරයෙකු තෝරන්න</mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>විෂයය</mat-label>
@@ -92,9 +84,7 @@
       <div class="subject-text">
         <strong>{{ s.name }}</strong>
         <p *ngIf="s.description">{{ s.description }}</p>
-        <span class="subject-date">{{
-          s.createdAt | date: 'yyyy-MM-dd'
-        }}</span>
+        <span class="subject-date">{{ s.createdAt | date: "yyyy-MM-dd" }}</span>
       </div>
     </div>
     <div class="subject-actions">

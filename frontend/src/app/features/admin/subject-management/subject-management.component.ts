@@ -7,7 +7,11 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { ApiService } from '../../../core/services/api.service';
 import { NotificationService } from '../../../core/services/notification.service';
-import { SubjectDto, UpdateSubjectRequest } from '../../../core/models';
+import {
+  SubjectDto,
+  UpdateSubjectRequest,
+  UserDto,
+} from '../../../core/models';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { EditSubjectDialogComponent } from '../../../shared/components/edit-subject-dialog/edit-subject-dialog.component';
 
@@ -25,6 +29,7 @@ import { EditSubjectDialogComponent } from '../../../shared/components/edit-subj
 })
 export class SubjectManagementComponent implements OnInit {
   subjects: SubjectDto[] = [];
+  teachers: UserDto[] = [];
   loading = true;
   creating = false;
   assigning = false;
@@ -50,6 +55,17 @@ export class SubjectManagementComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadSubjects();
+    this.loadTeachers();
+  }
+
+  loadTeachers(): void {
+    this.api.getUsers(0, 200).subscribe({
+      next: (res) => {
+        this.teachers = res.content.filter(
+          (u) => u.role === 'TEACHER' && u.status === 'ACTIVE',
+        );
+      },
+    });
   }
 
   loadSubjects(): void {

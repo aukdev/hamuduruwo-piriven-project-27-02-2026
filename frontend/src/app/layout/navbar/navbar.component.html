@@ -13,7 +13,28 @@
     </div>
   </div>
 
+  <nav class="navbar__links">
+    <a
+      *ngFor="let link of publicNavLinks"
+      [routerLink]="link.route"
+      routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: link.route === '/' }"
+      class="navbar__link"
+    >
+      {{ link.label }}
+    </a>
+  </nav>
+
   <span class="navbar__spacer"></span>
+
+  <button
+    mat-icon-button
+    class="navbar__nav-menu-btn"
+    [matMenuTriggerFor]="siteNavMenu"
+    aria-label="Open site navigation"
+  >
+    <mat-icon>travel_explore</mat-icon>
+  </button>
 
   <button
     mat-icon-button
@@ -26,17 +47,31 @@
     <mat-icon>{{ (isDark$ | async) ? "light_mode" : "dark_mode" }}</mat-icon>
   </button>
 
-  <span class="role-badge role-{{ user?.role }}" *ngIf="user">
-    {{ getRoleSinhala(user.role) }}
+  <span
+    class="role-badge role-{{ currentUser.role }}"
+    *ngIf="user as currentUser"
+  >
+    {{ getRoleSinhala(currentUser.role) }}
   </span>
 
   <button mat-icon-button [matMenuTriggerFor]="profileMenu" *ngIf="user">
     <mat-icon>account_circle</mat-icon>
   </button>
+
+  <mat-menu #siteNavMenu="matMenu">
+    <a
+      *ngFor="let link of publicNavLinks"
+      mat-menu-item
+      [routerLink]="link.route"
+    >
+      <span>{{ link.label }}</span>
+    </a>
+  </mat-menu>
+
   <mat-menu #profileMenu="matMenu">
-    <div class="profile-menu-header">
-      <strong>{{ user?.fullName }}</strong>
-      <small>{{ user?.email }}</small>
+    <div class="profile-menu-header" *ngIf="user as currentUser">
+      <strong>{{ currentUser.fullName }}</strong>
+      <small>{{ currentUser.email }}</small>
     </div>
     <mat-divider></mat-divider>
     <button mat-menu-item (click)="logout()">

@@ -9,6 +9,12 @@
 .create-card,
 .assign-card {
   padding: 24px !important;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 }
 .card-title {
   display: flex;
