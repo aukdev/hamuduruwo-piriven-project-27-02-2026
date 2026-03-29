@@ -20,8 +20,8 @@ export class TeacherDashboardComponent implements OnInit {
       icon: 'edit_note',
       label: 'කෙටුම්පත්',
       count: 0,
-      bg: 'rgba(0,0,0,0.06)',
-      color: '#424242',
+      bg: 'rgba(0, 109, 119, 0.06)',
+      color: '#003d46',
     },
     {
       icon: 'pending',

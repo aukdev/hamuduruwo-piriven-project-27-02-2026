@@ -3,36 +3,45 @@
    Change these variables to restyle the entire app.
    ══════════════════════════════════════════════════════ */
 
-/* ── Brand Colors (Deep Maroon + Gold) ── */
-$primary: #7b2d26;
-$primary-light: #9e4a3f;
-$primary-dark: #5a1a15;
-$accent: #d4a017;
-$accent-light: #f5e6b8;
-$warn: #d32f2f;
+/* ── Brand Colors (Teal Ocean) ── */
+$primary: #006d77;
+$primary-light: #83c5be;
+$primary-dark: #004f56;
+$accent: #83c5be;
+$accent-light: #b8e8e0;
+$warn: #9d0208;
 $success: #2e7d32;
 $info: #1565c0;
 
 /* ── Neutrals / Surface ── */
-$bg-page: #faf7f5;
+$bg-page: #e8f6f5;
 $bg-card: #ffffff;
-$bg-hover: rgba(123, 45, 38, 0.03);
-$bg-active: rgba(123, 45, 38, 0.06);
-$text-primary: #2c1810;
-$text-secondary: #6b4f45;
-$text-muted: #a08878;
-$border-color: #e5dad4;
-$divider: #f0e8e3;
+$bg-card-inner: #f4ffff;
+$bg-hover: rgba(0, 109, 119, 0.03);
+$bg-active: rgba(0, 109, 119, 0.06);
+$text-primary: #05445e;
+$text-secondary: #2f4f4f;
+$text-muted: #5f8a8a;
+$border-color: #dcefef;
+$divider: #e8f6f5;
+
+/* ── Table Colors ── */
+$table-header-bg: #83c5be;
+$table-header-text: #03303d;
+$table-border: #dcefef;
+$table-row-alt: #f7ffff;
 
 /* ── Semantic Badge Colors ── */
 $badge-active-bg: #e8f5e9;
 $badge-active-fg: #2e7d32;
 $badge-deactivated-bg: #fce4ec;
-$badge-deactivated-fg: #c62828;
+$badge-deactivated-fg: #9d0208;
 $badge-pending-bg: #fff3e0;
 $badge-pending-fg: #e65100;
-$badge-draft-bg: rgba(0, 0, 0, 0.06);
-$badge-draft-fg: #424242;
+$badge-draft-bg: rgba(0, 109, 119, 0.06);
+$badge-draft-fg: #003d46;
+$badge-dark-text: #003d46;
+$danger-bright: #d90429;
 
 /* ── Shadows ── */
 $shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -76,18 +85,18 @@ $bp-wide: 1400px;
 
 /* ── Gradients ── */
 $gradient-primary: linear-gradient(135deg, $primary, $primary-light);
-$gradient-page: linear-gradient(160deg, $bg-page 0%, #ede5df 100%);
+$gradient-page: linear-gradient(160deg, $bg-page 0%, #d4f0ee 100%);
 
 /* ── Role Badge Colors ── */
-$role-student-bg: rgba(123, 45, 38, 0.08);
+$role-student-bg: rgba(0, 109, 119, 0.08);
 $role-student-fg: $primary;
 $role-teacher-bg: rgba(46, 125, 50, 0.08);
 $role-teacher-fg: $success;
-$role-admin-bg: rgba(212, 160, 23, 0.12);
-$role-admin-fg: #b8860b;
-$role-superadmin-bg: rgba(198, 40, 40, 0.08);
-$role-superadmin-fg: #c62828;
+$role-admin-bg: rgba(131, 197, 190, 0.15);
+$role-admin-fg: #004f56;
+$role-superadmin-bg: rgba(157, 2, 8, 0.08);
+$role-superadmin-fg: #9d0208;
 
 /* ── Skeleton ── */
-$skeleton-base: #e8ddd6;
-$skeleton-shine: #f5ede8;
+$skeleton-base: #d4ede9;
+$skeleton-shine: #e8f6f5;

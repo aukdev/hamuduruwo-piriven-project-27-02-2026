@@ -20,8 +20,9 @@
   --color-info: #{v.$info};
   --color-bg-page: #{v.$bg-page};
   --color-bg-card: #ffffff;
-  --color-bg-hover: rgba(123, 45, 38, 0.03);
-  --color-bg-active: rgba(123, 45, 38, 0.06);
+  --color-bg-card-inner: #{v.$bg-card-inner};
+  --color-bg-hover: rgba(0, 109, 119, 0.03);
+  --color-bg-active: rgba(0, 109, 119, 0.06);
   --color-text-primary: #{v.$text-primary};
   --color-text-secondary: #{v.$text-secondary};
   --color-text-muted: #{v.$text-muted};
@@ -34,7 +35,13 @@
   --color-shadow-md: rgba(0, 0, 0, 0.1);
   --color-skeleton-base: #{v.$skeleton-base};
   --color-skeleton-shine: #{v.$skeleton-shine};
-  --color-scrollbar: #c5b5a5;
+  --color-scrollbar: #9ec5c0;
+  --color-table-header-bg: #{v.$table-header-bg};
+  --color-table-header-text: #{v.$table-header-text};
+  --color-table-border: #{v.$table-border};
+  --color-table-row-alt: #{v.$table-row-alt};
+  --color-badge-dark: #{v.$badge-dark-text};
+  --color-danger-bright: #{v.$danger-bright};
   --radius-sm: #{v.$radius-sm};
   --radius-md: #{v.$radius-md};
   --shadow-sm: #{v.$shadow-sm};
@@ -43,31 +50,256 @@
 
 /* ── Dark Theme ── */
 .dark-theme {
-  --color-primary: #c97b73;
-  --color-primary-light: #e0a39c;
-  --color-primary-dark: #9e4a3f;
-  --color-accent: #f4c430;
-  --color-accent-light: #5c4a1a;
-  --color-warn: #ef5350;
+  --color-primary: #4db8c4;
+  --color-primary-light: #5dd9eb;
+  --color-primary-dark: #003d46;
+  --color-accent: #5dd9eb;
+  --color-accent-light: #1a3a40;
+  --color-warn: #ff6b6b;
   --color-success: #66bb6a;
   --color-info: #42a5f5;
-  --color-bg-page: #1a1210;
-  --color-bg-card: #2c1e1a;
-  --color-bg-hover: rgba(201, 123, 115, 0.06);
-  --color-bg-active: rgba(201, 123, 115, 0.1);
-  --color-text-primary: #f0e8e5;
-  --color-text-secondary: #c0aaa0;
-  --color-text-muted: #7a6860;
-  --color-border: #3d2e28;
-  --color-divider: #332520;
-  --color-bg-navbar: rgba(26, 18, 16, 0.92);
-  --color-bg-navbar-scrolled: rgba(26, 18, 16, 0.97);
-  --color-bg-mobile-menu: #2c1e1a;
+  --color-bg-page: #0f1419;
+  --color-bg-card: #1a2329;
+  --color-bg-card-inner: #1e2a31;
+  --color-bg-hover: rgba(77, 184, 196, 0.06);
+  --color-bg-active: rgba(77, 184, 196, 0.1);
+  --color-text-primary: #e0f2f1;
+  --color-text-secondary: #a0a0a0;
+  --color-text-muted: #6a7a7a;
+  --color-border: #2a3a45;
+  --color-divider: #1e2a31;
+  --color-bg-navbar: rgba(15, 20, 25, 0.92);
+  --color-bg-navbar-scrolled: rgba(15, 20, 25, 0.97);
+  --color-bg-mobile-menu: #1a2329;
   --color-shadow: rgba(0, 0, 0, 0.3);
   --color-shadow-md: rgba(0, 0, 0, 0.4);
-  --color-skeleton-base: #3d2e28;
-  --color-skeleton-shine: #4a3832;
-  --color-scrollbar: #5a4a40;
+  --color-skeleton-base: #2a3a45;
+  --color-skeleton-shine: #344550;
+  --color-scrollbar: #3a5050;
+  --color-table-header-bg: #0d5a6d;
+  --color-table-header-text: #e0f2f1;
+  --color-table-border: #2a3a45;
+  --color-table-row-alt: #151d24;
+  --color-badge-dark: #a0d8d0;
+  --color-danger-bright: #ff6b6b;
+
+  /* Browser hint */
+  color-scheme: dark;
+
+  /* ── MDC Filled/Raised Button Token Overrides ── */
+  .mat-mdc-unelevated-button.mat-primary,
+  .mat-mdc-raised-button.mat-primary {
+    --mdc-filled-button-container-color: var(--color-primary);
+    --mdc-filled-button-label-text-color: #0f1419;
+    --mdc-protected-button-container-color: var(--color-primary);
+    --mdc-protected-button-label-text-color: #0f1419;
+  }
+  .mat-mdc-unelevated-button.mat-accent,
+  .mat-mdc-raised-button.mat-accent {
+    --mdc-filled-button-container-color: var(--color-accent);
+    --mdc-filled-button-label-text-color: #0f1419;
+  }
+  .mat-mdc-unelevated-button.mat-warn,
+  .mat-mdc-raised-button.mat-warn {
+    --mdc-filled-button-container-color: var(--color-warn);
+    --mdc-filled-button-label-text-color: #fff;
+  }
+
+  /* ── MDC Outlined/Stroked Button ── */
+  .mat-mdc-outlined-button.mat-primary {
+    --mdc-outlined-button-label-text-color: var(--color-primary);
+    --mdc-outlined-button-outline-color: var(--color-border);
+  }
+  .mat-mdc-outlined-button:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+    --mdc-outlined-button-label-text-color: var(--color-text-primary);
+    --mdc-outlined-button-outline-color: var(--color-border);
+  }
+
+  /* ── MDC Text Button ── */
+  .mat-mdc-button.mat-primary {
+    --mdc-text-button-label-text-color: var(--color-primary);
+  }
+  .mat-mdc-button:not(.mat-primary):not(.mat-accent):not(.mat-warn) {
+    --mdc-text-button-label-text-color: var(--color-text-primary);
+  }
+
+  /* ── MDC Icon Button ── */
+  .mat-mdc-icon-button {
+    --mdc-icon-button-icon-color: var(--color-text-secondary);
+  }
+
+  /* ── MDC Form Field Token Overrides ── */
+  .mat-mdc-form-field {
+    --mdc-outlined-text-field-outline-color: var(--color-border);
+    --mdc-outlined-text-field-hover-outline-color: var(--color-primary);
+    --mdc-outlined-text-field-focus-outline-color: var(--color-primary);
+    --mdc-outlined-text-field-label-text-color: var(--color-text-secondary);
+    --mdc-outlined-text-field-hover-label-text-color: var(--color-text-primary);
+    --mdc-outlined-text-field-focus-label-text-color: var(--color-primary);
+    --mdc-outlined-text-field-input-text-color: var(--color-text-primary);
+    --mdc-outlined-text-field-input-text-placeholder-color: var(
+      --color-text-muted
+    );
+    --mdc-outlined-text-field-caret-color: var(--color-primary);
+    --mdc-outlined-text-field-error-outline-color: var(--color-warn);
+    --mdc-outlined-text-field-error-hover-outline-color: var(--color-warn);
+    --mdc-outlined-text-field-error-focus-outline-color: var(--color-warn);
+    --mdc-outlined-text-field-error-label-text-color: var(--color-warn);
+    --mdc-filled-text-field-container-color: var(--color-bg-card-inner);
+    --mdc-filled-text-field-label-text-color: var(--color-text-secondary);
+    --mdc-filled-text-field-hover-label-text-color: var(--color-text-primary);
+    --mdc-filled-text-field-focus-label-text-color: var(--color-primary);
+    --mdc-filled-text-field-input-text-color: var(--color-text-primary);
+    --mdc-filled-text-field-input-text-placeholder-color: var(
+      --color-text-muted
+    );
+    --mdc-filled-text-field-caret-color: var(--color-primary);
+    --mdc-filled-text-field-active-indicator-color: var(--color-border);
+    --mdc-filled-text-field-hover-active-indicator-color: var(--color-primary);
+    --mdc-filled-text-field-focus-active-indicator-color: var(--color-primary);
+    --mat-form-field-state-layer-color: var(--color-bg-hover);
+  }
+  .mat-mdc-form-field .mat-mdc-form-field-icon-prefix,
+  .mat-mdc-form-field .mat-mdc-form-field-icon-suffix {
+    color: var(--color-text-muted);
+  }
+  .mat-mdc-form-field .mat-mdc-icon-button {
+    color: var(--color-text-muted);
+  }
+  .mat-mdc-form-field .mdc-text-field--outlined {
+    background-color: transparent;
+  }
+
+  /* ── MDC Checkbox/Radio ── */
+  .mat-mdc-checkbox {
+    --mdc-checkbox-unselected-icon-color: var(--color-text-muted);
+    --mdc-checkbox-selected-icon-color: var(--color-primary);
+    --mdc-checkbox-selected-checkmark-color: #0f1419;
+    --mdc-checkbox-unselected-hover-icon-color: var(--color-primary);
+  }
+  .mat-mdc-radio-button {
+    --mdc-radio-unselected-icon-color: var(--color-text-muted);
+    --mdc-radio-selected-icon-color: var(--color-primary);
+    --mdc-radio-unselected-hover-icon-color: var(--color-primary);
+  }
+
+  /* ── MDC Tabs ── */
+  .mat-mdc-tab-group,
+  .mat-mdc-tab-nav-bar {
+    --mdc-tab-indicator-active-indicator-color: var(--color-primary);
+    --mat-tab-header-active-label-text-color: var(--color-primary);
+    --mat-tab-header-active-focus-label-text-color: var(--color-primary);
+    --mat-tab-header-active-hover-label-text-color: var(--color-primary);
+    --mat-tab-header-inactive-label-text-color: var(--color-text-secondary);
+    --mat-tab-header-inactive-hover-label-text-color: var(--color-text-primary);
+  }
+
+  /* ── MDC Progress Spinner ── */
+  .mat-mdc-progress-spinner {
+    --mdc-circular-progress-active-indicator-color: var(--color-primary);
+  }
+
+  /* ── MDC Divider ── */
+  .mat-divider {
+    border-top-color: var(--color-border);
+  }
+
+  /* ── MDC List ── */
+  .mat-mdc-list-item {
+    --mdc-list-list-item-label-text-color: var(--color-text-primary);
+    --mdc-list-list-item-supporting-text-color: var(--color-text-secondary);
+    --mdc-list-list-item-hover-state-layer-color: var(--color-bg-hover);
+  }
+
+  /* ── MDC Chips ── */
+  .mat-mdc-chip {
+    --mdc-chip-elevated-container-color: var(--color-bg-card-inner);
+    --mdc-chip-label-text-color: var(--color-text-primary);
+  }
+
+  /* ── MDC Tooltip ── */
+  .mat-mdc-tooltip {
+    --mdc-plain-tooltip-container-color: var(--color-bg-card-inner);
+    --mdc-plain-tooltip-supporting-text-color: var(--color-text-primary);
+  }
+
+  /* ── MDC Snackbar ── */
+  .mat-mdc-snack-bar-container {
+    --mdc-snackbar-container-color: var(--color-bg-card-inner);
+    --mdc-snackbar-supporting-text-color: var(--color-text-primary);
+  }
+
+  /* ── MDC FAB ── */
+  .mat-mdc-fab.mat-primary,
+  .mat-mdc-mini-fab.mat-primary {
+    --mdc-fab-container-color: var(--color-primary);
+    --mat-fab-foreground-color: #0f1419;
+  }
+
+  /* ── MDC Slide Toggle ── */
+  .mat-mdc-slide-toggle {
+    --mdc-switch-selected-track-color: var(--color-primary);
+    --mdc-switch-selected-handle-color: var(--color-bg-card);
+    --mdc-switch-unselected-track-color: var(--color-border);
+    --mdc-switch-unselected-handle-color: var(--color-text-muted);
+  }
+
+  /* ── Status badges dark mode (global override) ── */
+  [class*="status-pending"],
+  [class*="status-PENDING"] {
+    background: rgba(255, 152, 0, 0.15) !important;
+    color: #ffb74d !important;
+  }
+  [class*="status-approved"],
+  [class*="status-APPROVED"] {
+    background: rgba(102, 187, 106, 0.15) !important;
+    color: #81c784 !important;
+  }
+  [class*="status-rejected"],
+  [class*="status-REJECTED"] {
+    background: rgba(255, 107, 107, 0.15) !important;
+    color: #ff6b6b !important;
+  }
+  [class*="status-draft"],
+  [class*="status-DRAFT"] {
+    background: rgba(77, 184, 196, 0.1) !important;
+    color: #80cbc4 !important;
+  }
+  [class*="status-active"],
+  [class*="status-ACTIVE"] {
+    background: rgba(102, 187, 106, 0.15) !important;
+    color: #81c784 !important;
+  }
+  [class*="status-deactivated"],
+  [class*="status-DEACTIVATED"],
+  [class*="status-expired"],
+  [class*="status-EXPIRED"] {
+    background: rgba(255, 107, 107, 0.12) !important;
+    color: #ff8a80 !important;
+  }
+  [class*="status-submitted"],
+  [class*="status-SUBMITTED"] {
+    background: rgba(66, 165, 245, 0.15) !important;
+    color: #64b5f6 !important;
+  }
+
+  /* ── Role badges dark mode ── */
+  .role-badge.role-STUDENT {
+    background: rgba(77, 184, 196, 0.12) !important;
+    color: #4db8c4 !important;
+  }
+  .role-badge.role-TEACHER {
+    background: rgba(102, 187, 106, 0.12) !important;
+    color: #81c784 !important;
+  }
+  .role-badge.role-ADMIN {
+    background: rgba(93, 217, 235, 0.12) !important;
+    color: #5dd9eb !important;
+  }
+  .role-badge.role-SUPER_ADMIN {
+    background: rgba(255, 107, 107, 0.12) !important;
+    color: #ff6b6b !important;
+  }
 
   /* Material overrides for dark mode */
   .mat-toolbar {

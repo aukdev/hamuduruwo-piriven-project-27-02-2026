@@ -1,21 +1,21 @@
 @use "@angular/material" as mat;
 
-/* ── Deep Maroon primary palette ── */
-$piriven-maroon: (
-  50: #f5e8e7,
-  100: #e6c5c2,
-  200: #d49f9a,
-  300: #c27972,
-  400: #b55d54,
-  500: #7b2d26,
-  600: #702823,
-  700: #62221d,
-  800: #551c18,
-  900: #5a1a15,
-  A100: #ffb3ad,
-  A200: #ff867d,
-  A400: #ff594d,
-  A700: #ff4336,
+/* ── Teal Ocean primary palette ── */
+$piriven-teal: (
+  50: #e0f2f1,
+  100: #b2dfdb,
+  200: #80cbc4,
+  300: #4db6ac,
+  400: #26a69a,
+  500: #006d77,
+  600: #00626b,
+  700: #004f56,
+  800: #003d46,
+  900: #002a30,
+  A100: #a7ffeb,
+  A200: #64ffda,
+  A400: #1de9b6,
+  A700: #00bfa5,
   contrast: (
     50: rgba(0, 0, 0, 0.87),
     100: rgba(0, 0, 0, 0.87),
@@ -29,27 +29,27 @@ $piriven-maroon: (
     900: #ffffff,
     A100: rgba(0, 0, 0, 0.87),
     A200: rgba(0, 0, 0, 0.87),
-    A400: #ffffff,
-    A700: #ffffff,
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
   ),
 );
 
-/* ── Gold accent palette ── */
-$piriven-gold: (
-  50: #fbf5e3,
-  100: #f5e6b8,
-  200: #eed589,
-  300: #e7c45a,
-  400: #e2b836,
-  500: #d4a017,
-  600: #cf9814,
-  700: #c98e11,
-  800: #c3840d,
-  900: #b97307,
-  A100: #ffffff,
-  A200: #fff1dc,
-  A400: #ffddaa,
-  A700: #ffd390,
+/* ── Teal Light accent palette ── */
+$piriven-accent: (
+  50: #e8f6f5,
+  100: #c6e8e4,
+  200: #a3d9d2,
+  300: #83c5be,
+  400: #6dbcb3,
+  500: #57b3a8,
+  600: #4ea69b,
+  700: #44968a,
+  800: #3b877a,
+  900: #2b6a5f,
+  A100: #e0fff8,
+  A200: #adfff0,
+  A400: #7affe7,
+  A700: #60ffe3,
   contrast: (
     50: rgba(0, 0, 0, 0.87),
     100: rgba(0, 0, 0, 0.87),
@@ -58,8 +58,8 @@ $piriven-gold: (
     400: rgba(0, 0, 0, 0.87),
     500: rgba(0, 0, 0, 0.87),
     600: rgba(0, 0, 0, 0.87),
-    700: rgba(0, 0, 0, 0.87),
-    800: rgba(0, 0, 0, 0.87),
+    700: #ffffff,
+    800: #ffffff,
     900: #ffffff,
     A100: rgba(0, 0, 0, 0.87),
     A200: rgba(0, 0, 0, 0.87),
@@ -68,9 +68,43 @@ $piriven-gold: (
   ),
 );
 
-$piriven-primary: mat.define-palette($piriven-maroon, 500);
-$piriven-accent: mat.define-palette($piriven-gold, 500);
-$piriven-warn: mat.define-palette(mat.$red-palette);
+/* ── Danger / Warn palette ── */
+$piriven-danger: (
+  50: #fde8e8,
+  100: #f9c5c5,
+  200: #f59e9e,
+  300: #f17777,
+  400: #ee5959,
+  500: #9d0208,
+  600: #8e0207,
+  700: #7c0106,
+  800: #6b0105,
+  900: #4d0103,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$piriven-primary: mat.define-palette($piriven-teal, 500);
+$piriven-accent-pal: mat.define-palette($piriven-accent, 300);
+$piriven-warn: mat.define-palette($piriven-danger, 500);
 
 $piriven-typography: mat.define-typography-config(
   $font-family:
@@ -90,7 +124,7 @@ $piriven-theme: mat.define-light-theme(
   (
     color: (
       primary: $piriven-primary,
-      accent: $piriven-accent,
+      accent: $piriven-accent-pal,
       warn: $piriven-warn,
     ),
     typography: $piriven-typography,

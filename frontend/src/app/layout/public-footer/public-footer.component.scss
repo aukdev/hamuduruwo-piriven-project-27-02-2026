@@ -1,6 +1,10 @@
 /* ── Stats Counter Band ── */
 .stats {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-primary-dark)
+  );
   padding: 48px 24px;
 }
 .stats__inner {
@@ -43,7 +47,7 @@
 
 /* ── Footer ── */
 .ft {
-  background: #0a1628;
+  background: #003d46;
   color: rgba(255, 255, 255, 0.85);
 }
 .ft__inner {
@@ -64,7 +68,11 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--color-primary-light), var(--color-accent));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-light),
+    var(--color-accent)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
