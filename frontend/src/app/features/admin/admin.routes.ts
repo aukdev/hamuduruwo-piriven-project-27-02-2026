@@ -12,9 +12,12 @@ export const ADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: AdminDashboardComponent },
   { path: 'approvals', component: PendingApprovalsComponent },
-  { path: 'practice-approvals', component: PracticePaperApprovalsComponent },
   {
-    path: 'practice-approvals/:paperId',
+    path: 'practice-paper-management',
+    component: PracticePaperApprovalsComponent,
+  },
+  {
+    path: 'practice-paper-management/:paperId',
     component: PracticePaperReviewComponent,
   },
   { path: 'users', component: UserManagementComponent },

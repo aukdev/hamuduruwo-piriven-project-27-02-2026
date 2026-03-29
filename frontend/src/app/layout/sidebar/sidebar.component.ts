@@ -93,12 +93,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
           },
           {
             icon: 'rate_review',
-            label: 'පුහුණු පත්‍ර අනුමැතිය',
-            route: '/admin/practice-approvals',
+            label: 'පුහුණු පත්‍ර කළමනාකරණය',
+            route: '/admin/practice-paper-management',
           },
           {
             icon: 'description',
-            label: 'පත්‍ර කළමනාකරණය',
+            label: 'past-paper කළමනාකරණය',
             route: '/admin/papers',
           },
           { icon: 'people', label: 'පරිශීලකයින්', route: '/admin/users' },
@@ -127,12 +127,12 @@ export class SidebarComponent implements OnInit, OnDestroy {
           },
           {
             icon: 'rate_review',
-            label: 'පුහුණු පත්‍ර අනුමැතිය',
-            route: '/superadmin/practice-approvals',
+            label: 'පුහුණු පත්‍ර කළමනාකරණය',
+            route: '/superadmin/practice-paper-management',
           },
           {
             icon: 'description',
-            label: 'පත්‍ර කළමනාකරණය',
+            label: 'past-paper කළමනාකරණය',
             route: '/superadmin/papers',
           },
           { icon: 'people', label: 'පරිශීලකයින්', route: '/superadmin/users' },

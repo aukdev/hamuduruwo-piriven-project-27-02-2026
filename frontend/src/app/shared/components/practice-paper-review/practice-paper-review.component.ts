@@ -49,7 +49,7 @@ export class PracticePaperReviewComponent implements OnInit {
   showAddForm = false;
   addForm!: FormGroup;
 
-  private basePath = '';
+  private listPath = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -64,7 +64,10 @@ export class PracticePaperReviewComponent implements OnInit {
   ngOnInit(): void {
     this.paperId = this.route.snapshot.params['paperId'];
     const role = this.auth.currentUser?.role;
-    this.basePath = role === 'SUPER_ADMIN' ? '/superadmin' : '/admin';
+    this.listPath =
+      role === 'SUPER_ADMIN'
+        ? '/superadmin/practice-paper-management'
+        : '/admin/practice-paper-management';
     this.buildEditForm();
     this.buildAddForm();
     this.loadPaper();
@@ -240,7 +243,7 @@ export class PracticePaperReviewComponent implements OnInit {
         this.api.approvePracticePaper(this.paperId).subscribe({
           next: () => {
             this.notify.success('පුහුණු පත්‍රය සාර්ථකව අනුමත කරන ලදී!');
-            this.router.navigate([this.basePath + '/practice-approvals']);
+            this.router.navigate([this.listPath]);
           },
           error: (err: any) =>
             this.notify.error(err.error?.message || 'අනුමත කිරීම අසාර්ථකයි.'),
@@ -270,7 +273,7 @@ export class PracticePaperReviewComponent implements OnInit {
           .subscribe({
             next: () => {
               this.notify.success('පුහුණු පත්‍රය ප්‍රතික්ෂේප කරන ලදී.');
-              this.router.navigate([this.basePath + '/practice-approvals']);
+              this.router.navigate([this.listPath]);
             },
             error: (err: any) =>
               this.notify.error(
@@ -282,7 +285,7 @@ export class PracticePaperReviewComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate([this.basePath + '/practice-approvals']);
+    this.router.navigate([this.listPath]);
   }
 
   // ==================== Helpers ====================

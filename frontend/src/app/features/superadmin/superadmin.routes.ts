@@ -12,9 +12,12 @@ export const SUPERADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: 'dashboard', component: SuperadminDashboardComponent },
   { path: 'approvals', component: SuperadminApprovalsComponent },
-  { path: 'practice-approvals', component: PracticePaperApprovalsComponent },
   {
-    path: 'practice-approvals/:paperId',
+    path: 'practice-paper-management',
+    component: PracticePaperApprovalsComponent,
+  },
+  {
+    path: 'practice-paper-management/:paperId',
     component: PracticePaperReviewComponent,
   },
   { path: 'users', component: SuperadminUsersComponent },
