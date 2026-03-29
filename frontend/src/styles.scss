@@ -91,6 +91,9 @@
   .mdc-text-field--filled:not(.mdc-text-field--disabled) {
     background-color: var(--color-bg-card);
   }
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled) {
+    background-color: var(--color-bg-card);
+  }
   .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__leading,
   .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__notch,
   .mat-mdc-form-field .mdc-text-field--outlined .mdc-notched-outline__trailing {
@@ -100,10 +103,45 @@
   .mat-mdc-form-field .mat-mdc-input-element {
     color: var(--color-text-primary);
   }
+  .mat-mdc-form-field .mat-mdc-floating-label {
+    color: var(--color-text-secondary);
+  }
   .mat-mdc-tab:not(.mat-mdc-tab-disabled) .mdc-tab__text-label {
     color: var(--color-text-secondary);
   }
   .mat-mdc-option {
+    color: var(--color-text-primary);
+  }
+  .mat-mdc-select-panel,
+  .mat-mdc-autocomplete-panel {
+    background: var(--color-bg-card) !important;
+  }
+  .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+  .mat-mdc-option:focus:not(.mdc-list-item--disabled),
+  .mat-mdc-option.mat-mdc-option-active {
+    background: var(--color-bg-hover);
+  }
+  .mat-mdc-select-arrow {
+    color: var(--color-text-secondary);
+  }
+  mat-table,
+  .mat-mdc-table {
+    background: var(--color-bg-card);
+  }
+  .mat-mdc-header-cell {
+    color: var(--color-text-secondary);
+    background: var(--color-bg-page);
+    border-bottom-color: var(--color-border);
+  }
+  .mat-mdc-cell {
+    color: var(--color-text-primary);
+    border-bottom-color: var(--color-border);
+  }
+  .mat-mdc-row:hover {
+    background: var(--color-bg-hover);
+  }
+  .mat-mdc-paginator {
+    background: var(--color-bg-card);
     color: var(--color-text-primary);
   }
 }
