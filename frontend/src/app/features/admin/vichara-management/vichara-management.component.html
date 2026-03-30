@@ -1,0 +1,145 @@
+<app-page-header
+  title="විචාර කළමනාකරණය"
+  subtitle="විචාර එකතු කිරීම, සංස්කරණය සහ මකා දැමීම"
+>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="openCreateForm()"
+    *ngIf="!showForm && subjects.length > 0"
+  >
+    <mat-icon>add</mat-icon> නව විචාරයක්
+  </button>
+</app-page-header>
+
+<!-- Subject Filter -->
+<div class="filter-row" *ngIf="subjects.length > 0 && !showForm">
+  <mat-form-field appearance="outline">
+    <mat-label>විචාර විෂයය</mat-label>
+    <mat-select
+      [value]="selectedSubjectId"
+      (selectionChange)="onSubjectChange($event.value)"
+    >
+      <mat-option *ngFor="let s of subjects" [value]="s.id">{{
+        s.name
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+
+<!-- Create / Edit Form -->
+<mat-card class="form-card" *ngIf="showForm">
+  <h3 class="card-title">
+    <mat-icon>{{ editingId ? "edit" : "add_circle" }}</mat-icon>
+    {{ editingId ? "විචාරය සංස්කරණය කරන්න" : "නව විචාරයක් එකතු කරන්න" }}
+  </h3>
+  <form [formGroup]="vcharaForm" (ngSubmit)="saveVichara()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>විචාර විෂයය</mat-label>
+      <mat-select formControlName="vcharaSubjectId">
+        <mat-option *ngFor="let s of subjects" [value]="s.id">{{
+          s.name
+        }}</mat-option>
+      </mat-select>
+      <mat-error>විෂයයක් තෝරන්න</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>මාතෘකාව</mat-label>
+      <input matInput formControlName="title" placeholder="විචාරයේ මාතෘකාව" />
+      <mat-error>මාතෘකාව අවශ්‍යයි</mat-error>
+    </mat-form-field>
+    <div class="editor-label">අන්තර්ගතය</div>
+    <quill-editor
+      formControlName="content"
+      [modules]="quillModules"
+      placeholder="විචාරයේ අන්තර්ගතය ලියන්න..."
+      [styles]="{ 'min-height': '200px' }"
+    ></quill-editor>
+    <mat-error
+      *ngIf="
+        vcharaForm.get('content')?.touched &&
+        vcharaForm.get('content')?.hasError('required')
+      "
+      class="content-error"
+    >
+      අන්තර්ගතය අවශ්‍යයි
+    </mat-error>
+    <div class="form-actions">
+      <button mat-button type="button" (click)="cancelForm()">අවලංගු</button>
+      <button
+        mat-flat-button
+        color="primary"
+        type="submit"
+        [disabled]="vcharaForm.invalid || saving"
+      >
+        <mat-icon>save</mat-icon>
+        {{ editingId ? "යාවත්කාලීන කරන්න" : "සුරකින්න" }}
+      </button>
+    </div>
+  </form>
+</mat-card>
+
+<!-- Loading -->
+<app-skeleton
+  *ngIf="loading || loadingVicharas"
+  type="card-grid"
+  [count]="3"
+  gridMinWidth="100%"
+></app-skeleton>
+
+<!-- Vichara List -->
+<div class="vichara-list" *ngIf="!loading && !loadingVicharas && !showForm">
+  <mat-card class="vichara-item" *ngFor="let v of vicharas">
+    <div class="vichara-top">
+      <div class="vichara-info">
+        <h4>{{ v.title }}</h4>
+        <span class="vichara-meta">
+          {{ v.vcharaSubjectName }} · {{ v.createdByName }} ·
+          {{ v.createdAt | date: "yyyy-MM-dd HH:mm" }}
+        </span>
+      </div>
+      <div class="vichara-actions">
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="සංස්කරණය"
+          (click)="openEditForm(v)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          matTooltip="මකා දැමීම"
+          (click)="deleteVichara(v)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div
+      class="vichara-preview ql-editor"
+      [innerHTML]="sanitizeHtml(v.content)"
+    ></div>
+  </mat-card>
+</div>
+
+<!-- Empty State -->
+<app-empty-state
+  *ngIf="!loading && !loadingVicharas && !showForm && vicharas.length === 0"
+  icon="auto_stories"
+  title="විචාර නොමැත"
+  subtitle="'නව විචාරයක්' බොත්තම භාවිතා කර විචාරයක් එකතු කරන්න."
+></app-empty-state>
+
+<!-- Paginator -->
+<mat-paginator
+  *ngIf="!loading && !showForm && totalElements > 0"
+  [length]="totalElements"
+  [pageSize]="size"
+  [pageIndex]="page"
+  [pageSizeOptions]="[5, 10, 20]"
+  (page)="onPageChange($event)"
+  showFirstLastButtons
+></mat-paginator>

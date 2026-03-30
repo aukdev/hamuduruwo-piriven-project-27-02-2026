@@ -34,8 +34,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     { label: 'අපි ගැන', route: '/about' },
     { label: 'දැක්ම හා මෙහෙවර', route: '/vision-mission' },
     { label: 'වීඩියෝ', route: '/videos' },
+    { label: 'විචාර', route: '/vichara' },
     { label: 'සම්බන්ධ වන්න', route: '/contact' },
   ];
+  visibleNavLinks = this.publicNavLinks.slice(0, 4);
+  overflowNavLinks = this.publicNavLinks.slice(4);
   private sub!: Subscription;
 
   constructor(

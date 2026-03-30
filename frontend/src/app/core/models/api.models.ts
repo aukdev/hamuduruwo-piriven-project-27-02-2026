@@ -358,3 +358,47 @@ export interface CreateUserRequest {
   password: string;
   role: AppRole;
 }
+
+/* ── Vichara (විචාර) ── */
+export interface VcharaSubjectDto {
+  id: string;
+  name: string;
+  description: string;
+  displayOrder: number;
+  createdAt: string;
+}
+
+export interface VcharaDto {
+  id: string;
+  vcharaSubjectId: string;
+  vcharaSubjectName: string;
+  title: string;
+  content: string;
+  createdByName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateVcharaSubjectRequest {
+  name: string;
+  description?: string;
+  displayOrder?: number;
+}
+
+export interface UpdateVcharaSubjectRequest {
+  name: string;
+  description?: string;
+  displayOrder?: number;
+}
+
+export interface CreateVcharaRequest {
+  vcharaSubjectId: string;
+  title: string;
+  content: string;
+}
+
+export interface UpdateVcharaRequest {
+  vcharaSubjectId: string;
+  title: string;
+  content: string;
+}

@@ -35,13 +35,25 @@
         class="ph__nav-link"
         >වීඩියෝ</a
       >
-      <a
-        routerLink="/contact"
-        routerLinkActive="ph__nav-link--active"
-        class="ph__nav-link"
-        >සම්බන්ධ වන්න</a
+      <button
+        class="ph__nav-link ph__more-btn"
+        [matMenuTriggerFor]="moreMenu"
+        aria-label="තවත්"
       >
+        <mat-icon class="ph__more-icon">more_vert</mat-icon>
+      </button>
     </nav>
+
+    <mat-menu #moreMenu="matMenu">
+      <a mat-menu-item routerLink="/vichara">
+        <mat-icon>auto_stories</mat-icon>
+        <span>විචාර</span>
+      </a>
+      <a mat-menu-item routerLink="/contact">
+        <mat-icon>mail</mat-icon>
+        <span>සම්බන්ධ වන්න</span>
+      </a>
+    </mat-menu>
 
     <!-- Auth Buttons -->
     <div class="ph__actions">
@@ -92,6 +104,7 @@
     <a routerLink="/about" class="ph__mobile-link">අපි ගැන / About</a>
     <a routerLink="/vision-mission" class="ph__mobile-link">දැක්ම හා මෙහෙවර</a>
     <a routerLink="/videos" class="ph__mobile-link">වීඩියෝ / Videos</a>
+    <a routerLink="/vichara" class="ph__mobile-link">විචාර / Vichara</a>
     <a routerLink="/contact" class="ph__mobile-link">සම්බන්ධ වන්න / Contact</a>
     <mat-divider></mat-divider>
     <a routerLink="/login" class="ph__mobile-link ph__mobile-link--primary">

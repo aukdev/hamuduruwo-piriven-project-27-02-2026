@@ -112,6 +112,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
             label: 'ශිෂ්‍ය පිළිතුරු',
             route: '/admin/student-answers',
           },
+          {
+            icon: 'category',
+            label: 'විචාර විෂය කළමනාකරණය',
+            route: '/admin/vichara-subjects',
+          },
+          {
+            icon: 'auto_stories',
+            label: 'විචාර කළමනාකරණය',
+            route: '/admin/vichara',
+          },
         ];
       case 'SUPER_ADMIN':
         return [
@@ -145,6 +155,16 @@ export class SidebarComponent implements OnInit, OnDestroy {
             icon: 'assignment',
             label: 'ශිෂ්‍ය පිළිතුරු',
             route: '/superadmin/student-answers',
+          },
+          {
+            icon: 'category',
+            label: 'විචාර විෂය කළමනාකරණය',
+            route: '/superadmin/vichara-subjects',
+          },
+          {
+            icon: 'auto_stories',
+            label: 'විචාර කළමනාකරණය',
+            route: '/superadmin/vichara',
           },
         ];
       default:

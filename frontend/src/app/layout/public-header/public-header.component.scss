@@ -57,16 +57,18 @@
 }
 .ph__nav {
   display: flex;
-  gap: 8px;
+  gap: 4px;
+  align-items: center;
 }
 .ph__nav-link {
-  padding: 8px 16px;
+  padding: 8px 14px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--color-text-secondary);
   text-decoration: none;
   transition: all 0.2s ease;
+  white-space: nowrap;
   &:hover {
     background: var(--color-bg-active);
     color: var(--color-primary);
@@ -76,6 +78,19 @@
   color: var(--color-primary);
   background: var(--color-bg-active);
   font-weight: 600;
+}
+.ph__more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: none;
+  cursor: pointer;
+  background: none;
+}
+.ph__more-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
 }
 .ph__actions {
   display: flex;

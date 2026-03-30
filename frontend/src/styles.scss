@@ -157,6 +157,23 @@
     --mdc-icon-button-icon-color: var(--color-accent);
   }
 
+  /* ── MDC Menu ── */
+  .mat-mdc-menu-item {
+    color: var(--color-text-primary) !important;
+  }
+  .mat-mdc-menu-item .mat-icon,
+  .mat-mdc-menu-item .mdc-list-item__primary-text {
+    color: var(--color-text-primary) !important;
+  }
+  .mat-mdc-menu-item:hover,
+  .mat-mdc-menu-item.cdk-program-focused,
+  .mat-mdc-menu-item.cdk-keyboard-focused {
+    background: var(--color-bg-hover) !important;
+  }
+  .mat-divider {
+    border-top-color: var(--color-border) !important;
+  }
+
   /* ── MDC Form Field Token Overrides ── */
   .mat-mdc-form-field {
     --mdc-outlined-text-field-outline-color: var(--color-border);

@@ -30,6 +30,12 @@ import {
   StudentAttemptSummaryDto,
   AttemptDetailDto,
   PublicStats,
+  VcharaSubjectDto,
+  VcharaDto,
+  CreateVcharaSubjectRequest,
+  UpdateVcharaSubjectRequest,
+  CreateVcharaRequest,
+  UpdateVcharaRequest,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -511,5 +517,91 @@ export class ApiService {
     return this.http.get<AttemptDetailDto>(
       `${BASE}/api/admin/student-attempts/${attemptId}/detail`,
     );
+  }
+
+  /* ── Public Vichara ── */
+  getVcharaSubjects(): Observable<VcharaSubjectDto[]> {
+    return this.http.get<VcharaSubjectDto[]>(
+      `${BASE}/api/public/vichara/subjects`,
+    );
+  }
+
+  getVicharas(
+    subjectId: string,
+    page = 0,
+    size = 10,
+  ): Observable<PagedResponse<VcharaDto>> {
+    return this.http.get<PagedResponse<VcharaDto>>(
+      `${BASE}/api/public/vichara`,
+      {
+        params: new HttpParams()
+          .set('subjectId', subjectId)
+          .set('page', page)
+          .set('size', size),
+      },
+    );
+  }
+
+  getVichara(id: string): Observable<VcharaDto> {
+    return this.http.get<VcharaDto>(`${BASE}/api/public/vichara/${id}`);
+  }
+
+  /* ── Admin Vichara Subjects ── */
+  getAdminVcharaSubjects(): Observable<VcharaSubjectDto[]> {
+    return this.http.get<VcharaSubjectDto[]>(
+      `${BASE}/api/admin/vichara/subjects`,
+    );
+  }
+
+  createVcharaSubject(
+    req: CreateVcharaSubjectRequest,
+  ): Observable<VcharaSubjectDto> {
+    return this.http.post<VcharaSubjectDto>(
+      `${BASE}/api/admin/vichara/subjects`,
+      req,
+    );
+  }
+
+  updateVcharaSubject(
+    id: string,
+    req: UpdateVcharaSubjectRequest,
+  ): Observable<VcharaSubjectDto> {
+    return this.http.put<VcharaSubjectDto>(
+      `${BASE}/api/admin/vichara/subjects/${id}`,
+      req,
+    );
+  }
+
+  deleteVcharaSubject(id: string): Observable<void> {
+    return this.http.delete<void>(`${BASE}/api/admin/vichara/subjects/${id}`);
+  }
+
+  /* ── Admin Vicharas ── */
+  getAdminVicharas(
+    subjectId: string,
+    page = 0,
+    size = 10,
+  ): Observable<PagedResponse<VcharaDto>> {
+    return this.http.get<PagedResponse<VcharaDto>>(
+      `${BASE}/api/admin/vichara`,
+      {
+        params: new HttpParams()
+          .set('subjectId', subjectId)
+          .set('page', page)
+          .set('size', size),
+      },
+    );
+  }
+
+  createVichara(req: CreateVcharaRequest): Observable<VcharaDto> {
+    return this.http.post<VcharaDto>(`${BASE}/api/admin/vichara`, req);
+  }
+
+  updateVichara(id: string, req: UpdateVcharaRequest): Observable<VcharaDto> {
+    return this.http.put<VcharaDto>(`${BASE}/api/admin/vichara/${id}`, req);
+  }
+
+  deleteVichara(id: string): Observable<void> {
+    return this.http.delete<void>(`${BASE}/api/admin/vichara/${id}`);
   }
 }

@@ -7,6 +7,8 @@ import { SuperadminSubjectsComponent } from './subjects/superadmin-subjects.comp
 import { StudentAnswersComponent } from '../../shared/components/student-answers/student-answers.component';
 import { PracticePaperApprovalsComponent } from '../../shared/components/practice-paper-approvals/practice-paper-approvals.component';
 import { PracticePaperReviewComponent } from '../../shared/components/practice-paper-review/practice-paper-review.component';
+import { VcharaSubjectManagementComponent } from '../admin/vichara-subject-management/vichara-subject-management.component';
+import { VcharaManagementComponent } from '../admin/vichara-management/vichara-management.component';
 
 export const SUPERADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -24,4 +26,6 @@ export const SUPERADMIN_ROUTES: Routes = [
   { path: 'papers', component: SuperadminPapersComponent },
   { path: 'subjects', component: SuperadminSubjectsComponent },
   { path: 'student-answers', component: StudentAnswersComponent },
+  { path: 'vichara-subjects', component: VcharaSubjectManagementComponent },
+  { path: 'vichara', component: VcharaManagementComponent },
 ];

@@ -15,7 +15,7 @@
 
   <nav class="navbar__links">
     <a
-      *ngFor="let link of publicNavLinks"
+      *ngFor="let link of visibleNavLinks"
       [routerLink]="link.route"
       routerLinkActive="navbar__link--active"
       [routerLinkActiveOptions]="{ exact: link.route === '/' }"
@@ -23,6 +23,14 @@
     >
       {{ link.label }}
     </a>
+    <button
+      *ngIf="overflowNavLinks.length > 0"
+      class="navbar__link navbar__more-btn"
+      [matMenuTriggerFor]="overflowMenu"
+      aria-label="තවත්"
+    >
+      <mat-icon class="navbar__more-icon">more_vert</mat-icon>
+    </button>
   </nav>
 
   <span class="navbar__spacer"></span>
@@ -35,6 +43,16 @@
   >
     <mat-icon>travel_explore</mat-icon>
   </button>
+
+  <mat-menu #overflowMenu="matMenu">
+    <a
+      *ngFor="let link of overflowNavLinks"
+      mat-menu-item
+      [routerLink]="link.route"
+    >
+      <span>{{ link.label }}</span>
+    </a>
+  </mat-menu>
 
   <button
     mat-icon-button

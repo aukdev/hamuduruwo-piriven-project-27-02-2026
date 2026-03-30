@@ -1,0 +1,74 @@
+<div class="page">
+  <!-- Hero Banner -->
+  <section class="page-hero">
+    <h1>විචාර / Vichara</h1>
+    <p>පිරිවෙන් විචාර සම්පත් එකතුව</p>
+  </section>
+
+  <div class="page-body">
+    <!-- Subject Filter -->
+    <div class="filter-bar" *ngIf="subjects.length > 0">
+      <button
+        *ngFor="let sub of subjects"
+        class="filter-btn"
+        [class.active]="selectedSubjectId === sub.id"
+        (click)="selectSubject(sub.id)"
+      >
+        {{ sub.name }}
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div class="loading-wrap" *ngIf="loading || loadingVicharas">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <!-- Vichara List -->
+    <div class="vichara-list" *ngIf="!loading && !loadingVicharas">
+      <mat-card
+        class="vichara-card"
+        *ngFor="let v of vicharas"
+        (click)="toggleExpand(v.id)"
+      >
+        <div class="vichara-header">
+          <h3>{{ v.title }}</h3>
+          <div class="vichara-meta">
+            <span><mat-icon>person</mat-icon> {{ v.createdByName }}</span>
+            <span
+              ><mat-icon>schedule</mat-icon>
+              {{ v.createdAt | date: "yyyy-MM-dd" }}</span
+            >
+          </div>
+          <mat-icon class="expand-icon" [class.expanded]="expandedId === v.id">
+            expand_more
+          </mat-icon>
+        </div>
+        <div
+          class="vichara-content ql-editor"
+          *ngIf="expandedId === v.id"
+          [innerHTML]="sanitizeHtml(v.content)"
+        ></div>
+      </mat-card>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      class="empty-state"
+      *ngIf="!loading && !loadingVicharas && vicharas.length === 0"
+    >
+      <mat-icon>auto_stories</mat-icon>
+      <p>මෙම විෂයය සඳහා විචාර නොමැත</p>
+    </div>
+
+    <!-- Paginator -->
+    <mat-paginator
+      *ngIf="!loading && totalElements > 0"
+      [length]="totalElements"
+      [pageSize]="size"
+      [pageIndex]="page"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    ></mat-paginator>
+  </div>
+</div>

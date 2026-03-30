@@ -16,6 +16,19 @@
   gap: 6px;
   margin-left: 12px;
 }
+.navbar__more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border: none;
+  cursor: pointer;
+  background: none;
+}
+.navbar__more-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
 .navbar__link {
   padding: 8px 12px;
   border-radius: 999px;

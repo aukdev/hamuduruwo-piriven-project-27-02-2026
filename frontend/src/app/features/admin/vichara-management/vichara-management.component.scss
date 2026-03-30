@@ -1,0 +1,154 @@
+.filter-row {
+  margin-bottom: 16px;
+
+  mat-form-field {
+    min-width: 280px;
+  }
+}
+
+.form-card {
+  padding: 24px !important;
+  margin-bottom: 24px;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0 0 16px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.editor-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: 4px;
+}
+
+.content-error {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.vichara-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.vichara-item {
+  padding: 20px !important;
+
+  .vichara-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .vichara-info {
+    flex: 1;
+
+    h4 {
+      margin: 0 0 4px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .vichara-meta {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+  }
+
+  .vichara-actions {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+
+  mat-divider {
+    margin-bottom: 12px;
+  }
+
+  .vichara-preview {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    max-height: 200px;
+    overflow: hidden;
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(transparent, var(--color-bg-card));
+    }
+  }
+}
+
+// Quill editor dark-theme support
+:host ::ng-deep {
+  .ql-toolbar {
+    border-color: var(--color-border) !important;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .ql-container {
+    border-color: var(--color-border) !important;
+    border-radius: 0 0 8px 8px;
+    font-size: 14px;
+  }
+
+  .ql-editor {
+    color: var(--color-text-primary);
+  }
+
+  .ql-editor.ql-blank::before {
+    color: var(--color-text-muted);
+  }
+
+  .ql-snow .ql-stroke {
+    stroke: var(--color-text-secondary);
+  }
+
+  .ql-snow .ql-fill,
+  .ql-snow .ql-stroke.ql-fill {
+    fill: var(--color-text-secondary);
+  }
+
+  .ql-snow .ql-picker-label {
+    color: var(--color-text-secondary);
+  }
+}

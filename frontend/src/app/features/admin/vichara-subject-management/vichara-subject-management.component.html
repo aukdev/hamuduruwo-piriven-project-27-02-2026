@@ -1,0 +1,87 @@
+<app-page-header
+  title="විචාර විෂය කළමනාකරණය"
+  subtitle="විචාර විෂයයන් එකතු කිරීම, සංස්කරණය සහ මකා දැමීම"
+>
+</app-page-header>
+
+<!-- Create Subject -->
+<mat-card class="create-card">
+  <h3 class="card-title">
+    <mat-icon>add_circle</mat-icon> නව විචාර විෂයයක් එකතු කරන්න
+  </h3>
+  <form [formGroup]="subjectForm" (ngSubmit)="createSubject()">
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="flex-grow">
+        <mat-label>විෂය නාමය</mat-label>
+        <input matInput formControlName="name" placeholder="උදා: විනය පිටකය" />
+        <mat-error *ngIf="subjectForm.get('name')?.hasError('required')"
+          >විෂය නාමය අවශ්‍යයි</mat-error
+        >
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="order-field">
+        <mat-label>අනුපිළිවෙල</mat-label>
+        <input matInput type="number" formControlName="displayOrder" />
+      </mat-form-field>
+    </div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>විස්තරය (විකල්ප)</mat-label>
+      <textarea matInput formControlName="description" rows="2"></textarea>
+    </mat-form-field>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="subjectForm.invalid || creating"
+    >
+      <mat-icon>save</mat-icon> සුරකින්න
+    </button>
+  </form>
+</mat-card>
+
+<!-- Existing Subjects -->
+<h3 class="section-title mt-24">පවතින විචාර විෂයයන්</h3>
+<app-skeleton
+  *ngIf="loading"
+  type="card-grid"
+  [count]="4"
+  gridMinWidth="260px"
+></app-skeleton>
+<div class="subjects-grid" *ngIf="!loading">
+  <mat-card class="subject-chip-card" *ngFor="let s of subjects">
+    <div class="subject-content">
+      <mat-icon color="primary">auto_stories</mat-icon>
+      <div class="subject-text">
+        <strong>{{ s.name }}</strong>
+        <p *ngIf="s.description">{{ s.description }}</p>
+        <span class="subject-meta"
+          >අනුපිළිවෙල: {{ s.displayOrder }} ·
+          {{ s.createdAt | date: "yyyy-MM-dd" }}</span
+        >
+      </div>
+    </div>
+    <div class="subject-actions">
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="සංස්කරණය"
+        (click)="editSubject(s)"
+      >
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button
+        mat-icon-button
+        color="warn"
+        matTooltip="මකා දැමීම"
+        (click)="deleteSubject(s)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+</div>
+<app-empty-state
+  *ngIf="!loading && subjects.length === 0"
+  icon="auto_stories"
+  title="විචාර විෂයයන් නොමැත"
+  subtitle="ඉහත පෝරමය භාවිතා කර නව විචාර විෂයයක් එකතු කරන්න."
+></app-empty-state>
