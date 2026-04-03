@@ -389,3 +389,18 @@
     font-size: 24px;
   }
 }
+
+:host-context(.dark-theme) {
+  .hero {
+    background: linear-gradient(135deg, #004f56 0%, #002e36 60%, #001e24 100%);
+  }
+
+  .feature-card:hover {
+    box-shadow: 0 12px 32px rgba(77, 184, 196, 0.12);
+    border-color: var(--color-border);
+  }
+
+  .cta__inner {
+    background: linear-gradient(135deg, #004f56, #002030);
+  }
+}

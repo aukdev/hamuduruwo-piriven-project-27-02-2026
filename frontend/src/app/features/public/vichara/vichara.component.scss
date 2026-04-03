@@ -175,3 +175,9 @@
     }
   }
 }
+
+:host-context(.dark-theme) {
+  .page-hero {
+    background: linear-gradient(135deg, #005b65, #002e36);
+  }
+}

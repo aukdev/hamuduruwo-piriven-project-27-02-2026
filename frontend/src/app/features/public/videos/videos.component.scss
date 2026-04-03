@@ -170,3 +170,16 @@
     grid-template-columns: 1fr;
   }
 }
+
+:host-context(.dark-theme) {
+  .page-hero {
+    background: linear-gradient(135deg, #005b65, #002e36);
+  }
+
+  .video-card {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    &:hover {
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+  }
+}

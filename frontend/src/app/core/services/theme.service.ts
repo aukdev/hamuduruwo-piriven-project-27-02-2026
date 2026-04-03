@@ -34,10 +34,13 @@ export class ThemeService {
   private applyTheme(theme: Theme): void {
     if (!this.isBrowser) return;
     const body = document.body;
+    const html = document.documentElement;
     if (theme === 'dark') {
       body.classList.add('dark-theme');
+      html.classList.add('dark-theme');
     } else {
       body.classList.remove('dark-theme');
+      html.classList.remove('dark-theme');
     }
     this.isDark$.next(theme === 'dark');
   }

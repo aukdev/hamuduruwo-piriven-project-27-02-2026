@@ -130,3 +130,16 @@
     gap: 32px;
   }
 }
+
+:host-context(.dark-theme) {
+  .page-hero {
+    background: linear-gradient(135deg, #005b65, #002e36);
+  }
+
+  .success-msg {
+    background: rgba(102, 187, 106, 0.12);
+    mat-icon {
+      color: #81c784;
+    }
+  }
+}

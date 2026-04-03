@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { SHARED_IMPORTS } from '../../../shared/shared-imports';
-import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-landing',
@@ -83,12 +81,5 @@ export class LandingComponent {
     },
   ];
 
-  constructor(
-    private auth: AuthService,
-    private router: Router,
-  ) {
-    if (this.auth.isAuthenticated) {
-      this.auth.navigateByRole();
-    }
-  }
+  constructor() {}
 }

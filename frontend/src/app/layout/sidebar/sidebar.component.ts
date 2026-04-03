@@ -41,7 +41,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         return [
           {
             icon: 'dashboard',
-            label: 'මුල් පිටුව',
+            label: 'මගේ පිටුව',
             route: '/student/dashboard',
           },
           {
@@ -59,7 +59,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         return [
           {
             icon: 'dashboard',
-            label: 'මුල් පිටුව',
+            label: 'මගේ පිටුව',
             route: '/teacher/dashboard',
           },
           {
@@ -85,7 +85,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         ];
       case 'ADMIN':
         return [
-          { icon: 'dashboard', label: 'මුල් පිටුව', route: '/admin/dashboard' },
+          { icon: 'dashboard', label: 'මගේ පිටුව', route: '/admin/dashboard' },
           {
             icon: 'pending_actions',
             label: 'ප්‍රශ්න අනුමැතිය',
@@ -127,7 +127,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
         return [
           {
             icon: 'dashboard',
-            label: 'මුල් පිටුව',
+            label: 'මගේ පිටුව',
             route: '/superadmin/dashboard',
           },
           {
