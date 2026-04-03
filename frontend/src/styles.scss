@@ -42,6 +42,8 @@
   --color-table-row-alt: #{v.$table-row-alt};
   --color-badge-dark: #{v.$badge-dark-text};
   --color-danger-bright: #{v.$danger-bright};
+  --color-brand-logo-icon: #f7ffff;
+  --color-brand-logo-shadow: rgba(0, 79, 86, 0.22);
   --radius-sm: #{v.$radius-sm};
   --radius-md: #{v.$radius-md};
   --shadow-sm: #{v.$shadow-sm};
@@ -82,6 +84,8 @@
   --color-table-row-alt: #151d24;
   --color-badge-dark: #a0d8d0;
   --color-danger-bright: #ff6b6b;
+  --color-brand-logo-icon: #f7ffff;
+  --color-brand-logo-shadow: rgba(0, 0, 0, 0.35);
 
   /* Browser hint */
   color-scheme: dark;

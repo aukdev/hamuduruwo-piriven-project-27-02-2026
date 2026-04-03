@@ -48,7 +48,8 @@
   cursor: pointer;
 
   mat-icon {
-    color: var(--color-accent);
+    color: var(--color-brand-logo-icon);
+    filter: drop-shadow(0 1px 2px var(--color-brand-logo-shadow));
     font-size: 28px;
     width: 28px;
     height: 28px;
