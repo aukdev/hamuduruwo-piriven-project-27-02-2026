@@ -69,19 +69,48 @@
           (isDark$ | async) ? "light_mode" : "dark_mode"
         }}</mat-icon>
       </button>
-      <a mat-stroked-button routerLink="/login" class="ph__btn ph__btn--login">
-        <mat-icon>login</mat-icon>
-        පිවිසීම
-      </a>
-      <a
-        mat-flat-button
-        color="primary"
-        routerLink="/register"
-        class="ph__btn ph__btn--register"
-      >
-        <mat-icon>person_add</mat-icon>
-        ලියාපදිංචිය
-      </a>
+      <!-- Not logged in -->
+      <ng-container *ngIf="!(currentUser$ | async)">
+        <a
+          mat-stroked-button
+          routerLink="/login"
+          class="ph__btn ph__btn--login"
+        >
+          <mat-icon>login</mat-icon>
+          පිවිසීම
+        </a>
+        <a
+          mat-flat-button
+          color="primary"
+          routerLink="/register"
+          class="ph__btn ph__btn--register"
+        >
+          <mat-icon>person_add</mat-icon>
+          ලියාපදිංචිය
+        </a>
+      </ng-container>
+
+      <!-- Logged in -->
+      <ng-container *ngIf="currentUser$ | async">
+        <button
+          mat-stroked-button
+          color="primary"
+          class="ph__btn ph__btn--dashboard"
+          (click)="goToDashboard()"
+        >
+          <mat-icon>dashboard</mat-icon>
+          මගේ පිටුව
+        </button>
+        <button
+          mat-icon-button
+          class="ph__theme-toggle"
+          (click)="logout()"
+          aria-label="ලොග් අවුට්"
+          matTooltip="ලොග් අවුට්"
+        >
+          <mat-icon>logout</mat-icon>
+        </button>
+      </ng-container>
     </div>
 
     <!-- Mobile Menu Toggle -->
@@ -107,11 +136,48 @@
     <a routerLink="/vichara" class="ph__mobile-link">විචාර / Vichara</a>
     <a routerLink="/contact" class="ph__mobile-link">සම්බන්ධ වන්න / Contact</a>
     <mat-divider></mat-divider>
-    <a routerLink="/login" class="ph__mobile-link ph__mobile-link--primary">
-      <mat-icon>login</mat-icon> පිවිසීම / Login
-    </a>
-    <a routerLink="/register" class="ph__mobile-link ph__mobile-link--accent">
-      <mat-icon>person_add</mat-icon> ලියාපදිංචිය / Register
-    </a>
+    <ng-container *ngIf="!(currentUser$ | async)">
+      <a routerLink="/login" class="ph__mobile-link ph__mobile-link--primary">
+        <mat-icon>login</mat-icon> පිවිසීම / Login
+      </a>
+      <a routerLink="/register" class="ph__mobile-link ph__mobile-link--accent">
+        <mat-icon>person_add</mat-icon> ලියාපදිංචිය / Register
+      </a>
+    </ng-container>
+    <ng-container *ngIf="currentUser$ | async">
+      <button
+        class="ph__mobile-link ph__mobile-link--primary"
+        style="
+          border: none;
+          background: none;
+          width: 100%;
+          text-align: left;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        "
+        (click)="goToDashboard(); mobileMenuOpen = false"
+      >
+        <mat-icon>dashboard</mat-icon> මගේ පිටුව / Dashboard
+      </button>
+      <button
+        class="ph__mobile-link"
+        style="
+          border: none;
+          background: none;
+          width: 100%;
+          text-align: left;
+          cursor: pointer;
+          color: var(--color-warn);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        "
+        (click)="logout()"
+      >
+        <mat-icon>logout</mat-icon> ලොග් අවුට් / Logout
+      </button>
+    </ng-container>
   </div>
 </header>
