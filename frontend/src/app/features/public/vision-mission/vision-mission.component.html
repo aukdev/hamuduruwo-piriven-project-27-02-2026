@@ -53,5 +53,32 @@
         </div>
       </div>
     </section>
+
+    <!-- Official Testimonials -->
+    <section class="testimonials">
+      <h2 class="testimonials__title">
+        නිලධාරීන්ගේ අදහස් / Official Testimonials
+      </h2>
+      <p class="testimonials__subtitle">
+        ඉහළ පෙළේ අධ්‍යාපන නිලධාරීන් මෙම පද්ධතිය ගැන දක්වන අදහස්
+      </p>
+      <div class="testimonials__list">
+        <div class="testimonial-card" *ngFor="let t of testimonials">
+          <div class="testimonial-card__header">
+            <div class="testimonial-card__avatar">{{ t.avatar }}</div>
+            <div class="testimonial-card__info">
+              <h3>{{ t.name }}</h3>
+              <p class="testimonial-card__position">{{ t.position }}</p>
+              <p class="testimonial-card__position-en">{{ t.positionEn }}</p>
+              <p class="testimonial-card__org">{{ t.organization }}</p>
+            </div>
+          </div>
+          <blockquote class="testimonial-card__quote">
+            <mat-icon class="quote-icon">format_quote</mat-icon>
+            {{ t.quote }}
+          </blockquote>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
