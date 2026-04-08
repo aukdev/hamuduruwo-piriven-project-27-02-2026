@@ -1,2 +1,2 @@
-export { JwtInterceptor } from './jwt.interceptor';
-export { ErrorInterceptor } from './error.interceptor';
+export { jwtInterceptor } from './jwt.interceptor';
+export { errorInterceptor } from './error.interceptor';
