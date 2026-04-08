@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>අදහස සංස්කරණය</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>අදහස</mat-label>
+      <textarea
+        matInput
+        formControlName="quote"
+        rows="4"
+        placeholder="පරිශීලකයාගේ අදහස..."
+      ></textarea>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>තනතුර / Position</mat-label>
+      <input
+        matInput
+        formControlName="positionTitle"
+        placeholder="උදා: ගුරු, ශිෂ්‍ය"
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>තරු ශ්‍රේණිගත කිරීම</mat-label>
+      <mat-select formControlName="rating">
+        <mat-option [value]="1">⭐ 1</mat-option>
+        <mat-option [value]="2">⭐⭐ 2</mat-option>
+        <mat-option [value]="3">⭐⭐⭐ 3</mat-option>
+        <mat-option [value]="4">⭐⭐⭐⭐ 4</mat-option>
+        <mat-option [value]="5">⭐⭐⭐⭐⭐ 5</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="isPublished" color="primary">
+      ප්‍රකාශිත (Public)
+    </mat-slide-toggle>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">අවලංගු</button>
+  <button mat-raised-button color="primary" (click)="onSave()">සුරකින්න</button>
+</mat-dialog-actions>

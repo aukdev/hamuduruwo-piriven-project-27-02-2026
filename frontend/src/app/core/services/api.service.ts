@@ -36,6 +36,10 @@ import {
   UpdateVcharaSubjectRequest,
   CreateVcharaRequest,
   UpdateVcharaRequest,
+  TestimonialDto,
+  PublicTestimonialDto,
+  TestimonialStatusDto,
+  UpdateTestimonialRequest,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -603,5 +607,105 @@ export class ApiService {
 
   deleteVichara(id: string): Observable<void> {
     return this.http.delete<void>(`${BASE}/api/admin/vichara/${id}`);
+  }
+
+  /* ── Public Testimonials ── */
+  getPublicTestimonials(): Observable<PublicTestimonialDto[]> {
+    return this.http.get<PublicTestimonialDto[]>(
+      `${BASE}/api/public/testimonials`,
+    );
+  }
+
+  getTestimonialPhotoUrl(id: string, isPublic = false): string {
+    const prefix = isPublic ? 'public' : 'admin';
+    return `${BASE}/api/${prefix}/testimonials/${id}/photo`;
+  }
+
+  /* ── User Testimonials ── */
+  getTestimonialStatus(): Observable<TestimonialStatusDto> {
+    return this.http.get<TestimonialStatusDto>(
+      `${BASE}/api/user/testimonials/status`,
+    );
+  }
+
+  submitTestimonial(data: any, photo?: File): Observable<void> {
+    const formData = new FormData();
+    formData.append(
+      'data',
+      new Blob([JSON.stringify(data)], { type: 'application/json' }),
+    );
+    if (photo) {
+      formData.append('photo', photo);
+    }
+    return this.http.post<void>(
+      `${BASE}/api/user/testimonials/submit`,
+      formData,
+    );
+  }
+
+  /* ── Admin Testimonials ── */
+  getTestimonials(
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<TestimonialDto>> {
+    return this.http.get<PagedResponse<TestimonialDto>>(
+      `${BASE}/api/admin/testimonials`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getSubmittedTestimonials(
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<TestimonialDto>> {
+    return this.http.get<PagedResponse<TestimonialDto>>(
+      `${BASE}/api/admin/testimonials/submitted`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getFormEnabledUsers(): Observable<TestimonialDto[]> {
+    return this.http.get<TestimonialDto[]>(
+      `${BASE}/api/admin/testimonials/enabled-users`,
+    );
+  }
+
+  enableTestimonialForm(userId: string): Observable<void> {
+    return this.http.post<void>(
+      `${BASE}/api/admin/testimonials/enable/${userId}`,
+      {},
+    );
+  }
+
+  disableTestimonialForm(userId: string): Observable<void> {
+    return this.http.post<void>(
+      `${BASE}/api/admin/testimonials/disable/${userId}`,
+      {},
+    );
+  }
+
+  updateTestimonial(
+    id: string,
+    req: UpdateTestimonialRequest,
+  ): Observable<TestimonialDto> {
+    return this.http.put<TestimonialDto>(
+      `${BASE}/api/admin/testimonials/${id}`,
+      req,
+    );
+  }
+
+  toggleTestimonialPublish(id: string): Observable<TestimonialDto> {
+    return this.http.put<TestimonialDto>(
+      `${BASE}/api/admin/testimonials/${id}/toggle-publish`,
+      {},
+    );
+  }
+
+  deleteTestimonial(id: string): Observable<void> {
+    return this.http.delete<void>(`${BASE}/api/admin/testimonials/${id}`);
   }
 }

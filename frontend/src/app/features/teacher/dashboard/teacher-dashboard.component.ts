@@ -6,6 +6,8 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { QuestionDto } from '../../../core/models';
+import { MatDialog } from '@angular/material/dialog';
+import { TestimonialFormDialogComponent } from '../../../shared/components/testimonial-form-dialog/testimonial-form-dialog.component';
 
 @Component({
   selector: 'app-teacher-dashboard',
@@ -47,10 +49,12 @@ export class TeacherDashboardComponent implements OnInit {
   ];
 
   loading = true;
+  showTestimonialBanner = false;
 
   constructor(
     private api: ApiService,
     public auth: AuthService,
+    private dialog: MatDialog,
     public router: Router,
   ) {}
 
@@ -73,6 +77,22 @@ export class TeacherDashboardComponent implements OnInit {
         this.loading = false;
       },
       error: () => (this.loading = false),
+    });
+
+    this.api.getTestimonialStatus().subscribe({
+      next: (status) => {
+        this.showTestimonialBanner =
+          status.isFormEnabled && !status.isSubmitted;
+      },
+    });
+  }
+
+  openTestimonialForm(): void {
+    const ref = this.dialog.open(TestimonialFormDialogComponent, {
+      width: '520px',
+    });
+    ref.afterClosed().subscribe((submitted) => {
+      if (submitted) this.showTestimonialBanner = false;
     });
   }
 }

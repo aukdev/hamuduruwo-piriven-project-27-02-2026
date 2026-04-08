@@ -11,6 +11,18 @@
   </button>
 </app-page-header>
 
+<!-- Testimonial Banner -->
+<mat-card class="testimonial-banner" *ngIf="showTestimonialBanner">
+  <mat-icon>rate_review</mat-icon>
+  <div class="testimonial-banner__content">
+    <strong>ඔබගේ අදහස් අපට වැදගත්!</strong>
+    <p>පද්ධතිය ගැන ඔබගේ අදහස් Feedback form එක පුරවන්න</p>
+  </div>
+  <button mat-raised-button color="primary" (click)="openTestimonialForm()">
+    අදහස් ලබා දෙන්න
+  </button>
+</mat-card>
+
 <app-skeleton *ngIf="loading" type="dashboard"></app-skeleton>
 
 <div *ngIf="!loading">

@@ -151,6 +151,43 @@
       </div>
     </section>
 
+    <!-- Dynamic User Testimonials -->
+    <section class="section" *ngIf="userTestimonials.length > 0">
+      <div class="section__content section__content--full">
+        <h2>පරිශීලක අදහස් / User Testimonials</h2>
+        <h3>පද්ධතිය භාවිතා කරන ගුරුවරුන් හා සිසුන්ගේ අදහස්</h3>
+        <div class="testimonials-grid">
+          <div class="testimonial-card" *ngFor="let t of userTestimonials">
+            <div class="testimonial-photo">
+              <img
+                *ngIf="t.hasPhoto"
+                [src]="getPhotoUrl(t)"
+                [alt]="t.userName"
+                loading="lazy"
+              />
+              <span class="avatar-text" *ngIf="!t.hasPhoto">{{
+                getInitials(t.userName)
+              }}</span>
+            </div>
+            <h4>{{ t.userName }}</h4>
+            <span class="testimonial-role-badge">{{
+              getRoleLabel(t.userRole)
+            }}</span>
+            <span class="testimonial-position" *ngIf="t.positionTitle">{{
+              t.positionTitle
+            }}</span>
+            <div class="testimonial-stars" *ngIf="t.rating">
+              <mat-icon *ngFor="let s of getStars(t.rating)">star</mat-icon>
+              <mat-icon *ngFor="let s of getEmptyStars(t.rating)"
+                >star_border</mat-icon
+              >
+            </div>
+            <p class="testimonial-quote">"{{ t.quote }}"</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Featured Videos -->
     <section class="section">
       <div class="section__content section__content--full">

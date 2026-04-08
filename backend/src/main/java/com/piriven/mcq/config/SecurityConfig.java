@@ -70,6 +70,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/papers/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/subjects").authenticated()
 
+                        // User endpoints (authenticated)
+                        .requestMatchers("/api/user/**").authenticated()
+
                         // Super Admin endpoints
                         .requestMatchers("/api/superadmin/**").hasRole("SUPER_ADMIN")
 

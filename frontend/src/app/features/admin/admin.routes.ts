@@ -9,6 +9,7 @@ import { PracticePaperApprovalsComponent } from '../../shared/components/practic
 import { PracticePaperReviewComponent } from '../../shared/components/practice-paper-review/practice-paper-review.component';
 import { VcharaSubjectManagementComponent } from './vichara-subject-management/vichara-subject-management.component';
 import { VcharaManagementComponent } from './vichara-management/vichara-management.component';
+import { TestimonialManagementComponent } from './testimonial-management/testimonial-management.component';
 
 export const ADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -28,4 +29,5 @@ export const ADMIN_ROUTES: Routes = [
   { path: 'student-answers', component: StudentAnswersComponent },
   { path: 'vichara-subjects', component: VcharaSubjectManagementComponent },
   { path: 'vichara', component: VcharaManagementComponent },
+  { path: 'testimonials', component: TestimonialManagementComponent },
 ];

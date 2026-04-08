@@ -122,6 +122,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
             label: 'විචාර කළමනාකරණය',
             route: '/admin/vichara',
           },
+          {
+            icon: 'forum',
+            label: 'අදහස් කළමනාකරණය',
+            route: '/admin/testimonials',
+          },
         ];
       case 'SUPER_ADMIN':
         return [
@@ -165,6 +170,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
             icon: 'auto_stories',
             label: 'විචාර කළමනාකරණය',
             route: '/superadmin/vichara',
+          },
+          {
+            icon: 'forum',
+            label: 'අදහස් කළමනාකරණය',
+            route: '/superadmin/testimonials',
           },
         ];
       default:

@@ -402,3 +402,49 @@ export interface UpdateVcharaRequest {
   title: string;
   content: string;
 }
+
+/* ── Testimonials ── */
+export interface TestimonialDto {
+  id: string;
+  userId: string;
+  userName: string;
+  userRole: string;
+  quote: string;
+  positionTitle: string;
+  rating: number;
+  hasPhoto: boolean;
+  isPublished: boolean;
+  isFormEnabled: boolean;
+  isSubmitted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PublicTestimonialDto {
+  id: string;
+  userName: string;
+  userRole: string;
+  quote: string;
+  positionTitle: string;
+  rating: number;
+  hasPhoto: boolean;
+  createdAt: string;
+}
+
+export interface TestimonialStatusDto {
+  isFormEnabled: boolean;
+  isSubmitted: boolean;
+}
+
+export interface SubmitTestimonialRequest {
+  quote: string;
+  positionTitle?: string;
+  rating: number;
+}
+
+export interface UpdateTestimonialRequest {
+  quote?: string;
+  positionTitle?: string;
+  rating?: number;
+  isPublished?: boolean;
+}
