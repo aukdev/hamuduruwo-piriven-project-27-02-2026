@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { SkeletonComponent } from '../../../shared/components/skeleton/skeleton.component';
@@ -26,13 +26,14 @@ import {
   templateUrl: './testimonial-management.component.html',
   styleUrls: ['./testimonial-management.component.scss'],
 })
-export class TestimonialManagementComponent implements OnInit {
+export class TestimonialManagementComponent implements OnInit, OnDestroy {
   /* Tab 1: Submitted testimonials */
   testimonials: TestimonialDto[] = [];
   loading = true;
   currentPage = 0;
   pageSize = 20;
   totalElements = 0;
+  photoUrls: Record<string, string> = {};
 
   /* Tab 2: Enable feedback */
   allUsers: UserDto[] = [];
@@ -73,6 +74,7 @@ export class TestimonialManagementComponent implements OnInit {
           this.testimonials = res.content;
           this.totalElements = res.totalElements;
           this.loading = false;
+          this.loadPhotos();
         },
         error: () => (this.loading = false),
       });
@@ -145,7 +147,25 @@ export class TestimonialManagementComponent implements OnInit {
   }
 
   getPhotoUrl(t: TestimonialDto): string {
-    return this.api.getTestimonialPhotoUrl(t.id);
+    return this.photoUrls[t.id] || '';
+  }
+
+  private loadPhotos(): void {
+    this.testimonials
+      .filter((t) => t.hasPhoto)
+      .forEach((t) => {
+        if (!this.photoUrls[t.id]) {
+          this.api.getTestimonialPhoto(t.id).subscribe({
+            next: (blob) => {
+              this.photoUrls[t.id] = URL.createObjectURL(blob);
+            },
+          });
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    Object.values(this.photoUrls).forEach((url) => URL.revokeObjectURL(url));
   }
 
   getStars(rating: number): number[] {

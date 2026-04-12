@@ -621,6 +621,12 @@ export class ApiService {
     return `${BASE}/api/${prefix}/testimonials/${id}/photo`;
   }
 
+  getTestimonialPhoto(id: string): Observable<Blob> {
+    return this.http.get(`${BASE}/api/admin/testimonials/${id}/photo`, {
+      responseType: 'blob',
+    });
+  }
+
   /* ── User Testimonials ── */
   getTestimonialStatus(): Observable<TestimonialStatusDto> {
     return this.http.get<TestimonialStatusDto>(

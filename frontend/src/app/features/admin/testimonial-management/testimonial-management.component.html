@@ -120,27 +120,30 @@
         ></app-skeleton>
 
         <div class="users-list" *ngIf="!usersLoading">
-          <mat-card class="user-row" *ngFor="let u of filteredUsers">
+          <div class="user-row" *ngFor="let u of filteredUsers">
             <div class="user-row__info">
               <div class="user-avatar-sm">{{ getInitials(u.fullName) }}</div>
-              <div>
-                <h4>{{ u.fullName }}</h4>
-                <span class="user-email">{{ u.email }}</span>
-                <span class="role-badge role-{{ u.role }}">{{
-                  getRoleLabel(u.role)
-                }}</span>
+              <div class="user-row__details">
+                <span class="user-name">{{ u.fullName }}</span>
+                <span class="user-meta">
+                  <span class="user-email">{{ u.email }}</span>
+                  <span class="role-badge role-{{ u.role }}">{{
+                    getRoleLabel(u.role)
+                  }}</span>
+                </span>
               </div>
             </div>
             <button
-              mat-raised-button
-              [color]="isFormEnabled(u.id) ? 'warn' : 'primary'"
+              mat-stroked-button
+              color="primary"
+              class="enable-btn"
               [disabled]="isFormEnabled(u.id)"
               (click)="enableForm(u)"
             >
               <mat-icon>{{ isFormEnabled(u.id) ? "check" : "send" }}</mat-icon>
               {{ isFormEnabled(u.id) ? "Enable කර ඇත" : "Enable කරන්න" }}
             </button>
-          </mat-card>
+          </div>
         </div>
 
         <app-empty-state
@@ -163,20 +166,22 @@
         ></app-skeleton>
 
         <div class="enabled-list" *ngIf="!enabledLoading">
-          <mat-card class="enabled-row" *ngFor="let t of enabledUsers">
+          <div class="enabled-row" *ngFor="let t of enabledUsers">
             <div class="user-row__info">
               <div class="user-avatar-sm">{{ getInitials(t.userName) }}</div>
-              <div>
-                <h4>{{ t.userName }}</h4>
-                <span class="role-badge role-{{ t.userRole }}">{{
-                  getRoleLabel(t.userRole)
-                }}</span>
-                <span
-                  class="submit-badge"
-                  [class.submitted]="t.isSubmitted"
-                  [class.pending]="!t.isSubmitted"
-                >
-                  {{ t.isSubmitted ? "ඉදිරිපත් කර ඇත" : "බලා සිටී" }}
+              <div class="user-row__details">
+                <span class="user-name">{{ t.userName }}</span>
+                <span class="user-meta">
+                  <span class="role-badge role-{{ t.userRole }}">{{
+                    getRoleLabel(t.userRole)
+                  }}</span>
+                  <span
+                    class="submit-badge"
+                    [class.submitted]="t.isSubmitted"
+                    [class.pending]="!t.isSubmitted"
+                  >
+                    {{ t.isSubmitted ? "ඉදිරිපත් කර ඇත" : "බලා සිටී" }}
+                  </span>
                 </span>
               </div>
             </div>
@@ -188,7 +193,7 @@
             >
               <mat-icon>cancel</mat-icon>
             </button>
-          </mat-card>
+          </div>
         </div>
 
         <app-empty-state
