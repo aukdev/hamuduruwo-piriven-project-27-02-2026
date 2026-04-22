@@ -104,7 +104,7 @@
 .hero__image {
   position: relative;
   z-index: 1;
-  flex: 0 0 400px;
+  flex: 0 0 500px;
   margin-left: 60px;
   img {
     width: 100%;
@@ -345,7 +345,7 @@
     margin-left: 0;
     margin-top: 40px;
     flex: 0 0 auto;
-    max-width: 400px;
+    max-width: 550px;
   }
 }
 @media (max-width: 768px) {
@@ -398,6 +398,15 @@
   .feature-card:hover {
     box-shadow: 0 12px 32px rgba(77, 184, 196, 0.12);
     border-color: var(--color-border);
+  }
+
+  .step__icon-wrap {
+    background: linear-gradient(135deg, #006d77, #2a9d8f);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+    mat-icon {
+      color: #c8f0ec;
+    }
   }
 
   .cta__inner {
