@@ -13,11 +13,10 @@
 
     <mat-form-field appearance="outline" class="w-100">
       <mat-label>තනතුර / Position</mat-label>
-      <input
-        matInput
-        formControlName="positionTitle"
-        placeholder="උදා: ගුරු, ශිෂ්‍ය"
-      />
+      <mat-select formControlName="positionTitle">
+        <mat-option value="ගුරුවරයා">ගුරුවරයා</mat-option>
+        <mat-option value="ශිෂ්‍ය">ශිෂ්‍ය</mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="w-100">
