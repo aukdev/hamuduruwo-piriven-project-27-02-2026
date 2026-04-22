@@ -38,58 +38,60 @@
       <div class="form-section">
         <h2>පණිවිඩයක් යවන්න / Send a Message</h2>
         <form class="contact-form" (ngSubmit)="onSubmit()">
-          <mat-form-field appearance="outline">
-            <mat-label>ඔබේ නම / Your Name</mat-label>
-            <input matInput [(ngModel)]="form.name" name="name" required />
-            <mat-icon matPrefix>person</mat-icon>
-          </mat-form-field>
+          <ng-container *ngIf="!submitted">
+            <mat-form-field appearance="outline">
+              <mat-label>ඔබේ නම / Your Name</mat-label>
+              <input matInput [(ngModel)]="form.name" name="name" required />
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>ඊමේල් / Email</mat-label>
-            <input
-              matInput
-              type="email"
-              [(ngModel)]="form.email"
-              name="email"
-              required
-            />
-            <mat-icon matPrefix>email</mat-icon>
-          </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>ඊමේල් / Email</mat-label>
+              <input
+                matInput
+                type="email"
+                [(ngModel)]="form.email"
+                name="email"
+                required
+              />
+              <mat-icon matPrefix>email</mat-icon>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>විෂය / Subject</mat-label>
-            <input matInput [(ngModel)]="form.subject" name="subject" />
-            <mat-icon matPrefix>subject</mat-icon>
-          </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>විෂය / Subject</mat-label>
+              <input matInput [(ngModel)]="form.subject" name="subject" />
+              <mat-icon matPrefix>subject</mat-icon>
+            </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>පණිවිඩය / Message</mat-label>
-            <textarea
-              matInput
-              rows="5"
-              [(ngModel)]="form.message"
-              name="message"
-              required
-            ></textarea>
-            <mat-icon matPrefix>message</mat-icon>
-          </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>පණිවිඩය / Message</mat-label>
+              <textarea
+                matInput
+                rows="5"
+                [(ngModel)]="form.message"
+                name="message"
+                required
+              ></textarea>
+              <mat-icon matPrefix>message</mat-icon>
+            </mat-form-field>
 
-          <button
-            mat-flat-button
-            color="primary"
-            type="submit"
-            class="submit-btn"
-            *ngIf="!submitted"
-            [disabled]="submitting"
-          >
-            <mat-icon *ngIf="!submitting">send</mat-icon>
-            <mat-progress-spinner
-              *ngIf="submitting"
-              diameter="20"
-              mode="indeterminate"
-            ></mat-progress-spinner>
-            {{ submitting ? "යවමින්..." : "පණිවිඩය යවන්න / Send" }}
-          </button>
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="submit-btn"
+              [disabled]="submitting"
+            >
+              <mat-icon *ngIf="!submitting">send</mat-icon>
+              <mat-progress-spinner
+                *ngIf="submitting"
+                diameter="20"
+                mode="indeterminate"
+              ></mat-progress-spinner>
+              {{ submitting ? "යවමින්..." : "පණිවිඩය යවන්න / Send" }}
+            </button>
+          </ng-container>
+
           <div class="success-msg" *ngIf="submitted">
             <mat-icon>check_circle</mat-icon>
             <p>ඔබේ පණිවිඩය සාර්ථකව යවන ලදී. ස්තුතියි!</p>
