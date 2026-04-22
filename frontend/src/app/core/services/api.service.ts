@@ -40,6 +40,9 @@ import {
   PublicTestimonialDto,
   TestimonialStatusDto,
   UpdateTestimonialRequest,
+  ContactMessageDto,
+  CreateContactMessageRequest,
+  UnreadCountDto,
 } from '../models';
 
 const BASE = environment.apiBaseUrl;
@@ -713,5 +716,50 @@ export class ApiService {
 
   deleteTestimonial(id: string): Observable<void> {
     return this.http.delete<void>(`${BASE}/api/admin/testimonials/${id}`);
+  }
+
+  /* ── Public Contact Messages ── */
+  submitContactMessage(req: CreateContactMessageRequest): Observable<void> {
+    return this.http.post<void>(`${BASE}/api/public/contact`, req);
+  }
+
+  /* ── Admin Contact Messages ── */
+  getContactMessages(
+    page = 0,
+    size = 20,
+  ): Observable<PagedResponse<ContactMessageDto>> {
+    return this.http.get<PagedResponse<ContactMessageDto>>(
+      `${BASE}/api/admin/contact-messages`,
+      {
+        params: new HttpParams().set('page', page).set('size', size),
+      },
+    );
+  }
+
+  getContactMessage(id: string): Observable<ContactMessageDto> {
+    return this.http.get<ContactMessageDto>(
+      `${BASE}/api/admin/contact-messages/${id}`,
+    );
+  }
+
+  markContactMessageRead(
+    id: string,
+    read: boolean,
+  ): Observable<ContactMessageDto> {
+    return this.http.patch<ContactMessageDto>(
+      `${BASE}/api/admin/contact-messages/${id}/read`,
+      {},
+      { params: new HttpParams().set('read', read) },
+    );
+  }
+
+  deleteContactMessage(id: string): Observable<void> {
+    return this.http.delete<void>(`${BASE}/api/admin/contact-messages/${id}`);
+  }
+
+  getUnreadContactCount(): Observable<UnreadCountDto> {
+    return this.http.get<UnreadCountDto>(
+      `${BASE}/api/admin/contact-messages/unread-count`,
+    );
   }
 }

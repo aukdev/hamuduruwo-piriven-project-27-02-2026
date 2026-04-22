@@ -1,0 +1,50 @@
+<h2 mat-dialog-title>පණිවිඩයේ විස්තර</h2>
+
+<mat-dialog-content class="detail-content">
+  <div class="row">
+    <mat-icon>person</mat-icon>
+    <div class="row__body">
+      <span class="label">නම / Name</span>
+      <span class="value">{{ data.name }}</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <mat-icon>email</mat-icon>
+    <div class="row__body">
+      <span class="label">ඊමේල් / Email</span>
+      <a class="value link" [href]="'mailto:' + data.email">{{ data.email }}</a>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="data.subject">
+    <mat-icon>subject</mat-icon>
+    <div class="row__body">
+      <span class="label">විෂය / Subject</span>
+      <span class="value">{{ data.subject }}</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <mat-icon>schedule</mat-icon>
+    <div class="row__body">
+      <span class="label">ලැබුණු දිනය</span>
+      <span class="value">
+        {{ data.createdAt | date: "yyyy-MM-dd HH:mm" }}
+      </span>
+    </div>
+  </div>
+
+  <div class="message-block">
+    <span class="label">පණිවිඩය / Message</span>
+    <p class="message-body">{{ data.message }}</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">වසන්න</button>
+  <a mat-raised-button color="primary" [href]="mailtoHref">
+    <mat-icon>reply</mat-icon>
+    ඊමේල් මගින් පිළිතුරු
+  </a>
+</mat-dialog-actions>

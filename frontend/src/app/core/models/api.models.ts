@@ -448,3 +448,26 @@ export interface UpdateTestimonialRequest {
   rating?: number;
   isPublished?: boolean;
 }
+
+/* ── Contact Messages ── */
+export interface ContactMessageDto {
+  id: string;
+  name: string;
+  email: string;
+  subject: string | null;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateContactMessageRequest {
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+}
+
+export interface UnreadCountDto {
+  unread: number;
+}

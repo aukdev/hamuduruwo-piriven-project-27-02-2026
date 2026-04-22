@@ -1,0 +1,101 @@
+<app-page-header
+  title="සම්බන්ධීකරණ පණිවිඩ"
+  subtitle="වෙබ් අඩවියෙන් ලැබුණු පණිවිඩ බැලීම සහ කළමනාකරණය"
+>
+</app-page-header>
+
+<div class="summary-bar">
+  <div class="summary-chip">
+    <mat-icon>mark_email_unread</mat-icon>
+    <span
+      >නොකියවූ පණිවිඩ: <strong>{{ unreadCount }}</strong></span
+    >
+  </div>
+  <div class="summary-chip">
+    <mat-icon>forum</mat-icon>
+    <span
+      >මුළු පණිවිඩ: <strong>{{ totalElements }}</strong></span
+    >
+  </div>
+</div>
+
+<app-skeleton *ngIf="loading" type="user-list" [count]="4"></app-skeleton>
+
+<div class="messages-list" *ngIf="!loading">
+  <mat-card
+    class="message-card"
+    *ngFor="let m of messages"
+    [class.unread]="!m.isRead"
+    (click)="viewMessage(m)"
+  >
+    <div class="message-card__main">
+      <div class="message-avatar">
+        <span>{{ getInitials(m.name) }}</span>
+      </div>
+      <div class="message-info">
+        <div class="message-header">
+          <h4>{{ m.name }}</h4>
+          <span
+            class="status-badge"
+            [class.read]="m.isRead"
+            [class.unread]="!m.isRead"
+          >
+            {{ m.isRead ? "කියවූ" : "නොකියවූ" }}
+          </span>
+        </div>
+        <p class="message-email">
+          <mat-icon>email</mat-icon>
+          {{ m.email }}
+        </p>
+        <p class="message-subject" *ngIf="m.subject">
+          <mat-icon>subject</mat-icon>
+          {{ m.subject }}
+        </p>
+        <p class="message-snippet">{{ getSnippet(m.message) }}</p>
+        <span class="message-date">
+          {{ m.createdAt | date: "yyyy-MM-dd HH:mm" }}
+        </span>
+      </div>
+      <div class="message-actions">
+        <button
+          mat-icon-button
+          color="primary"
+          matTooltip="{{
+            m.isRead ? 'නොකියවූ ලෙස සලකුණු කරන්න' : 'කියවූ ලෙස සලකුණු කරන්න'
+          }}"
+          (click)="toggleRead(m, $event)"
+        >
+          <mat-icon>{{
+            m.isRead ? "mark_email_unread" : "mark_email_read"
+          }}</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          color="warn"
+          matTooltip="මකන්න"
+          (click)="deleteMessage(m, $event)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && messages.length === 0"
+  icon="mark_email_read"
+  title="පණිවිඩ නොමැත"
+  message="තවම කිසිදු අමුත්තෙකු සම්බන්ධීකරණ පණිවිඩයක් යවා නොමැත."
+>
+</app-empty-state>
+
+<mat-paginator
+  *ngIf="!loading && messages.length > 0"
+  [length]="totalElements"
+  [pageSize]="pageSize"
+  [pageIndex]="currentPage"
+  (page)="onPageChange($event)"
+  [hidePageSize]="true"
+>
+</mat-paginator>

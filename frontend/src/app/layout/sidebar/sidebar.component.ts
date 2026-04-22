@@ -127,6 +127,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
             label: 'අදහස් කළමනාකරණය',
             route: '/admin/testimonials',
           },
+          {
+            icon: 'mark_email_unread',
+            label: 'සම්බන්ධීකරණ පණිවිඩ',
+            route: '/admin/contact-messages',
+          },
         ];
       case 'SUPER_ADMIN':
         return [
@@ -175,6 +180,11 @@ export class SidebarComponent implements OnInit, OnDestroy {
             icon: 'forum',
             label: 'අදහස් කළමනාකරණය',
             route: '/superadmin/testimonials',
+          },
+          {
+            icon: 'mark_email_unread',
+            label: 'සම්බන්ධීකරණ පණිවිඩ',
+            route: '/superadmin/contact-messages',
           },
         ];
       default:

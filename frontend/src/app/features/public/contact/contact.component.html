@@ -80,9 +80,15 @@
             type="submit"
             class="submit-btn"
             *ngIf="!submitted"
+            [disabled]="submitting"
           >
-            <mat-icon>send</mat-icon>
-            පණිවිඩය යවන්න / Send
+            <mat-icon *ngIf="!submitting">send</mat-icon>
+            <mat-progress-spinner
+              *ngIf="submitting"
+              diameter="20"
+              mode="indeterminate"
+            ></mat-progress-spinner>
+            {{ submitting ? "යවමින්..." : "පණිවිඩය යවන්න / Send" }}
           </button>
           <div class="success-msg" *ngIf="submitted">
             <mat-icon>check_circle</mat-icon>

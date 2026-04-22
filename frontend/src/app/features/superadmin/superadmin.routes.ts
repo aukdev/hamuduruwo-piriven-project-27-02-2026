@@ -10,6 +10,7 @@ import { PracticePaperReviewComponent } from '../../shared/components/practice-p
 import { VcharaSubjectManagementComponent } from '../admin/vichara-subject-management/vichara-subject-management.component';
 import { VcharaManagementComponent } from '../admin/vichara-management/vichara-management.component';
 import { TestimonialManagementComponent } from '../admin/testimonial-management/testimonial-management.component';
+import { ContactManagementComponent } from '../admin/contact-management/contact-management.component';
 
 export const SUPERADMIN_ROUTES: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -30,4 +31,5 @@ export const SUPERADMIN_ROUTES: Routes = [
   { path: 'vichara-subjects', component: VcharaSubjectManagementComponent },
   { path: 'vichara', component: VcharaManagementComponent },
   { path: 'testimonials', component: TestimonialManagementComponent },
+  { path: 'contact-messages', component: ContactManagementComponent },
 ];
