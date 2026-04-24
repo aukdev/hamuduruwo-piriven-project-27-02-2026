@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'http://localhost:8080',
+  // Same-origin: host VPS nginx proxies /api/ → backend container.
+  apiBaseUrl: '',
 };

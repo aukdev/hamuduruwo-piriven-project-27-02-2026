@@ -1,0 +1,36 @@
+# VPS host nginx site config — reverse-proxies to the frontend container
+# (docker compose publishes it on 127.0.0.1:4200 → container :80) and
+# forwards /api/ to the backend container on :8080.
+#
+# Install:
+#   sudo cp deploy/nginx-vps-site.conf.example /etc/nginx/sites-available/piriven
+#   sudo nano /etc/nginx/sites-available/piriven        # edit server_name
+#   sudo ln -sf /etc/nginx/sites-available/piriven /etc/nginx/sites-enabled/piriven
+#   sudo nginx -t && sudo systemctl reload nginx
+
+server {
+    listen 80;
+    server_name your.domain.com;
+    client_max_body_size 25m;
+
+    # Angular SPA (served by the frontend container's internal nginx)
+    location / {
+        proxy_pass         http://127.0.0.1:4200;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+    }
+
+    # Backend API (same origin → no CORS)
+    location /api/ {
+        proxy_pass         http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header   Host              $host;
+        proxy_set_header   X-Real-IP         $remote_addr;
+        proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+        proxy_read_timeout 120s;
+    }
+}
