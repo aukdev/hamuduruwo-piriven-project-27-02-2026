@@ -26,23 +26,23 @@ services:
     depends_on:
       - postgres
 
-  # app:
-  #   build: .
-  #   container_name: mcq-backend
-  #   environment:
-  #     DB_HOST: postgres
-  #     DB_PORT: 5432
-  #     DB_NAME: mcq_db
-  #     DB_USERNAME: mcq_user
-  #     DB_PASSWORD: mcq_pass
-  #     JWT_SECRET: aVeryLongSecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLongForHS512ProdKey2024
-  #     JWT_EXPIRATION: 86400000
-  #     SERVER_PORT: 8080
-  #   ports:
-  #     - "8080:8080"
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
+  app:
+    build: .
+    container_name: mcq-backend
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: mcq_db
+      DB_USERNAME: mcq_user
+      DB_PASSWORD: mcq_pass
+      JWT_SECRET: aVeryLongSecretKeyForJwtTokenGenerationThatIsAtLeast256BitsLongForHS512ProdKey2024
+      JWT_EXPIRATION: 86400000
+      SERVER_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 # volumes:
 #   pgdata:
