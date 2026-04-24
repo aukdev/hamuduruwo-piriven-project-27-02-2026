@@ -1,0 +1,60 @@
+<app-page-header
+  title="ගුරු මුල් පිටුව"
+  [subtitle]="'ආයුබෝවන්, ' + auth.currentUser?.fullName"
+>
+  <button
+    mat-flat-button
+    color="primary"
+    routerLink="/teacher/questions/create"
+  >
+    <mat-icon>add</mat-icon> නව ප්‍රශ්නයක්
+  </button>
+</app-page-header>
+
+<!-- Testimonial Banner -->
+<mat-card class="testimonial-banner" *ngIf="showTestimonialBanner">
+  <mat-icon>rate_review</mat-icon>
+  <div class="testimonial-banner__content">
+    <strong>ඔබගේ අදහස් අපට වැදගත්!</strong>
+    <p>පද්ධතිය ගැන ඔබගේ අදහස් Feedback form එක පුරවන්න</p>
+  </div>
+  <button mat-raised-button color="primary" (click)="openTestimonialForm()">
+    අදහස් ලබා දෙන්න
+  </button>
+</mat-card>
+
+<app-skeleton *ngIf="loading" type="dashboard"></app-skeleton>
+
+<div *ngIf="!loading">
+  <div class="dashboard-grid">
+    <mat-card class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-card__icon-wrap" [style.background]="stat.bg">
+        <mat-icon [style.color]="stat.color">{{ stat.icon }}</mat-icon>
+      </div>
+      <div class="stat-card__info">
+        <div class="stat-card__value">{{ stat.count }}</div>
+        <div class="stat-card__label">{{ stat.label }}</div>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="mt-24">
+    <h3 class="section-title">ඉක්මන් ක්‍රියා</h3>
+    <div class="quick-actions">
+      <mat-card
+        class="action-card"
+        (click)="router.navigate(['/teacher/questions/create'])"
+      >
+        <mat-icon>add_circle</mat-icon>
+        <span>නව ප්‍රශ්නයක් සාදන්න</span>
+      </mat-card>
+      <mat-card
+        class="action-card"
+        (click)="router.navigate(['/teacher/questions'])"
+      >
+        <mat-icon>list_alt</mat-icon>
+        <span>මගේ ප්‍රශ්න බලන්න</span>
+      </mat-card>
+    </div>
+  </div>
+</div>

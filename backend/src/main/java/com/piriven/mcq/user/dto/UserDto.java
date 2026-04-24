@@ -4,11 +4,14 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record UserDto(
-        UUID id,
-        String email,
-        String fullName,
-        String role,
-        String status,
-        boolean teacherVerified,
-        LocalDateTime createdAt) {
+                UUID id,
+                String email,
+                String fullName,
+                String role,
+                String status,
+                boolean teacherVerified,
+                String pirivenName,
+                String pirivenAddress,
+                String phoneNumber,
+                LocalDateTime createdAt) {
 }

@@ -1,0 +1,102 @@
+/* ══════════════════════════════════════════════════════
+   Piriven MCQ - Design Tokens (Single Source of Truth)
+   Change these variables to restyle the entire app.
+   ══════════════════════════════════════════════════════ */
+
+/* ── Brand Colors (Teal Ocean) ── */
+$primary: #006d77;
+$primary-light: #83c5be;
+$primary-dark: #004f56;
+$accent: #83c5be;
+$accent-light: #b8e8e0;
+$warn: #9d0208;
+$success: #2e7d32;
+$info: #1565c0;
+
+/* ── Neutrals / Surface ── */
+$bg-page: #e8f6f5;
+$bg-card: #ffffff;
+$bg-card-inner: #f4ffff;
+$bg-hover: rgba(0, 109, 119, 0.03);
+$bg-active: rgba(0, 109, 119, 0.06);
+$text-primary: #05445e;
+$text-secondary: #2f4f4f;
+$text-muted: #5f8a8a;
+$border-color: #dcefef;
+$divider: #e8f6f5;
+
+/* ── Table Colors ── */
+$table-header-bg: #83c5be;
+$table-header-text: #03303d;
+$table-border: #dcefef;
+$table-row-alt: #f7ffff;
+
+/* ── Semantic Badge Colors ── */
+$badge-active-bg: #e8f5e9;
+$badge-active-fg: #2e7d32;
+$badge-deactivated-bg: #fce4ec;
+$badge-deactivated-fg: #9d0208;
+$badge-pending-bg: #fff3e0;
+$badge-pending-fg: #e65100;
+$badge-draft-bg: rgba(0, 109, 119, 0.06);
+$badge-draft-fg: #003d46;
+$badge-dark-text: #003d46;
+$danger-bright: #d90429;
+
+/* ── Shadows ── */
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+$shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+$shadow-card-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+/* ── Radii ── */
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+$radius-pill: 24px;
+
+/* ── Spacing ── */
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+
+/* ── Typography ── */
+$font-family:
+  "Noto Sans Sinhala",
+  "Segoe UI",
+  system-ui,
+  -apple-system,
+  sans-serif;
+
+/* ── Transitions ── */
+$transition-fast: 0.15s ease;
+$transition-normal: 0.2s ease;
+$transition-slow: 0.3s ease;
+
+/* ── Breakpoints (for reference in @media) ── */
+$bp-mobile: 480px;
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+$bp-wide: 1400px;
+
+/* ── Gradients ── */
+$gradient-primary: linear-gradient(135deg, $primary, $primary-light);
+$gradient-page: linear-gradient(160deg, $bg-page 0%, #d4f0ee 100%);
+
+/* ── Role Badge Colors ── */
+$role-student-bg: rgba(0, 109, 119, 0.08);
+$role-student-fg: $primary;
+$role-teacher-bg: rgba(46, 125, 50, 0.08);
+$role-teacher-fg: $success;
+$role-admin-bg: rgba(131, 197, 190, 0.15);
+$role-admin-fg: #004f56;
+$role-superadmin-bg: rgba(157, 2, 8, 0.08);
+$role-superadmin-fg: #9d0208;
+
+/* ── Skeleton ── */
+$skeleton-base: #d4ede9;
+$skeleton-shine: #e8f6f5;

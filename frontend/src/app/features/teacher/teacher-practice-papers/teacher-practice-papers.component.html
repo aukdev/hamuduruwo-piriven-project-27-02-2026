@@ -1,0 +1,139 @@
+<app-page-header
+  title="මගේ පුහුණු ප්‍රශ්න පත්‍ර"
+  subtitle="පුහුණු ප්‍රශ්න පත්‍ර කළමනාකරණය"
+>
+  <button mat-flat-button color="primary" (click)="openCreateForm()">
+    <mat-icon>add</mat-icon> නව පුහුණු පත්‍රයක්
+  </button>
+</app-page-header>
+
+<!-- Create Form -->
+<mat-card class="form-card mb-20" *ngIf="showCreateForm">
+  <h3 class="card-title">
+    <mat-icon>add_circle</mat-icon> නව පුහුණු ප්‍රශ්න පත්‍රයක් සාදන්න
+    <button mat-icon-button (click)="showCreateForm = false" class="ml-auto">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h3>
+  <form [formGroup]="createForm" (ngSubmit)="createPaper()">
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>විෂය</mat-label>
+        <mat-select formControlName="subjectId">
+          <mat-option *ngFor="let s of subjects" [value]="s.id">{{
+            s.name
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="title-field">
+        <mat-label>මාතෘකාව</mat-label>
+        <input
+          matInput
+          formControlName="title"
+          placeholder="උදා: පුහුණු පත්‍ර 01"
+        />
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline">
+        <mat-label>ප්‍රශ්න ගණන</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="questionCount"
+          min="1"
+          max="200"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>කාලය (මිනිත්තු)</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="durationMinutes"
+          min="1"
+        />
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="createForm.invalid || saving"
+    >
+      <mat-icon>save</mat-icon> සාදන්න
+    </button>
+  </form>
+</mat-card>
+
+<app-loading-overlay [show]="loading"></app-loading-overlay>
+
+<!-- Papers List -->
+<div class="papers-grid" *ngIf="!loading">
+  <mat-card class="paper-card" *ngFor="let p of papers">
+    <div class="paper-card__header">
+      <span class="paper-title">{{ p.title || "Untitled" }}</span>
+      <mat-chip [class]="'status-' + p.status.toLowerCase()">
+        {{ getStatusLabel(p.status) }}
+      </mat-chip>
+    </div>
+
+    <div class="paper-subject">{{ p.subjectName }}</div>
+
+    <div class="paper-card__stats">
+      <div class="stat">
+        <span class="stat-label">ප්‍රශ්න</span>
+        <span class="stat-value"
+          >{{ p.assignedQuestions }} / {{ p.questionCount }}</span
+        >
+      </div>
+      <div class="stat">
+        <span class="stat-label">කාලය</span>
+        <span class="stat-value">{{ p.durationSeconds / 60 }} මි.</span>
+      </div>
+    </div>
+
+    <mat-progress-bar
+      mode="determinate"
+      [value]="
+        p.questionCount > 0 ? (p.assignedQuestions / p.questionCount) * 100 : 0
+      "
+      [color]="p.assignedQuestions >= p.questionCount ? 'primary' : 'accent'"
+    ></mat-progress-bar>
+
+    <div class="paper-card__rejection" *ngIf="p.status === 'REJECTED'">
+      <mat-icon>warning</mat-icon>
+      <span>ප්‍රතික්ෂේප විය</span>
+    </div>
+
+    <div class="paper-card__actions">
+      <button
+        mat-stroked-button
+        *ngIf="canAddQuestions(p)"
+        [routerLink]="['/teacher/questions/create']"
+        [queryParams]="{ paperId: p.id }"
+      >
+        <mat-icon>add</mat-icon> ප්‍රශ්නයක් එකතු
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        *ngIf="canSubmit(p)"
+        (click)="submitForApproval(p)"
+      >
+        <mat-icon>send</mat-icon> අනුමතියට යවන්න
+      </button>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && papers.length === 0"
+  icon="school"
+  title="පුහුණු ප්‍රශ්න පත්‍ර නොමැත"
+  message="නව පුහුණු ප්‍රශ්න පත්‍රයක් සාදන්න."
+></app-empty-state>

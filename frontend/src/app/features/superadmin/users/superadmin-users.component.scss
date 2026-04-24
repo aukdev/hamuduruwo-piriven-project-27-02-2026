@@ -1,0 +1,117 @@
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.user-card {
+  padding: 18px 22px !important;
+}
+.user-main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-info));
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.user-info {
+  flex: 1;
+  min-width: 200px;
+}
+.user-info h4 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.user-email {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+.user-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.status-chip {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  &.active {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  &.deactivated {
+    background: #fce4ec;
+    color: #c62828;
+  }
+}
+.verify-badge {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+  &.unverified {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  &.verified {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+}
+.date-chip {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  padding: 2px 8px;
+  background: var(--color-bg-page);
+  border-radius: 4px;
+}
+.user-actions {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.actions-bar {
+  margin-bottom: 16px;
+}
+.teacher-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}

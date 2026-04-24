@@ -1,0 +1,100 @@
+<mat-toolbar class="navbar">
+  <button mat-icon-button (click)="toggleSidenav()" class="navbar__menu-btn">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div class="navbar__brand" routerLink="/">
+    <div class="navbar__logo">
+      <mat-icon class="navbar__logo-icon">school</mat-icon>
+    </div>
+    <div class="navbar__brand-text hide-mobile">
+      <span class="navbar__app-name">පිරිවෙන් MCQ</span>
+      <span class="navbar__app-sub">past-paper ප්‍රශ්න පත්‍ර පද්ධතිය</span>
+    </div>
+  </div>
+
+  <nav class="navbar__links">
+    <a
+      *ngFor="let link of visibleNavLinks"
+      [routerLink]="link.route"
+      routerLinkActive="navbar__link--active"
+      [routerLinkActiveOptions]="{ exact: link.route === '/' }"
+      class="navbar__link"
+    >
+      {{ link.label }}
+    </a>
+    <button
+      *ngIf="overflowNavLinks.length > 0"
+      class="navbar__link navbar__more-btn"
+      [matMenuTriggerFor]="overflowMenu"
+      aria-label="තවත්"
+    >
+      <mat-icon class="navbar__more-icon">more_vert</mat-icon>
+    </button>
+  </nav>
+
+  <span class="navbar__spacer"></span>
+
+  <button
+    mat-icon-button
+    class="navbar__nav-menu-btn"
+    [matMenuTriggerFor]="siteNavMenu"
+    aria-label="Open site navigation"
+  >
+    <mat-icon>travel_explore</mat-icon>
+  </button>
+
+  <mat-menu #overflowMenu="matMenu">
+    <a
+      *ngFor="let link of overflowNavLinks"
+      mat-menu-item
+      [routerLink]="link.route"
+    >
+      <span>{{ link.label }}</span>
+    </a>
+  </mat-menu>
+
+  <button
+    mat-icon-button
+    (click)="toggleTheme()"
+    class="navbar__theme-btn"
+    [attr.aria-label]="
+      (isDark$ | async) ? 'Switch to light mode' : 'Switch to dark mode'
+    "
+  >
+    <mat-icon>{{ (isDark$ | async) ? "light_mode" : "dark_mode" }}</mat-icon>
+  </button>
+
+  <span
+    class="role-badge role-{{ currentUser.role }}"
+    *ngIf="user as currentUser"
+  >
+    {{ getRoleSinhala(currentUser.role) }}
+  </span>
+
+  <button mat-icon-button [matMenuTriggerFor]="profileMenu" *ngIf="user">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+
+  <mat-menu #siteNavMenu="matMenu">
+    <a
+      *ngFor="let link of publicNavLinks"
+      mat-menu-item
+      [routerLink]="link.route"
+    >
+      <span>{{ link.label }}</span>
+    </a>
+  </mat-menu>
+
+  <mat-menu #profileMenu="matMenu">
+    <div class="profile-menu-header" *ngIf="user as currentUser">
+      <strong>{{ currentUser.fullName }}</strong>
+      <small>{{ currentUser.email }}</small>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>පිටවීම</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

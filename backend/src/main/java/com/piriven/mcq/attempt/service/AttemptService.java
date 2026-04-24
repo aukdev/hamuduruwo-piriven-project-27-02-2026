@@ -6,8 +6,10 @@ import com.piriven.mcq.attempt.entity.AttemptAnswer;
 import com.piriven.mcq.attempt.entity.AttemptStatus;
 import com.piriven.mcq.attempt.repository.AttemptAnswerRepository;
 import com.piriven.mcq.attempt.repository.AttemptRepository;
+import com.piriven.mcq.common.dto.PagedResponse;
 import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
+import com.piriven.mcq.common.util.PaginationUtil;
 import com.piriven.mcq.paper.entity.Paper;
 import com.piriven.mcq.paper.entity.PaperQuestion;
 import com.piriven.mcq.paper.repository.PaperQuestionRepository;
@@ -16,10 +18,14 @@ import com.piriven.mcq.question.dto.QuestionOptionDto;
 import com.piriven.mcq.question.entity.Question;
 import com.piriven.mcq.question.entity.QuestionOption;
 import com.piriven.mcq.question.repository.QuestionOptionRepository;
+import com.piriven.mcq.subject.dto.SubjectDto;
+import com.piriven.mcq.subject.service.SubjectService;
 import com.piriven.mcq.user.entity.User;
 import com.piriven.mcq.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,18 +45,13 @@ public class AttemptService {
     private final PaperQuestionRepository paperQuestionRepository;
     private final UserRepository userRepository;
     private final QuestionOptionRepository questionOptionRepository;
-
-    @Value("${app.exam.total-duration-seconds:1200}")
-    private int totalDurationSeconds;
+    private final SubjectService subjectService;
 
     @Value("${app.exam.per-question-seconds:30}")
     private int perQuestionSeconds;
 
     @Value("${app.exam.max-attempts-per-paper:10}")
     private int maxAttemptsPerPaper;
-
-    @Value("${app.exam.questions-per-paper:40}")
-    private int questionsPerPaper;
 
     // ==================== Start Attempt ====================
 
@@ -62,10 +63,10 @@ public class AttemptService {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
 
-        // Check paper has 40 questions
+        // Check paper has enough questions assigned
         long assignedCount = paperQuestionRepository.countByPaperId(paperId);
-        if (assignedCount < questionsPerPaper) {
-            throw new BusinessException("Paper does not have " + questionsPerPaper +
+        if (assignedCount < paper.getQuestionCount()) {
+            throw new BusinessException("Paper does not have " + paper.getQuestionCount() +
                     " questions assigned yet. Currently has " + assignedCount);
         }
 
@@ -99,7 +100,7 @@ public class AttemptService {
                 .attemptNo(attemptNo)
                 .status(AttemptStatus.IN_PROGRESS)
                 .startedAt(now)
-                .expiresAt(now.plusSeconds(totalDurationSeconds))
+                .expiresAt(now.plusSeconds(paper.getDurationSeconds()))
                 .correctCount(0)
                 .wrongCount(0)
                 .score(0)
@@ -111,7 +112,7 @@ public class AttemptService {
                 attempt.getId(),
                 attemptNo,
                 paper.getYear(),
-                paper.getPaperNo(),
+                paper.getSubject().getName(),
                 paper.getQuestionCount(),
                 paper.getDurationSeconds(),
                 attempt.getStartedAt(),
@@ -363,11 +364,6 @@ public class AttemptService {
             }
         }
 
-        // Unanswered questions (never served) also count as wrong
-        int totalAnswered = correctCount + wrongCount;
-        int unanswered = questionsPerPaper - totalAnswered;
-        wrongCount += unanswered;
-
         attempt.setCorrectCount(correctCount);
         attempt.setWrongCount(wrongCount);
         attempt.setScore(correctCount); // 1 mark per correct question
@@ -378,19 +374,17 @@ public class AttemptService {
         int correctCount = attempt.getCorrectCount();
         int wrongCount = attempt.getWrongCount();
         int score = attempt.getScore();
-        int unanswered = questionsPerPaper - correctCount - wrongCount;
+        int totalQuestions = attempt.getPaper().getQuestionCount();
+        int unanswered = totalQuestions - correctCount - wrongCount;
         if (unanswered < 0)
             unanswered = 0;
 
         // Generate Sinhala score message
-        String scoreMessage = generateScoreMessage(score);
+        String scoreMessage = generateScoreMessage(score, totalQuestions);
 
         // Compare with previous best
         UUID paperId = attempt.getPaper().getId();
         UUID studentId = attempt.getStudent().getId();
-
-        Optional<Integer> previousBest = attemptRepository
-                .findBestScoreByStudentAndPaper(studentId, paperId);
 
         // The previous best should exclude the current attempt
         Integer prevBestScore = null;
@@ -411,11 +405,11 @@ public class AttemptService {
             if (score > prevBestScore) {
                 isNewBest = true;
                 comparisonMessage = "සුබ පැතුම්! ඔබේ පෙර හොඳම ලකුණු වාර්තාව (" +
-                        prevBestScore + "/40) ඉක්මවා ඇත! නව හොඳම ලකුණු: " +
-                        score + "/40 🎉";
+                        prevBestScore + "/" + totalQuestions + ") ඉක්මවා ඇත! නව හොඳම ලකුණු: " +
+                        score + "/" + totalQuestions + " 🎉";
             } else {
                 comparisonMessage = "ඔබට තවත් වැඩි දියුණු විය හැකිය. ඔබේ හොඳම ලකුණු: " +
-                        prevBestScore + "/40. නැවත උත්සාහ කරන්න! 💪";
+                        prevBestScore + "/" + totalQuestions + ". නැවත උත්සාහ කරන්න! 💪";
             }
         }
 
@@ -424,12 +418,12 @@ public class AttemptService {
                 attempt.getAttemptNo(),
                 attempt.getStatus().name(),
                 attempt.getPaper().getYear(),
-                attempt.getPaper().getPaperNo(),
+                attempt.getPaper().getSubject().getName(),
                 correctCount,
                 wrongCount,
                 unanswered,
                 score,
-                questionsPerPaper,
+                totalQuestions,
                 attempt.getStartedAt(),
                 attempt.getSubmittedAt(),
                 scoreMessage,
@@ -438,13 +432,15 @@ public class AttemptService {
                 comparisonMessage);
     }
 
-    private String generateScoreMessage(int score) {
-        if (score > 35) {
+    private String generateScoreMessage(int score, int totalQuestions) {
+        int threshold90 = (int) (totalQuestions * 0.9);
+        int threshold75 = (int) (totalQuestions * 0.75);
+        if (score > threshold90) {
             return "ඉතා විශිෂ්ටයි! ඔබ ඉතා දක්ෂ ශිෂ්‍යයෙකි. " +
                     "මෙම විශිෂ්ට ප්‍රතිඵලය ගැන අපි ඔබට සුබ පතමු! " +
                     "ඔබේ කැපවීම හා උත්සාහය ඉතා ප්‍රශංසනීයයි. " +
                     "මෙලෙස දිගටම ඉදිරියට යන්න! 🌟";
-        } else if (score >= 30) {
+        } else if (score >= threshold75) {
             return "හොඳයි! ඔබ හොඳ ප්‍රතිඵලයක් ලබා ඇත. " +
                     "තව උනන්දු වී පාඩම් කළ යුතුයි. " +
                     "ඔබට තවත් ඉහළ ප්‍රතිඵල ලබා ගත හැකිය! 📚";
@@ -471,11 +467,220 @@ public class AttemptService {
                 false,
                 false,
                 answer.getPaperQuestion().getPosition(),
+                attempt.getPaper().getQuestionCount(),
                 question.getId(),
                 question.getQuestionText(),
                 optionDtos,
                 remainTotal,
                 remainQuestion,
                 null);
+    }
+
+    // ==================== Admin: View Student Attempts ====================
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getAllStudentAttempts(int page, int size) {
+        Page<Attempt> attempts = attemptRepository.findAllCompletedAttempts(PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getAllStudentAttemptsByPaperType(String paperType, int page,
+            int size) {
+        com.piriven.mcq.paper.entity.PaperType type = com.piriven.mcq.paper.entity.PaperType.valueOf(paperType);
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperType(type,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByPaper(UUID paperId, int page, int size) {
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperId(paperId,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByPaper(UUID teacherId, UUID paperId, int page,
+            int size) {
+        Paper paper = paperRepository.findById(paperId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper", "id", paperId));
+        if (!subjectService.isTeacherAssignedToSubject(teacherId, paper.getSubject().getId())) {
+            throw new BusinessException("You are not assigned to this subject.");
+        }
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperId(paperId,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getStudentAttemptsByStudent(UUID studentId, int page, int size) {
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByStudentId(studentId,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    // ==================== Teacher: View Student Attempts (filtered by assigned
+    // subjects) ====================
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getTeacherStudentAttempts(UUID teacherId, int page, int size) {
+        List<UUID> subjectIds = subjectService.getTeacherSubjects(teacherId).stream()
+                .map(SubjectDto::id)
+                .toList();
+        if (subjectIds.isEmpty()) {
+            return PagedResponse.<StudentAttemptSummaryDto>builder()
+                    .content(List.of()).page(0).size(size).totalElements(0).totalPages(0).last(true).build();
+        }
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsBySubjectIds(subjectIds,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public PagedResponse<StudentAttemptSummaryDto> getTeacherStudentAttemptsByPaperType(UUID teacherId,
+            String paperType, int page, int size) {
+        List<UUID> subjectIds = subjectService.getTeacherSubjects(teacherId).stream()
+                .map(SubjectDto::id)
+                .toList();
+        if (subjectIds.isEmpty()) {
+            return PagedResponse.<StudentAttemptSummaryDto>builder()
+                    .content(List.of()).page(0).size(size).totalElements(0).totalPages(0).last(true).build();
+        }
+        com.piriven.mcq.paper.entity.PaperType type = com.piriven.mcq.paper.entity.PaperType.valueOf(paperType);
+        Page<Attempt> attempts = attemptRepository.findCompletedAttemptsByPaperTypeAndSubjectIds(type, subjectIds,
+                PaginationUtil.of(page, size));
+        return buildAttemptSummaryPage(attempts);
+    }
+
+    @Transactional(readOnly = true)
+    public AttemptDetailDto getAttemptDetail(UUID attemptId) {
+        return buildAttemptDetail(attemptId);
+    }
+
+    @Transactional(readOnly = true)
+    public AttemptDetailDto getAttemptDetail(UUID teacherId, UUID attemptId) {
+        Attempt attempt = attemptRepository.findById(attemptId)
+                .orElseThrow(() -> new ResourceNotFoundException("Attempt", "id", attemptId));
+        if (!subjectService.isTeacherAssignedToSubject(teacherId, attempt.getPaper().getSubject().getId())) {
+            throw new BusinessException("You are not assigned to this subject.");
+        }
+        return buildAttemptDetail(attemptId);
+    }
+
+    private AttemptDetailDto buildAttemptDetail(UUID attemptId) {
+        Attempt attempt = attemptRepository.findById(attemptId)
+                .orElseThrow(() -> new ResourceNotFoundException("Attempt", "id", attemptId));
+
+        if (attempt.getStatus() == AttemptStatus.IN_PROGRESS) {
+            throw new BusinessException("Attempt is still in progress.");
+        }
+
+        User student = attempt.getStudent();
+        Paper paper = attempt.getPaper();
+
+        // Get all paper questions ordered by position
+        List<PaperQuestion> paperQuestions = paperQuestionRepository
+                .findByPaperIdOrderByPosition(paper.getId());
+
+        // Get all answers for this attempt
+        List<AttemptAnswer> attemptAnswers = attemptAnswerRepository
+                .findByAttemptIdOrderByPaperQuestionPositionAsc(attempt.getId());
+
+        // Map attempt answers by paperQuestion ID for quick lookup
+        Map<UUID, AttemptAnswer> answerMap = attemptAnswers.stream()
+                .collect(Collectors.toMap(
+                        aa -> aa.getPaperQuestion().getId(),
+                        aa -> aa));
+
+        List<AttemptDetailDto.AttemptAnswerDetailDto> answerDetails = new ArrayList<>();
+
+        for (PaperQuestion pq : paperQuestions) {
+            Question question = pq.getQuestion();
+            AttemptAnswer aa = answerMap.get(pq.getId());
+
+            List<AttemptDetailDto.OptionDetail> optionDetails = question.getOptions().stream()
+                    .map(opt -> new AttemptDetailDto.OptionDetail(
+                            opt.getId(),
+                            opt.getOptionText(),
+                            opt.getOptionOrder(),
+                            opt.isCorrect(),
+                            aa != null && aa.getSelectedOption() != null
+                                    && aa.getSelectedOption().getId().equals(opt.getId())))
+                    .toList();
+
+            boolean isUnanswered = aa == null || (aa.getSelectedOption() == null && !aa.isTimeout());
+            boolean isCorrect = aa != null && Boolean.TRUE.equals(aa.getIsCorrect());
+            boolean isTimeout = aa != null && aa.isTimeout();
+
+            answerDetails.add(new AttemptDetailDto.AttemptAnswerDetailDto(
+                    pq.getPosition(),
+                    question.getId(),
+                    question.getQuestionText(),
+                    optionDetails,
+                    aa != null && aa.getSelectedOption() != null ? aa.getSelectedOption().getId() : null,
+                    aa != null && aa.getSelectedOption() != null ? aa.getSelectedOption().getOptionText() : null,
+                    aa != null && aa.getSelectedOption() != null ? aa.getSelectedOption().getOptionOrder() : null,
+                    isCorrect,
+                    isTimeout,
+                    isUnanswered,
+                    aa != null ? aa.getTimeTakenSeconds() : null,
+                    aa != null ? aa.getAnsweredAt() : null));
+        }
+
+        int totalQuestions = paper.getQuestionCount();
+        int unanswered = totalQuestions - attempt.getCorrectCount() - attempt.getWrongCount();
+        if (unanswered < 0)
+            unanswered = 0;
+
+        return new AttemptDetailDto(
+                attempt.getId(),
+                student.getId(),
+                student.getFullName(),
+                student.getEmail(),
+                paper.getYear(),
+                paper.getSubject().getName(),
+                attempt.getAttemptNo(),
+                attempt.getStatus().name(),
+                attempt.getCorrectCount(),
+                attempt.getWrongCount(),
+                unanswered,
+                attempt.getScore(),
+                totalQuestions,
+                attempt.getStartedAt(),
+                attempt.getSubmittedAt(),
+                answerDetails);
+    }
+
+    private PagedResponse<StudentAttemptSummaryDto> buildAttemptSummaryPage(Page<Attempt> attempts) {
+        List<StudentAttemptSummaryDto> content = attempts.getContent().stream()
+                .map(a -> new StudentAttemptSummaryDto(
+                        a.getId(),
+                        a.getStudent().getId(),
+                        a.getStudent().getFullName(),
+                        a.getStudent().getEmail(),
+                        a.getPaper().getId(),
+                        a.getPaper().getYear(),
+                        a.getPaper().getSubject().getName(),
+                        a.getAttemptNo(),
+                        a.getStatus().name(),
+                        a.getCorrectCount(),
+                        a.getWrongCount(),
+                        a.getScore(),
+                        a.getPaper().getQuestionCount(),
+                        a.getPaper().getPaperType().name(),
+                        a.getPaper().getTitle(),
+                        a.getStartedAt(),
+                        a.getSubmittedAt()))
+                .toList();
+
+        return PagedResponse.<StudentAttemptSummaryDto>builder()
+                .content(content)
+                .page(attempts.getNumber())
+                .size(attempts.getSize())
+                .totalElements(attempts.getTotalElements())
+                .totalPages(attempts.getTotalPages())
+                .last(attempts.isLast())
+                .build();
     }
 }

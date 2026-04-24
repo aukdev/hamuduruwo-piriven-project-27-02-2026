@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+  <mat-form-field
+    *ngIf="data.inputLabel"
+    class="w-100"
+    appearance="outline"
+  >
+    <mat-label>{{ data.inputLabel }}</mat-label>
+    <textarea matInput [(ngModel)]="inputValue" rows="3"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">
+    {{ data.cancelText || 'අවලංගු කරන්න' }}
+  </button>
+  <button
+    mat-flat-button
+    [color]="data.dangerous ? 'warn' : 'primary'"
+    [disabled]="
+      (data.showInput || data.inputRequired) && !inputValue?.trim()
+    "
+    (click)="onConfirm()"
+  >
+    {{ data.confirmText || 'තහවුරු කරන්න' }}
+  </button>
+</mat-dialog-actions>

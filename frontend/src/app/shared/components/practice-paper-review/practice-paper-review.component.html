@@ -1,0 +1,251 @@
+<app-page-header
+  [title]="paper?.title || 'පුහුණු පත්‍රය සමාලෝචනය'"
+  subtitle="ප්‍රශ්න බලන්න, සංස්කරණය කරන්න, අනුමත/ප්‍රතික්ෂේප කරන්න"
+>
+  <button mat-stroked-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon> ආපසු
+  </button>
+</app-page-header>
+
+<app-loading-overlay [show]="loading"></app-loading-overlay>
+
+<!-- Paper Info Header -->
+<mat-card class="paper-info-card" *ngIf="paper && !loading">
+  <div class="paper-info">
+    <div class="info-row">
+      <span class="chip subject">{{ paper.subjectName }}</span>
+      <span
+        class="chip status"
+        [ngClass]="{
+          'status-pending': paper.status === 'PENDING_APPROVAL',
+          'status-approved': paper.status === 'APPROVED',
+          'status-rejected': paper.status === 'REJECTED',
+          'status-draft': paper.status === 'DRAFT',
+        }"
+        >{{
+          paper.status === "PENDING_APPROVAL"
+            ? "අනුමතිය බලාපොරොත්තුයි"
+            : paper.status === "APPROVED"
+              ? "අනුමත කළ"
+              : paper.status === "REJECTED"
+                ? "ප්‍රතික්ෂේප කළ"
+                : "කෙටුම්පත"
+        }}</span
+      >
+    </div>
+    <div class="info-stats">
+      <div class="stat">
+        <mat-icon>quiz</mat-icon>
+        <span
+          >ප්‍රශ්න: {{ paper.questions.length }} /
+          {{ paper.questionCount }}</span
+        >
+      </div>
+      <div class="stat">
+        <mat-icon>timer</mat-icon>
+        <span>කාලය: මිනිත්තු {{ paper.durationSeconds / 60 }}</span>
+      </div>
+    </div>
+    <mat-progress-bar
+      mode="determinate"
+      [value]="
+        paper.questionCount > 0
+          ? (paper.questions.length / paper.questionCount) * 100
+          : 0
+      "
+    ></mat-progress-bar>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="paper-actions">
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="approve()"
+      *ngIf="paper.status === 'PENDING_APPROVAL'"
+    >
+      <mat-icon>check</mat-icon> අනුමත කරන්න
+    </button>
+    <button
+      mat-stroked-button
+      color="warn"
+      (click)="reject()"
+      *ngIf="paper.status === 'PENDING_APPROVAL'"
+    >
+      <mat-icon>close</mat-icon> ප්‍රතික්ෂේප කරන්න
+    </button>
+    <button
+      mat-stroked-button
+      (click)="toggleAddForm()"
+      *ngIf="paper.questions.length < paper.questionCount"
+    >
+      <mat-icon>add</mat-icon> නව ප්‍රශ්නයක් එකතු කරන්න
+    </button>
+  </div>
+</mat-card>
+
+<!-- Add new question form -->
+<mat-card class="add-form-card" *ngIf="showAddForm">
+  <h3 class="section-title">
+    <mat-icon>add_circle</mat-icon> නව ප්‍රශ්නයක් එකතු කරන්න
+    <button mat-icon-button (click)="toggleAddForm()" class="ml-auto">
+      <mat-icon>close</mat-icon>
+    </button>
+  </h3>
+  <form [formGroup]="addForm" (ngSubmit)="saveNewQuestion()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>ප්‍රශ්නය</mat-label>
+      <textarea matInput formControlName="questionText" rows="3"></textarea>
+      <mat-error>ප්‍රශ්නය අවශ්‍යයි</mat-error>
+    </mat-form-field>
+
+    <div formArrayName="options">
+      <div
+        *ngFor="let opt of addOptionsArray.controls; let i = index"
+        [formGroupName]="i"
+        class="option-row"
+        [class.correct-option]="opt.get('isCorrect')?.value"
+      >
+        <span class="option-label">{{ optLabels[i] }}</span>
+        <mat-form-field appearance="outline" class="option-input">
+          <mat-label>විකල්ප {{ optLabels[i] }}</mat-label>
+          <input matInput formControlName="optionText" />
+        </mat-form-field>
+        <mat-checkbox
+          formControlName="isCorrect"
+          color="primary"
+          (change)="onAddCorrectChange(i)"
+        >
+          නිවැරදි
+        </mat-checkbox>
+      </div>
+    </div>
+
+    <mat-error
+      *ngIf="addForm.hasError('exactlyOneCorrect') && addForm.touched"
+      class="validator-error"
+    >
+      හරියටම එක් නිවැරදි විකල්පයක් තෝරන්න
+    </mat-error>
+
+    <div class="form-actions">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving">
+        <mat-spinner *ngIf="saving" diameter="18"></mat-spinner>
+        <span *ngIf="!saving">සුරකින්න</span>
+      </button>
+      <button mat-stroked-button type="button" (click)="toggleAddForm()">
+        අවලංගු කරන්න
+      </button>
+    </div>
+  </form>
+</mat-card>
+
+<!-- Questions List -->
+<div class="questions-list" *ngIf="paper && !loading">
+  <mat-card
+    class="question-card"
+    *ngFor="let q of paper.questions; let i = index"
+    [class.editing]="editingQuestionId === q.questionId"
+  >
+    <!-- View Mode -->
+    <ng-container *ngIf="editingQuestionId !== q.questionId">
+      <div class="question-header">
+        <span class="question-number">{{ q.position }}</span>
+        <span class="question-text">{{ q.questionText }}</span>
+        <div class="question-actions">
+          <button mat-icon-button matTooltip="සංස්කරණය" (click)="startEdit(q)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            matTooltip="ඉවත් කරන්න"
+            color="warn"
+            (click)="removeQuestion(q)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="options-list">
+        <div
+          *ngFor="let opt of q.options; let j = index"
+          class="option-item"
+          [class.correct]="opt.isCorrect"
+        >
+          <span class="opt-label">{{ optLabels[j] }}</span>
+          <span class="opt-text">{{ opt.optionText }}</span>
+          <mat-icon *ngIf="opt.isCorrect" class="correct-icon"
+            >check_circle</mat-icon
+          >
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Edit Mode -->
+    <ng-container *ngIf="editingQuestionId === q.questionId">
+      <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
+        <div class="edit-header">
+          <span class="question-number">{{ q.position }}</span>
+          <span class="edit-label">සංස්කරණය කරමින්...</span>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>ප්‍රශ්නය</mat-label>
+          <textarea matInput formControlName="questionText" rows="3"></textarea>
+        </mat-form-field>
+
+        <div formArrayName="options">
+          <div
+            *ngFor="let opt of editOptionsArray.controls; let j = index"
+            [formGroupName]="j"
+            class="option-row"
+            [class.correct-option]="opt.get('isCorrect')?.value"
+          >
+            <span class="option-label">{{ optLabels[j] }}</span>
+            <mat-form-field appearance="outline" class="option-input">
+              <mat-label>විකල්ප {{ optLabels[j] }}</mat-label>
+              <input matInput formControlName="optionText" />
+            </mat-form-field>
+            <mat-checkbox
+              formControlName="isCorrect"
+              color="primary"
+              (change)="onEditCorrectChange(j)"
+            >
+              නිවැරදි
+            </mat-checkbox>
+          </div>
+        </div>
+
+        <mat-error
+          *ngIf="editForm.hasError('exactlyOneCorrect') && editForm.touched"
+          class="validator-error"
+        >
+          හරියටම එක් නිවැරදි විකල්පයක් තෝරන්න
+        </mat-error>
+
+        <div class="form-actions">
+          <button
+            mat-flat-button
+            color="primary"
+            type="submit"
+            [disabled]="saving"
+          >
+            <mat-spinner *ngIf="saving" diameter="18"></mat-spinner>
+            <span *ngIf="!saving">යාවත්කාලීන කරන්න</span>
+          </button>
+          <button mat-stroked-button type="button" (click)="cancelEdit()">
+            අවලංගු කරන්න
+          </button>
+        </div>
+      </form>
+    </ng-container>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="paper && !loading && paper.questions.length === 0"
+  icon="quiz"
+  title="ප්‍රශ්න නොමැත"
+  message="මෙම පත්‍රයට ප්‍රශ්න එකතු කර නොමැත."
+></app-empty-state>

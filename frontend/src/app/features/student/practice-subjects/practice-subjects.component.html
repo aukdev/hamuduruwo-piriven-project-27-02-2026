@@ -1,0 +1,40 @@
+<app-page-header
+  title="විෂය තෝරන්න"
+  subtitle="පුහුණු ප්‍රශ්න පත්‍ර ඇති විෂයයන්"
+>
+  <button mat-stroked-button routerLink="/student/dashboard">
+    <mat-icon>arrow_back</mat-icon> ආපසු
+  </button>
+</app-page-header>
+
+<app-skeleton
+  *ngIf="loading"
+  type="card-grid"
+  [count]="6"
+  gridMinWidth="200px"
+></app-skeleton>
+
+<div class="subjects-grid" *ngIf="!loading">
+  <mat-card
+    class="subject-card"
+    *ngFor="let subject of subjects"
+    (click)="selectSubject(subject)"
+  >
+    <div class="subject-card__icon-wrap">
+      <mat-icon>menu_book</mat-icon>
+    </div>
+    <div class="subject-card__name">{{ subject.name }}</div>
+    <div class="subject-card__desc" *ngIf="subject.description">
+      {{ subject.description }}
+    </div>
+    <mat-icon class="subject-card__arrow">chevron_right</mat-icon>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && subjects.length === 0"
+  icon="school"
+  title="පුහුණු ප්‍රශ්න පත්‍ර නොමැත"
+  message="අනුමත කළ පුහුණු ප්‍රශ්න පත්‍ර තවම එකතු කර නැත."
+>
+</app-empty-state>

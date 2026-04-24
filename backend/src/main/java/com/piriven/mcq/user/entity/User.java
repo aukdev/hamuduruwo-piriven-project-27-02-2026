@@ -39,6 +39,15 @@ public class User {
     @Column(name = "teacher_verified", nullable = false)
     private boolean teacherVerified;
 
+    @Column(name = "piriven_name")
+    private String pirivenName;
+
+    @Column(name = "piriven_address", length = 500)
+    private String pirivenAddress;
+
+    @Column(name = "phone_number", length = 20)
+    private String phoneNumber;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

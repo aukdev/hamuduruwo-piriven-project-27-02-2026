@@ -48,7 +48,18 @@ public class AuthService {
                 .teacherVerified(false)
                 .build();
 
+        if (role == Role.TEACHER) {
+            user.setPirivenName(request.pirivenName());
+            user.setPirivenAddress(request.pirivenAddress());
+            user.setPhoneNumber(request.phoneNumber());
+        }
+
         user = userRepository.save(user);
+
+        if (role == Role.TEACHER) {
+            return new AuthResponse(null, user.getId(), user.getEmail(),
+                    user.getFullName(), user.getRole().name());
+        }
 
         String token = tokenProvider.generateTokenFromUserId(user.getId(), user.getEmail());
 
@@ -60,11 +71,18 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 
-        String token = tokenProvider.generateToken(authentication);
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
 
         User user = userRepository.findById(principal.getId())
                 .orElseThrow(() -> new BusinessException("User not found"));
+
+        if (user.getRole() == Role.TEACHER && !user.isTeacherVerified()) {
+            throw new BusinessException(
+                    "ඔබගේ ගිණුම තවම සත්‍යාපනය කර නොමැත. කරුණාකර පරිපාලක අනුමැතිය සඳහා රැඳී සිටින්න.",
+                    HttpStatus.FORBIDDEN);
+        }
+
+        String token = tokenProvider.generateToken(authentication);
 
         return new AuthResponse(token, user.getId(), user.getEmail(),
                 user.getFullName(), user.getRole().name());

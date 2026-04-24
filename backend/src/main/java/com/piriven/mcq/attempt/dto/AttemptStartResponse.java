@@ -6,8 +6,8 @@ import java.util.UUID;
 public record AttemptStartResponse(
         UUID attemptId,
         int attemptNo,
-        int year,
-        int paperNo,
+        Integer year,
+        String subjectName,
         int totalQuestions,
         int durationSeconds,
         LocalDateTime startedAt,

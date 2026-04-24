@@ -1,0 +1,9 @@
+.public-content {
+  min-height: 100vh;
+  padding-top: 68px;
+}
+@media (max-width: 768px) {
+  .public-content {
+    padding-top: 60px;
+  }
+}

@@ -1,6 +1,7 @@
 package com.piriven.mcq.question.controller;
 
 import com.piriven.mcq.common.dto.PagedResponse;
+import com.piriven.mcq.question.dto.AssignPaperRequest;
 import com.piriven.mcq.question.dto.QuestionCreateRequest;
 import com.piriven.mcq.question.dto.QuestionDto;
 import com.piriven.mcq.question.dto.QuestionUpdateRequest;
@@ -57,5 +58,22 @@ public class TeacherQuestionController {
         PagedResponse<QuestionDto> response = questionService.getTeacherQuestions(
                 currentUser.getId(), page, size);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<QuestionDto> getQuestion(
+            @PathVariable UUID id,
+            @CurrentUser UserPrincipal currentUser) {
+        QuestionDto question = questionService.getTeacherQuestionById(id, currentUser.getId());
+        return ResponseEntity.ok(question);
+    }
+
+    @PatchMapping("/{id}/paper")
+    public ResponseEntity<QuestionDto> assignPaper(
+            @PathVariable UUID id,
+            @Valid @RequestBody AssignPaperRequest request,
+            @CurrentUser UserPrincipal currentUser) {
+        QuestionDto question = questionService.assignPaperToQuestion(id, request.paperId(), currentUser.getId());
+        return ResponseEntity.ok(question);
     }
 }

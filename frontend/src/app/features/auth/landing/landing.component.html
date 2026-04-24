@@ -1,0 +1,117 @@
+<div class="landing">
+  <!-- ═══ HERO SECTION ═══ -->
+  <section class="hero">
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <div class="hero__badge">
+        <mat-icon>verified</mat-icon>
+        ශ්‍රී ලංකා රජයේ පිරිවෙන් අධ්‍යාපනය
+      </div>
+      <h1 class="hero__title">පිරිවෙන් MCQ</h1>
+      <h2 class="hero__subtitle">past-paper ප්‍රශ්න පත්‍ර පද්ධතිය</h2>
+      <p class="hero__desc">
+        ශ්‍රී ලංකා රජයේ පිරිවෙන් පාසල් සඳහා නිර්මාණය කරන ලද බහුවරණ ප්‍රශ්න
+        පුහුණු වේදිකාව. 2017 සිට 2025 දක්වා past-paper ප්‍රශ්න පත්‍ර සමඟ ඔබේ
+        දැනුම පරීක්ෂා කරන්න.
+      </p>
+      <p class="hero__desc-en">
+        Practice MCQ papers from past examinations (2017–2025).<br />
+        Designed for Sri Lankan Government Pirivena schools.
+      </p>
+      <div class="hero__actions">
+        <button
+          mat-flat-button
+          routerLink="/register"
+          class="hero__btn hero__btn--primary"
+        >
+          <mat-icon>person_add</mat-icon>
+          දැන්ම ලියාපදිංචි වන්න / Register Now
+        </button>
+        <button
+          mat-stroked-button
+          routerLink="/login"
+          class="hero__btn hero__btn--outline"
+        >
+          <mat-icon>login</mat-icon>
+          පිවිසීම / Login
+        </button>
+      </div>
+    </div>
+    <div class="hero__image">
+      <img
+        src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
+        alt="Pirivena education"
+        loading="eager"
+      />
+    </div>
+  </section>
+
+  <!-- ═══ FEATURES SECTION ═══ -->
+  <section class="features">
+    <div class="features__header">
+      <h2 class="section-title">විශේෂාංග / Features</h2>
+      <p class="section-subtitle">
+        ඔබේ අධ්‍යාපනික ගමන සඳහා අවශ්‍ය සියලු මෙවලම් එක තැනකින්
+      </p>
+    </div>
+    <div class="features__grid">
+      <div class="feature-card" *ngFor="let f of features">
+        <div class="feature-card__icon-wrap" [style.background]="f.bg">
+          <mat-icon [style.color]="f.color">{{ f.icon }}</mat-icon>
+        </div>
+        <h3>{{ f.title }}</h3>
+        <p class="feature-card__title-en">{{ f.titleEn }}</p>
+        <p class="feature-card__desc">{{ f.desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ HOW IT WORKS ═══ -->
+  <section class="steps">
+    <div class="steps__header">
+      <h2 class="section-title">ක්‍රියාවලිය / How It Works</h2>
+      <p class="section-subtitle">
+        සරල පියවර 3කින් ඔබේ විභාග පුහුණුව ආරම්භ කරන්න
+      </p>
+    </div>
+    <div class="steps__grid">
+      <div class="step" *ngFor="let s of steps; let i = index">
+        <div class="step__number">{{ i + 1 }}</div>
+        <div class="step__icon-wrap">
+          <mat-icon>{{ s.icon }}</mat-icon>
+        </div>
+        <h3>{{ s.title }}</h3>
+        <p>{{ s.titleEn }}</p>
+        <p class="step__desc">{{ s.desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA SECTION ═══ -->
+  <section class="cta">
+    <div class="cta__inner">
+      <img
+        src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&q=80"
+        alt="Students studying"
+        class="cta__image"
+        loading="lazy"
+      />
+      <div class="cta__content">
+        <h2>දැන්ම ආරම්භ කරන්න</h2>
+        <h3>Start Your Journey Today</h3>
+        <p>
+          past-paper ප්‍රශ්න පත්‍ර සමඟ ඔබේ විභාග සූදානම වැඩි දියුණු කරගන්න.
+          නොමිලේ ලියාපදිංචි වී ඔබේ අධ්‍යාපනික ගමන ආරම්භ කරන්න.
+        </p>
+        <p class="cta__desc-en">
+          Improve exam readiness with past papers. Register free and start
+          learning.
+        </p>
+        <button mat-flat-button routerLink="/register" class="cta__btn">
+          <mat-icon>rocket_launch</mat-icon>
+          නොමිලේ ලියාපදිංචි වන්න / Register Free
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

@@ -1,0 +1,94 @@
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.action-card {
+  padding: 28px !important;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+
+  &:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+}
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  mat-icon {
+    color: #fff;
+    font-size: 26px;
+    width: 26px;
+    height: 26px;
+  }
+  &.questions {
+    background: linear-gradient(
+      135deg,
+      var(--color-primary),
+      var(--color-info)
+    );
+  }
+  &.users {
+    background: linear-gradient(
+      135deg,
+      var(--color-accent),
+      var(--color-accent)
+    );
+  }
+  &.papers {
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+  }
+}
+h4 {
+  margin: 0 0 4px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+.arrow {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+}
+.info-banner {
+  padding: 20px 24px !important;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  background: var(--color-bg-hover);
+  border-left: 4px solid var(--color-primary);
+
+  > mat-icon {
+    color: var(--color-primary);
+    margin-top: 2px;
+  }
+  strong {
+    font-size: 14px;
+    color: var(--color-primary);
+  }
+  p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+}

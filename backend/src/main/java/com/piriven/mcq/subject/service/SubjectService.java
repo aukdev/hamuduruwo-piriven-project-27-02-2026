@@ -4,6 +4,7 @@ import com.piriven.mcq.common.exception.BusinessException;
 import com.piriven.mcq.common.exception.ResourceNotFoundException;
 import com.piriven.mcq.subject.dto.CreateSubjectRequest;
 import com.piriven.mcq.subject.dto.SubjectDto;
+import com.piriven.mcq.subject.dto.UpdateSubjectRequest;
 import com.piriven.mcq.subject.entity.Subject;
 import com.piriven.mcq.subject.entity.TeacherSubject;
 import com.piriven.mcq.subject.repository.SubjectRepository;
@@ -50,6 +51,28 @@ public class SubjectService {
     }
 
     @Transactional
+    public SubjectDto updateSubject(UUID id, UpdateSubjectRequest request) {
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject", "id", id));
+
+        if (subjectRepository.existsByNameAndIdNot(request.name(), id)) {
+            throw new BusinessException("Subject with this name already exists", HttpStatus.CONFLICT);
+        }
+
+        subject.setName(request.name());
+        subject.setDescription(request.description());
+        subject = subjectRepository.save(subject);
+        return toDto(subject);
+    }
+
+    @Transactional
+    public void deleteSubject(UUID id) {
+        Subject subject = subjectRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Subject", "id", id));
+        subjectRepository.delete(subject);
+    }
+
+    @Transactional
     public void assignSubjectToTeacher(UUID teacherId, UUID subjectId) {
         User teacher = userRepository.findById(teacherId)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher", "id", teacherId));
@@ -77,6 +100,13 @@ public class SubjectService {
     public List<SubjectDto> getTeacherSubjects(UUID teacherId) {
         return teacherSubjectRepository.findByTeacherId(teacherId).stream()
                 .map(ts -> toDto(ts.getSubject()))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<UUID> getTeacherSubjectIds(UUID teacherId) {
+        return teacherSubjectRepository.findByTeacherId(teacherId).stream()
+                .map(ts -> ts.getSubject().getId())
                 .toList();
     }
 

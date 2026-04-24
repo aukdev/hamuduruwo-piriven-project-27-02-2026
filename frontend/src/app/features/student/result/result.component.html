@@ -1,0 +1,93 @@
+<app-skeleton *ngIf="loading" type="result"></app-skeleton>
+
+<div class="result-container" *ngIf="!loading && result">
+  <!-- Score Hero -->
+  <mat-card class="score-hero">
+    <div
+      class="score-hero__circle"
+      [class.good]="scorePercent >= 60"
+      [class.great]="scorePercent >= 80"
+    >
+      <div class="score-hero__number">{{ result.score }}</div>
+      <div class="score-hero__total">/{{ result.totalQuestions }}</div>
+    </div>
+    <h2 class="score-hero__title">{{ result.scoreMessage }}</h2>
+    <div class="score-hero__badge" *ngIf="result.isNewBest">
+      <mat-icon>emoji_events</mat-icon> නව ඉහළම ලකුණ!
+    </div>
+  </mat-card>
+
+  <!-- Stats -->
+  <div class="result-stats">
+    <mat-card class="stat-card correct">
+      <mat-icon>check_circle</mat-icon>
+      <div class="stat-card__value">{{ result.correctCount }}</div>
+      <div class="stat-card__label">නිවැරදි</div>
+    </mat-card>
+    <mat-card class="stat-card wrong">
+      <mat-icon>cancel</mat-icon>
+      <div class="stat-card__value">{{ result.wrongCount }}</div>
+      <div class="stat-card__label">වැරදි</div>
+    </mat-card>
+    <mat-card class="stat-card unanswered">
+      <mat-icon>help</mat-icon>
+      <div class="stat-card__value">{{ result.unansweredCount }}</div>
+      <div class="stat-card__label">පිළිතුරු නැත</div>
+    </mat-card>
+  </div>
+
+  <!-- Comparison -->
+  <mat-card class="comparison-card" *ngIf="result.comparisonMessage">
+    <mat-icon>trending_up</mat-icon>
+    <div>
+      <p>{{ result.comparisonMessage }}</p>
+      <small
+        *ngIf="
+          result.previousBestScore !== null &&
+          result.previousBestScore !== undefined
+        "
+      >
+        පෙර ඉහළම ලකුණ: {{ result.previousBestScore }}/{{
+          result.totalQuestions
+        }}
+      </small>
+    </div>
+  </mat-card>
+
+  <!-- Info -->
+  <mat-card class="info-card">
+    <div class="info-row">
+      <span>වර්ෂය</span>
+      <strong>{{ result.year }}</strong>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="info-row">
+      <span>ප්‍රශ්න පත්‍ර විශය</span>
+      <strong>{{ result.subjectName }}</strong>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="info-row">
+      <span>උත්සාහ අංකය</span>
+      <strong>{{ result.attemptNo }}/10</strong>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="info-row">
+      <span>තත්ත්වය</span>
+      <span class="status-badge status-{{ result.status }}">{{
+        getStatusSinhala(result.status)
+      }}</span>
+    </div>
+  </mat-card>
+
+  <!-- Actions -->
+  <div class="result-actions">
+    <button mat-flat-button color="primary" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      ප්‍රශ්න පත්‍ර වෙත
+    </button>
+    <button mat-stroked-button color="primary" routerLink="/student/years">
+      <mat-icon>calendar_today</mat-icon>
+      වර්ෂ තෝරන්න
+    </button>
+  </div>
+</div>

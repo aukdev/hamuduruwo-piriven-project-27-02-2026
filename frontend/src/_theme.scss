@@ -1,0 +1,136 @@
+@use "@angular/material" as mat;
+
+/* ── Teal Ocean primary palette ── */
+$piriven-teal: (
+  50: #e0f2f1,
+  100: #b2dfdb,
+  200: #80cbc4,
+  300: #4db6ac,
+  400: #26a69a,
+  500: #006d77,
+  600: #00626b,
+  700: #004f56,
+  800: #003d46,
+  900: #002a30,
+  A100: #a7ffeb,
+  A200: #64ffda,
+  A400: #1de9b6,
+  A700: #00bfa5,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
+  ),
+);
+
+/* ── Teal Light accent palette ── */
+$piriven-accent: (
+  50: #e8f6f5,
+  100: #c6e8e4,
+  200: #a3d9d2,
+  300: #83c5be,
+  400: #6dbcb3,
+  500: #57b3a8,
+  600: #4ea69b,
+  700: #44968a,
+  800: #3b877a,
+  900: #2b6a5f,
+  A100: #e0fff8,
+  A200: #adfff0,
+  A400: #7affe7,
+  A700: #60ffe3,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: rgba(0, 0, 0, 0.87),
+    500: rgba(0, 0, 0, 0.87),
+    600: rgba(0, 0, 0, 0.87),
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: rgba(0, 0, 0, 0.87),
+    A400: rgba(0, 0, 0, 0.87),
+    A700: rgba(0, 0, 0, 0.87),
+  ),
+);
+
+/* ── Danger / Warn palette ── */
+$piriven-danger: (
+  50: #fde8e8,
+  100: #f9c5c5,
+  200: #f59e9e,
+  300: #f17777,
+  400: #ee5959,
+  500: #9d0208,
+  600: #8e0207,
+  700: #7c0106,
+  800: #6b0105,
+  900: #4d0103,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87),
+    100: rgba(0, 0, 0, 0.87),
+    200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87),
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: rgba(0, 0, 0, 0.87),
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
+);
+
+$piriven-primary: mat.define-palette($piriven-teal, 500);
+$piriven-accent-pal: mat.define-palette($piriven-accent, 300);
+$piriven-warn: mat.define-palette($piriven-danger, 500);
+
+$piriven-typography: mat.define-typography-config(
+  $font-family:
+    '"Noto Sans Sinhala", "Segoe UI", system-ui, -apple-system, sans-serif',
+  $headline-1: mat.define-typography-level(96px, 96px, 300),
+  $headline-5: mat.define-typography-level(24px, 32px, 600),
+  $headline-6: mat.define-typography-level(20px, 28px, 600),
+  $subtitle-1: mat.define-typography-level(16px, 24px, 500),
+  $subtitle-2: mat.define-typography-level(14px, 22px, 500),
+  $body-1: mat.define-typography-level(16px, 24px, 400),
+  $body-2: mat.define-typography-level(14px, 20px, 400),
+  $button: mat.define-typography-level(14px, 14px, 600),
+  $caption: mat.define-typography-level(12px, 16px, 400),
+);
+
+$piriven-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $piriven-primary,
+      accent: $piriven-accent-pal,
+      warn: $piriven-warn,
+    ),
+    typography: $piriven-typography,
+    density: 0,
+  )
+);
+
+/* ── Re-export design tokens from single source ── */
+@forward "variables";

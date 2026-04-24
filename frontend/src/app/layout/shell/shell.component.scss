@@ -1,0 +1,29 @@
+.shell-container {
+  position: fixed;
+  top: 64px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.shell-sidenav {
+  width: 300px;
+  max-width: min(86vw, 300px);
+  background: var(--color-bg-card);
+}
+.shell-content {
+  background: var(--color-bg-page);
+}
+.shell-content__inner {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .shell-sidenav {
+    width: min(86vw, 320px);
+  }
+
+  .shell-content__inner {
+    padding: 16px;
+  }
+}

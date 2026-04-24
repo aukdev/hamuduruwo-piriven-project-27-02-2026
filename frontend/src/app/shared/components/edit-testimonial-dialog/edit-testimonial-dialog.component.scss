@@ -1,0 +1,18 @@
+.w-100 {
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 400px;
+
+  @media (max-width: 600px) {
+    min-width: auto;
+  }
+}
+
+mat-slide-toggle {
+  margin-top: 8px;
+}

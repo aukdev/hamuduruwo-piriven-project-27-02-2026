@@ -1,0 +1,90 @@
+<h2 mat-dialog-title>ඔබගේ අදහස ලබා දෙන්න</h2>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>ඔබගේ අදහස *</mat-label>
+      <textarea
+        matInput
+        formControlName="quote"
+        rows="4"
+        placeholder="පද්ධතිය ගැන ඔබගේ අදහස මෙහි ලියන්න..."
+      ></textarea>
+      <mat-hint align="end"
+        >{{ form.get("quote")?.value?.length || 0 }}/1000</mat-hint
+      >
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>ඔබගේ තනතුර (විකල්ප)</mat-label>
+      <input
+        matInput
+        formControlName="positionTitle"
+        placeholder="උදා: 10 ශ්‍රේණිය ශිෂ්‍ය, බුද්ධ ධර්ම ගුරු"
+      />
+    </mat-form-field>
+
+    <!-- Star Rating -->
+    <div class="rating-section">
+      <label>ශ්‍රේණිගත කිරීම *</label>
+      <div class="star-rating">
+        <mat-icon
+          *ngFor="let i of [1, 2, 3, 4, 5]"
+          (click)="setRating(i)"
+          [class.filled]="
+            i <= (selectedRating || form.get('rating')?.value || 0)
+          "
+        >
+          {{
+            i <= (selectedRating || form.get("rating")?.value || 0)
+              ? "star"
+              : "star_border"
+          }}
+        </mat-icon>
+      </div>
+    </div>
+
+    <!-- Photo Upload -->
+    <div class="photo-section">
+      <label>ඔබගේ ඡායාරූපය (විකල්ප)</label>
+      <div class="photo-upload">
+        <div class="photo-preview" *ngIf="imagePreview">
+          <img [src]="imagePreview" alt="Preview" />
+          <button mat-icon-button class="remove-photo" (click)="removePhoto()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="fileInput.click()"
+          *ngIf="!imagePreview"
+        >
+          <mat-icon>add_a_photo</mat-icon>
+          ඡායාරූපයක් තෝරන්න
+        </button>
+        <input
+          #fileInput
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          hidden
+        />
+        <p class="photo-hint">උපරිම ප්‍රමාණය: 2MB</p>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="submitting">
+    අවලංගු
+  </button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSubmit()"
+    [disabled]="form.invalid || submitting"
+  >
+    <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+    <span *ngIf="!submitting">ඉදිරිපත් කරන්න</span>
+  </button>
+</mat-dialog-actions>

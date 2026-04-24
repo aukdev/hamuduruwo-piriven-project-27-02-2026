@@ -17,4 +17,6 @@ public interface PaperQuestionRepository extends JpaRepository<PaperQuestion, UU
     boolean existsByPaperIdAndPosition(UUID paperId, int position);
 
     boolean existsByPaperIdAndQuestionId(UUID paperId, UUID questionId);
+
+    java.util.Optional<PaperQuestion> findByPaperIdAndQuestionId(UUID paperId, UUID questionId);
 }

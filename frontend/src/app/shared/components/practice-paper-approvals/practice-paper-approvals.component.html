@@ -1,0 +1,114 @@
+<app-page-header
+  title="පුහුණු පත්‍ර කළමනාකරණය"
+  subtitle="ගුරුවරුන් ඉදිරිපත් කළ පුහුණු ප්‍රශ්න පත්‍ර සමාලෝචනය"
+>
+</app-page-header>
+
+<mat-tab-group
+  [selectedIndex]="selectedTab"
+  (selectedIndexChange)="onTabChange($event)"
+  class="approvals-tabs"
+>
+  <mat-tab label="අනුමතිය බලාපොරොත්තුයි"></mat-tab>
+  <mat-tab label="අනුමත කළ"></mat-tab>
+  <mat-tab label="සියල්ල"></mat-tab>
+</mat-tab-group>
+
+<app-skeleton *ngIf="loading" type="card-grid" [count]="4"></app-skeleton>
+
+<div class="papers-list" *ngIf="!loading">
+  <mat-card class="paper-card" *ngFor="let p of papers">
+    <div class="paper-card__header">
+      <span
+        class="status-badge"
+        [ngClass]="{
+          'status-pending': p.status === 'PENDING_APPROVAL',
+          'status-approved': p.status === 'APPROVED',
+          'status-rejected': p.status === 'REJECTED',
+          'status-draft': p.status === 'DRAFT',
+        }"
+      >
+        {{
+          p.status === "PENDING_APPROVAL"
+            ? "අනුමතිය බලාපොරොත්තුයි"
+            : p.status === "APPROVED"
+              ? "අනුමත කළ"
+              : p.status === "REJECTED"
+                ? "ප්‍රතික්ෂේප කළ"
+                : "කෙටුම්පත"
+        }}
+      </span>
+      <span class="chip subject">{{ p.subjectName }}</span>
+    </div>
+
+    <h3 class="paper-title">{{ p.title }}</h3>
+
+    <div class="paper-meta">
+      <div class="meta-item" *ngIf="p.createdByName">
+        <mat-icon>person</mat-icon>
+        <span>{{ p.createdByName }} ({{ p.createdByEmail }})</span>
+      </div>
+      <div class="meta-item">
+        <mat-icon>quiz</mat-icon>
+        <span>ප්‍රශ්න: {{ p.assignedQuestions }}/{{ p.questionCount }}</span>
+      </div>
+      <div class="meta-item">
+        <mat-icon>timer</mat-icon>
+        <span>කාලය: මිනිත්තු {{ p.durationSeconds / 60 }}</span>
+      </div>
+    </div>
+
+    <mat-progress-bar
+      mode="determinate"
+      [value]="
+        p.questionCount > 0 ? (p.assignedQuestions / p.questionCount) * 100 : 0
+      "
+    ></mat-progress-bar>
+
+    <div class="paper-card__actions">
+      <button mat-flat-button color="accent" [routerLink]="[p.id]">
+        <mat-icon>visibility</mat-icon> සමාලෝචනය කරන්න
+      </button>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="approve(p)"
+        *ngIf="p.status === 'PENDING_APPROVAL'"
+      >
+        <mat-icon>check</mat-icon> අනුමත කරන්න
+      </button>
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="reject(p)"
+        *ngIf="p.status === 'PENDING_APPROVAL'"
+      >
+        <mat-icon>close</mat-icon> ප්‍රතික්ෂේප කරන්න
+      </button>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && papers.length === 0"
+  icon="check_circle"
+  [title]="
+    selectedTab === 0
+      ? 'අනුමතියට පත්‍ර නොමැත'
+      : selectedTab === 1
+        ? 'අනුමත කළ පත්‍ර නොමැත'
+        : 'පුහුණු පත්‍ර නොමැත'
+  "
+  message="තවම පුහුණු ප්‍රශ්න පත්‍ර නොමැත."
+>
+</app-empty-state>
+
+<mat-paginator
+  *ngIf="totalElements > pageSize"
+  [length]="totalElements"
+  [pageSize]="pageSize"
+  [pageIndex]="currentPage"
+  (page)="onPageChange($event)"
+  [hidePageSize]="true"
+>
+</mat-paginator>

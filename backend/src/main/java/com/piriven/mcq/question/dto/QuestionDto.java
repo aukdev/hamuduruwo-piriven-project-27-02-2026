@@ -8,17 +8,19 @@ import java.util.UUID;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record QuestionDto(
-        UUID id,
-        UUID subjectId,
-        String subjectName,
-        String questionText,
-        String status,
-        String rejectionReason,
-        String approvedByEmail,
-        LocalDateTime approvedAt,
-        Integer version,
-        List<QuestionOptionDto> options,
-        String createdByEmail,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt) {
+                UUID id,
+                UUID subjectId,
+                String subjectName,
+                Integer year,
+                UUID paperId,
+                String questionText,
+                String status,
+                String rejectionReason,
+                String approvedByEmail,
+                LocalDateTime approvedAt,
+                Integer version,
+                List<QuestionOptionDto> options,
+                String createdByEmail,
+                LocalDateTime createdAt,
+                LocalDateTime updatedAt) {
 }

@@ -1,0 +1,16 @@
+<div class="sidebar">
+  <nav class="sidebar__nav">
+    <a
+      *ngFor="let item of navItems"
+      class="sidebar__link"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{
+        exact: item.route.endsWith('dashboard'),
+      }"
+    >
+      <mat-icon class="sidebar__link-icon">{{ item.icon }}</mat-icon>
+      <span class="sidebar__link-label">{{ item.label }}</span>
+    </a>
+  </nav>
+</div>

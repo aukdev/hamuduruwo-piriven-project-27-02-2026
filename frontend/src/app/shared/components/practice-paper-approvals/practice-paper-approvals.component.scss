@@ -1,0 +1,90 @@
+.approvals-tabs {
+  margin-bottom: 20px;
+}
+.papers-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 16px;
+}
+.paper-card {
+  padding: 24px !important;
+}
+.paper-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: #fff3e0;
+  color: #e65100;
+
+  &.status-pending {
+    background: #fff3e0;
+    color: #e65100;
+  }
+  &.status-approved {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+  &.status-rejected {
+    background: #ffebee;
+    color: #c62828;
+  }
+  &.status-draft {
+    background: #e3f2fd;
+    color: #1565c0;
+  }
+}
+.chip {
+  font-size: 12px;
+  padding: 2px 10px;
+  border-radius: 6px;
+}
+.chip.subject {
+  background: rgba(46, 125, 50, 0.08);
+  color: #2e7d32;
+  font-weight: 600;
+}
+.paper-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 12px;
+}
+.paper-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+}
+mat-progress-bar {
+  margin-bottom: 16px;
+  border-radius: 4px;
+}
+.paper-card__actions {
+  display: flex;
+  gap: 12px;
+}
+@media (max-width: 600px) {
+  .papers-list {
+    grid-template-columns: 1fr;
+  }
+}

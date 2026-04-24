@@ -1,0 +1,56 @@
+<div class="page">
+  <!-- Hero Banner -->
+  <section class="page-hero">
+    <h1>පිරිවෙන් වීඩියෝ / Piriven Videos</h1>
+    <p>අධ්‍යාපනික වීඩියෝ සම්පත් එකතුව</p>
+  </section>
+
+  <div class="page-body">
+    <!-- Category Filter -->
+    <div class="filter-bar">
+      <button
+        *ngFor="let cat of categories"
+        class="filter-btn"
+        [class.active]="selectedCategory === cat.value"
+        (click)="filterByCategory(cat.value)"
+      >
+        {{ cat.label }}
+      </button>
+    </div>
+
+    <!-- Videos Grid -->
+    <div class="videos-grid">
+      <div class="video-card" *ngFor="let video of filteredVideos">
+        <div class="video-thumbnail">
+          <iframe
+            [src]="'https://www.youtube.com/embed/' + video.youtubeId | safeUrl"
+            [title]="video.title"
+            frameborder="0"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+            "
+            allowfullscreen
+          ></iframe>
+        </div>
+        <div class="video-info">
+          <span class="video-category">{{
+            getCategoryLabel(video.category)
+          }}</span>
+          <h4>{{ video.title }}</h4>
+          <p>{{ video.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" *ngIf="filteredVideos.length === 0">
+      <mat-icon>videocam_off</mat-icon>
+      <p>මෙම කාණ්ඩයේ වීඩියෝ නොමැත</p>
+    </div>
+  </div>
+</div>

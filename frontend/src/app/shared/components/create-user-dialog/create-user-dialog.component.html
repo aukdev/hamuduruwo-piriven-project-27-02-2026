@@ -1,0 +1,74 @@
+<h2 mat-dialog-title>නව පරිශීලකයෙකු එක් කරන්න</h2>
+<mat-dialog-content>
+  <form [formGroup]="form" class="create-form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>සම්පූර්ණ නම</mat-label>
+      <input matInput formControlName="fullName" />
+      <mat-error *ngIf="form.get('fullName')?.hasError('required')"
+        >නම අවශ්‍යයි</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>ඊමේල්</mat-label>
+      <input matInput formControlName="email" type="email" />
+      <mat-error *ngIf="form.get('email')?.hasError('required')"
+        >ඊමේල් අවශ්‍යයි</mat-error
+      >
+      <mat-error *ngIf="form.get('email')?.hasError('email')"
+        >වලංගු ඊමේල් ඇතුළත් කරන්න</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>මුරපදය</mat-label>
+      <input
+        matInput
+        formControlName="password"
+        [type]="hidePassword ? 'password' : 'text'"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        [attr.aria-label]="
+          hidePassword ? 'මුරපදය පෙන්වන්න' : 'මුරපදය සඟවන්න'
+        "
+        [attr.aria-pressed]="!hidePassword"
+        (click)="togglePasswordVisibility()"
+      >
+        <mat-icon>{{
+          hidePassword ? 'visibility' : 'visibility_off'
+        }}</mat-icon>
+      </button>
+      <mat-hint>අවම අක්ෂර 6ක්</mat-hint>
+      <mat-error *ngIf="form.get('password')?.hasError('required')"
+        >මුරපදය අවශ්‍යයි</mat-error
+      >
+      <mat-error *ngIf="form.get('password')?.hasError('minlength')"
+        >අවම අක්ෂර 6ක් අවශ්‍යයි</mat-error
+      >
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>භූමිකාව</mat-label>
+      <mat-select formControlName="role">
+        <mat-option value="STUDENT">ශිෂ්‍යයා</mat-option>
+        <mat-option value="TEACHER">ගුරුවරයා</mat-option>
+        <mat-option value="ADMIN">පරිපාලක</mat-option>
+        <mat-option value="SUPER_ADMIN">ප්‍රධාන පරිපාලක</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('role')?.hasError('required')"
+        >භූමිකාව අවශ්‍යයි</mat-error
+      >
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>අවලංගු</button>
+  <button
+    mat-raised-button
+    color="primary"
+    [disabled]="form.invalid"
+    (click)="create()"
+  >
+    එක් කරන්න
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,66 @@
+<app-page-header
+  [title]="year + ' වර්ෂයේ ප්‍රශ්න පත්‍ර'"
+  subtitle="ප්‍රශ්න පත්‍රයක් තෝරා විභාගය අරඹන්න"
+>
+  <button mat-stroked-button routerLink="/student/years">
+    <mat-icon>arrow_back</mat-icon> ආපසු
+  </button>
+</app-page-header>
+
+<app-skeleton *ngIf="loading" type="card-grid" [count]="6"></app-skeleton>
+
+<div class="papers-grid" *ngIf="!loading">
+  <mat-card
+    class="paper-card"
+    *ngFor="let paper of papers"
+    (click)="confirmStart(paper)"
+  >
+    <div class="paper-card__header">
+      <div class="paper-card__no">
+        {{ paper.subjectName?.charAt(0) }}
+      </div>
+      <mat-chip-listbox>
+        <mat-chip
+          [class.ready]="paper.assignedQuestions >= paper.questionCount"
+          highlighted
+        >
+          {{
+            paper.assignedQuestions >= paper.questionCount
+              ? 'සූදානම්'
+              : 'ප්‍රශ්න අඩුයි'
+          }}
+        </mat-chip>
+      </mat-chip-listbox>
+    </div>
+    <h3 class="paper-card__title">{{ paper.subjectName }}</h3>
+    <div class="paper-card__meta">
+      <span
+        ><mat-icon>quiz</mat-icon> ප්‍රශ්න {{ paper.questionCount }}</span
+      >
+      <span
+        ><mat-icon>timer</mat-icon> මිනිත්තු
+        {{ paper.durationSeconds / 60 }}</span
+      >
+    </div>
+    <div class="paper-card__assigned">
+      <span
+        >ප්‍රශ්න සංඛ්‍යාව: {{ paper.assignedQuestions }}/{{
+          paper.questionCount
+        }}</span
+      >
+      <mat-progress-bar
+        mode="determinate"
+        [value]="(paper.assignedQuestions / paper.questionCount) * 100"
+      >
+      </mat-progress-bar>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && papers.length === 0"
+  icon="description"
+  title="ප්‍රශ්න පත්‍ර නොමැත"
+  message="මෙම වර්ෂයට ප්‍රශ්න පත්‍ර තවම එකතු කර නැත."
+>
+</app-empty-state>

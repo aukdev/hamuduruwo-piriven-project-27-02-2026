@@ -1,0 +1,106 @@
+<div class="page">
+  <section class="page-hero">
+    <h1>සම්බන්ධ වන්න / Contact Us</h1>
+    <p>ඔබේ ගැටළු හෝ යෝජනා අප වෙත දන්වන්න</p>
+  </section>
+
+  <div class="page-body">
+    <div class="contact-grid">
+      <!-- Contact Info Cards -->
+      <div class="info-section">
+        <div class="info-card">
+          <div class="info-card__icon">
+            <mat-icon>email</mat-icon>
+          </div>
+          <h3>ඊමේල් / Email</h3>
+          <p>info&#64;pirivenmcq.lk</p>
+          <p class="text-muted">support&#64;pirivenmcq.lk</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">
+            <mat-icon>phone</mat-icon>
+          </div>
+          <h3>දුරකථන / Phone</h3>
+          <p>+94 11 234 5678</p>
+          <p class="text-muted">සඳුදා - සිකුරාදා, පෙ.ව 8 - ප.ව 5</p>
+        </div>
+        <div class="info-card">
+          <div class="info-card__icon">
+            <mat-icon>location_on</mat-icon>
+          </div>
+          <h3>ලිපිනය / Address</h3>
+          <p>අධ්‍යාපන අමාත්‍යාංශය</p>
+          <p class="text-muted">"ඉසුරුපාය", බත්තරමුල්ල, ශ්‍රී ලංකාව</p>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="form-section">
+        <h2>පණිවිඩයක් යවන්න / Send a Message</h2>
+        <form class="contact-form" (ngSubmit)="onSubmit()">
+          <ng-container *ngIf="!submitted">
+            <mat-form-field appearance="outline">
+              <mat-label>ඔබේ නම / Your Name</mat-label>
+              <input matInput [(ngModel)]="form.name" name="name" required />
+              <mat-icon matPrefix>person</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>ඊමේල් / Email</mat-label>
+              <input
+                matInput
+                type="email"
+                [(ngModel)]="form.email"
+                name="email"
+                required
+              />
+              <mat-icon matPrefix>email</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>විෂය / Subject</mat-label>
+              <input matInput [(ngModel)]="form.subject" name="subject" />
+              <mat-icon matPrefix>subject</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>පණිවිඩය / Message</mat-label>
+              <textarea
+                matInput
+                rows="5"
+                [(ngModel)]="form.message"
+                name="message"
+                required
+              ></textarea>
+              <mat-icon matPrefix>message</mat-icon>
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              class="submit-btn"
+              [disabled]="submitting"
+            >
+              <mat-icon *ngIf="!submitting">send</mat-icon>
+              <mat-progress-spinner
+                *ngIf="submitting"
+                diameter="20"
+                mode="indeterminate"
+              ></mat-progress-spinner>
+              {{ submitting ? "යවමින්..." : "පණිවිඩය යවන්න / Send" }}
+            </button>
+          </ng-container>
+
+          <div class="success-msg" *ngIf="submitted">
+            <mat-icon>check_circle</mat-icon>
+            <p>ඔබේ පණිවිඩය සාර්ථකව යවන ලදී. ස්තුතියි!</p>
+            <p class="text-en">
+              Your message has been sent successfully. Thank you!
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

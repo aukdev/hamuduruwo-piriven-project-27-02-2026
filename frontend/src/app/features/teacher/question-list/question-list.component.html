@@ -1,0 +1,104 @@
+<app-page-header
+  title="මගේ ප්‍රශ්න"
+  subtitle="ඔබ සාදන ලද ප්‍රශ්න ලැයිස්තුව"
+>
+  <button
+    mat-flat-button
+    color="primary"
+    routerLink="/teacher/questions/create"
+  >
+    <mat-icon>add</mat-icon> නව ප්‍රශ්නයක්
+  </button>
+</app-page-header>
+
+<!-- Filter Tabs -->
+<mat-tab-group
+  (selectedTabChange)="filterByStatus($event.index)"
+  class="mb-24"
+>
+  <mat-tab label="සියල්ලම ({{ questions.length }})"></mat-tab>
+  <mat-tab label="කෙටුම්පත් ({{ getCount('DRAFT') }})"></mat-tab>
+  <mat-tab label="සමාලෝචනයට ({{ getCount('PENDING_REVIEW') }})"></mat-tab>
+  <mat-tab label="අනුමත ({{ getCount('APPROVED') }})"></mat-tab>
+  <mat-tab label="ප්‍රතික්ෂේප ({{ getCount('REJECTED') }})"></mat-tab>
+</mat-tab-group>
+
+<app-skeleton
+  *ngIf="loading"
+  type="question-list"
+  [count]="5"
+></app-skeleton>
+
+<!-- Questions List -->
+<div class="questions-list" *ngIf="!loading">
+  <mat-card
+    class="question-item"
+    *ngFor="let q of filteredQuestions"
+    (click)="viewQuestion(q)"
+  >
+    <div class="question-item__header">
+      <span class="status-badge status-{{ q.status }}">{{
+        getStatusLabel(q.status)
+      }}</span>
+      <span class="question-item__subject">{{ q.subjectName }}</span>
+      <span class="question-item__year">{{ q.year }}</span>
+      <span class="question-item__paper" *ngIf="q.paperId">
+        <mat-icon>description</mat-icon> පත්‍රයට පවරා ඇත
+      </span>
+      <span class="question-item__no-paper" *ngIf="!q.paperId">
+        <mat-icon>warning</mat-icon> පත්‍රයක් නැත
+      </span>
+    </div>
+    <p class="question-item__text">{{ q.questionText }}</p>
+    <div class="question-item__footer">
+      <span class="text-muted">{{
+        q.createdAt | date: 'yyyy-MM-dd HH:mm'
+      }}</span>
+      <div class="question-item__actions">
+        <!-- Edit (only DRAFT/REJECTED) -->
+        <button
+          mat-icon-button
+          *ngIf="q.status === 'DRAFT' || q.status === 'REJECTED'"
+          (click)="editQuestion(q, $event)"
+          matTooltip="සංස්කරණය"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <!-- Submit for review (only DRAFT) -->
+        <button
+          mat-icon-button
+          *ngIf="q.status === 'DRAFT'"
+          (click)="submitForReview(q, $event)"
+          matTooltip="සමාලෝචනයට ඉදිරිපත් කරන්න"
+          color="primary"
+        >
+          <mat-icon>send</mat-icon>
+        </button>
+      </div>
+    </div>
+    <!-- Rejection reason -->
+    <div
+      class="rejection-reason"
+      *ngIf="q.status === 'REJECTED' && q.rejectionReason"
+    >
+      <mat-icon>warning</mat-icon>
+      <span>ප්‍රතික්ෂේප හේතුව: {{ q.rejectionReason }}</span>
+    </div>
+  </mat-card>
+</div>
+
+<app-empty-state
+  *ngIf="!loading && filteredQuestions.length === 0"
+  icon="quiz"
+  title="ප්‍රශ්න නොමැත"
+  message="මෙම ප්‍රවර්ගයේ ප්‍රශ්න නොමැත."
+>
+  <button
+    mat-flat-button
+    color="primary"
+    routerLink="/teacher/questions/create"
+    class="mt-16"
+  >
+    <mat-icon>add</mat-icon> නව ප්‍රශ්නයක් සාදන්න
+  </button>
+</app-empty-state>

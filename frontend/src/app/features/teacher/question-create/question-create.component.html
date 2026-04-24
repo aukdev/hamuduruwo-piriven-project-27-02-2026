@@ -1,0 +1,106 @@
+<app-page-header
+  [title]="isEdit ? 'ප්‍රශ්නය සංස්කරණය' : 'නව ප්‍රශ්නයක් සාදන්න'"
+  subtitle="ප්‍රශ්න හතරක් විකල්ප සමඟ ඇතුළත් කරන්න"
+>
+  <button mat-stroked-button routerLink="/teacher/questions">
+    <mat-icon>arrow_back</mat-icon> ආපසු
+  </button>
+</app-page-header>
+
+<mat-card class="form-card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <!-- Subject -->
+    <mat-form-field appearance="outline" *ngIf="!isEdit">
+      <mat-label>විෂය තෝරන්න</mat-label>
+      <mat-select
+        formControlName="subjectId"
+        (selectionChange)="onSubjectChange($event.value)"
+      >
+        <mat-option *ngFor="let s of subjects" [value]="s.id">{{
+          s.name
+        }}</mat-option>
+      </mat-select>
+      <mat-error>විෂයක් තෝරන්න</mat-error>
+    </mat-form-field>
+
+    <!-- Paper -->
+    <mat-form-field appearance="outline" *ngIf="!isEdit">
+      <mat-label>ප්‍රශ්න පත්‍රය තෝරන්න</mat-label>
+      <mat-select formControlName="paperId">
+        <mat-option *ngFor="let p of papers" [value]="p.id">
+          {{
+            p.paperType === "PRACTICE"
+              ? p.title
+              : p.year + " - " + p.subjectName
+          }}
+          ({{ p.assignedQuestions }}/{{ p.questionCount }})
+        </mat-option>
+      </mat-select>
+      <mat-hint *ngIf="loadingPapers">ප්‍රශ්න පත්‍ර පූරණය වෙමින්...</mat-hint>
+      <mat-error>ප්‍රශ්න පත්‍රයක් තෝරන්න</mat-error>
+    </mat-form-field>
+
+    <!-- Question Text -->
+    <mat-form-field appearance="outline">
+      <mat-label>ප්‍රශ්නය</mat-label>
+      <textarea
+        matInput
+        formControlName="questionText"
+        rows="4"
+        placeholder="ප්‍රශ්නය ඇතුළත් කරන්න..."
+      ></textarea>
+      <mat-error>ප්‍රශ්නය අවශ්‍යයි</mat-error>
+    </mat-form-field>
+
+    <!-- Options -->
+    <div class="options-section">
+      <h3 class="section-title">විකල්ප (හරියටම එකක් නිවැරදි විය යුතුය)</h3>
+
+      <div formArrayName="options">
+        <div
+          *ngFor="let opt of optionsArray.controls; let i = index"
+          [formGroupName]="i"
+          class="option-form-row"
+          [class.correct-option]="opt.get('isCorrect')?.value"
+        >
+          <div class="option-form-row__label">{{ optLabels[i] }}</div>
+
+          <mat-form-field appearance="outline" class="option-input">
+            <mat-label>විකල්ප {{ optLabels[i] }}</mat-label>
+            <input
+              matInput
+              formControlName="optionText"
+              [placeholder]="'විකල්ප ' + optLabels[i] + ' ඇතුළත් කරන්න'"
+            />
+            <mat-error>විකල්පය අවශ්‍යයි</mat-error>
+          </mat-form-field>
+
+          <mat-checkbox
+            formControlName="isCorrect"
+            color="primary"
+            (change)="onCorrectChange(i)"
+          >
+            නිවැරදි
+          </mat-checkbox>
+        </div>
+      </div>
+
+      <mat-error
+        *ngIf="form.hasError('exactlyOneCorrect') && form.touched"
+        style="font-size: 12px; margin-top: 8px"
+      >
+        හරියටම එක් නිවැරදි විකල්පයක් තෝරන්න
+      </mat-error>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions mt-24">
+      <button mat-flat-button color="primary" type="submit" [disabled]="saving">
+        <mat-spinner *ngIf="saving" diameter="20"></mat-spinner>
+        <span *ngIf="!saving">{{
+          isEdit ? "යාවත්කාලීන කරන්න" : "සුරකින්න (කෙටුම්පත)"
+        }}</span>
+      </button>
+    </div>
+  </form>
+</mat-card>

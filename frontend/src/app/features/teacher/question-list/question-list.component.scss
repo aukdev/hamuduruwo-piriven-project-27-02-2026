@@ -1,0 +1,110 @@
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.question-item {
+  padding: 20px !important;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+}
+.question-item__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.question-item__subject {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-bg-active);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.question-item__year {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-success);
+  background: rgba(46, 125, 50, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+.question-item__paper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2e7d32;
+  background: rgba(46, 125, 50, 0.06);
+  padding: 2px 8px;
+  border-radius: 4px;
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+.question-item__no-paper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e65100;
+  background: rgba(255, 152, 0, 0.08);
+  padding: 2px 8px;
+  border-radius: 4px;
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+  }
+}
+.question-item__text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.question-item__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.question-item__actions {
+  display: flex;
+  gap: 4px;
+}
+.rejection-reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(198, 40, 40, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid #c62828;
+
+  mat-icon {
+    color: #c62828;
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+  }
+  span {
+    font-size: 13px;
+    color: #c62828;
+    line-height: 1.5;
+  }
+}

@@ -1,0 +1,83 @@
+<!-- Stats Counter Band -->
+<section class="stats">
+  <div class="stats__inner">
+    <div class="stats__item" *ngFor="let s of stats">
+      <mat-icon class="stats__icon">{{ s.icon }}</mat-icon>
+      <span class="stats__number">{{ s.value | number }}</span>
+      <span class="stats__label">{{ s.label }}</span>
+      <span class="stats__label-en">{{ s.labelEn }}</span>
+    </div>
+  </div>
+</section>
+
+<!-- Main Footer -->
+<footer class="ft">
+  <div class="ft__inner">
+    <!-- Col 1: Brand -->
+    <div class="ft__col ft__col--brand">
+      <div class="ft__brand">
+        <div class="ft__logo">
+          <mat-icon>school</mat-icon>
+        </div>
+        <span class="ft__brand-text">පිරිවෙන් MCQ</span>
+      </div>
+      <p class="ft__desc">
+        ශ්‍රී ලංකා රජයේ පිරිවෙන් පාසල් සඳහා නිර්මාණය කරන ලද බහුවරණ ප්‍රශ්න
+        පුහුණු වේදිකාව.
+      </p>
+      <p class="ft__desc-en">
+        MCQ practice platform for Sri Lankan Government Pirivena schools.
+      </p>
+    </div>
+
+    <!-- Col 2: Quick Links -->
+    <div class="ft__col">
+      <h4 class="ft__heading">ඉක්මන් සබැඳි / Quick Links</h4>
+      <nav class="ft__links">
+        <a routerLink="/">මුල් පිටුව / Home</a>
+        <a routerLink="/about">අපි ගැන / About</a>
+        <a routerLink="/vision-mission">දැක්ම හා මෙහෙවර</a>
+        <a routerLink="/videos">වීඩියෝ / Videos</a>
+        <a routerLink="/contact">සම්බන්ධ වන්න / Contact</a>
+      </nav>
+    </div>
+
+    <!-- Col 3: Legal -->
+    <div class="ft__col">
+      <h4 class="ft__heading">නීතිමය / Legal</h4>
+      <nav class="ft__links">
+        <a routerLink="/privacy-policy">පෞද්ගලිකත්ව ප්‍රතිපත්තිය</a>
+        <a routerLink="/terms">නියම හා කොන්දේසි</a>
+        <a routerLink="/login">පිවිසීම / Login</a>
+        <a routerLink="/register">ලියාපදිංචිය / Register</a>
+      </nav>
+    </div>
+
+    <!-- Col 4: Contact -->
+    <div class="ft__col">
+      <h4 class="ft__heading">සම්බන්ධ වන්න / Contact</h4>
+      <div class="ft__contact">
+        <div class="ft__contact-item">
+          <mat-icon>email</mat-icon>
+          <span>info&#64;pirivenmcq.lk</span>
+        </div>
+        <div class="ft__contact-item">
+          <mat-icon>phone</mat-icon>
+          <span>+94 11 234 5678</span>
+        </div>
+        <div class="ft__contact-item">
+          <mat-icon>location_on</mat-icon>
+          <span>කොළඹ, ශ්‍රී ලංකාව</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="ft__bottom">
+    <p>
+      &copy; {{ currentYear }} පිරිවෙන් MCQ පද්ධතිය | ශ්‍රී ලංකා රජයේ පිරිවෙන්
+      අධ්‍යාපනය
+    </p>
+  </div>
+</footer>

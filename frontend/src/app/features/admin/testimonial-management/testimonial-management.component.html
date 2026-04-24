@@ -1,0 +1,209 @@
+<app-page-header
+  title="අදහස් කළමනාකරණය"
+  subtitle="පරිශීලක අදහස් බැලීම, සංස්කරණය, ප්‍රකාශ කිරීම"
+>
+</app-page-header>
+
+<mat-tab-group (selectedTabChange)="onTabChange($event.index)" class="mb-16">
+  <!-- Tab 1: Manage Submitted Testimonials -->
+  <mat-tab label="ලැබුණු අදහස් ({{ totalElements }})">
+    <app-skeleton *ngIf="loading" type="user-list" [count]="4"></app-skeleton>
+
+    <div class="testimonials-list" *ngIf="!loading">
+      <mat-card class="testimonial-card" *ngFor="let t of testimonials">
+        <div class="testimonial-card__main">
+          <div class="testimonial-avatar">
+            <img *ngIf="t.hasPhoto" [src]="getPhotoUrl(t)" [alt]="t.userName" />
+            <span *ngIf="!t.hasPhoto">{{ getInitials(t.userName) }}</span>
+          </div>
+          <div class="testimonial-info">
+            <div class="testimonial-header">
+              <h4>{{ t.userName }}</h4>
+              <span class="role-badge role-{{ t.userRole }}">{{
+                getRoleLabel(t.userRole)
+              }}</span>
+              <span
+                class="status-badge"
+                [class.published]="t.isPublished"
+                [class.unpublished]="!t.isPublished"
+              >
+                {{ t.isPublished ? "ප්‍රකාශිත" : "අප්‍රකාශිත" }}
+              </span>
+            </div>
+            <p class="testimonial-position" *ngIf="t.positionTitle">
+              {{ t.positionTitle }}
+            </p>
+            <div class="testimonial-rating" *ngIf="t.rating">
+              <mat-icon *ngFor="let s of getStars(t.rating)">star</mat-icon>
+              <mat-icon *ngFor="let s of getEmptyStars(t.rating)"
+                >star_border</mat-icon
+              >
+            </div>
+            <p class="testimonial-quote">"{{ t.quote }}"</p>
+            <span class="testimonial-date">
+              {{ t.createdAt | date: "yyyy-MM-dd HH:mm" }}
+            </span>
+          </div>
+          <div class="testimonial-actions">
+            <button
+              mat-icon-button
+              [color]="t.isPublished ? 'primary' : 'basic'"
+              matTooltip="{{
+                t.isPublished ? 'ප්‍රකාශය ඉවත් කරන්න' : 'ප්‍රකාශ කරන්න'
+              }}"
+              (click)="togglePublish(t)"
+            >
+              <mat-icon>{{
+                t.isPublished ? "visibility" : "visibility_off"
+              }}</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="සංස්කරණය"
+              (click)="editTestimonial(t)"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="මකන්න"
+              (click)="deleteTestimonial(t)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+
+    <app-empty-state
+      *ngIf="!loading && testimonials.length === 0"
+      icon="rate_review"
+      title="අදහස් නොමැත"
+      message="තවම කිසිදු පරිශීලකයෙකු අදහසක් ඉදිරිපත් කර නොමැත."
+    >
+    </app-empty-state>
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="currentPage"
+      (page)="onPageChange($event)"
+      [hidePageSize]="true"
+    >
+    </mat-paginator>
+  </mat-tab>
+
+  <!-- Tab 2: Enable Feedback Form -->
+  <mat-tab label="Feedback Enable කරන්න">
+    <div class="enable-section">
+      <!-- Search Users -->
+      <div class="search-section">
+        <h3>පරිශීලකයන් සොයන්න</h3>
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>නම හෝ email</mat-label>
+          <input
+            matInput
+            [(ngModel)]="userSearchQuery"
+            (ngModelChange)="filterUsers()"
+            placeholder="සොයන්න..."
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+
+        <app-skeleton
+          *ngIf="usersLoading"
+          type="user-list"
+          [count]="3"
+        ></app-skeleton>
+
+        <div class="users-list" *ngIf="!usersLoading">
+          <div class="user-row" *ngFor="let u of filteredUsers">
+            <div class="user-row__info">
+              <div class="user-avatar-sm">{{ getInitials(u.fullName) }}</div>
+              <div class="user-row__details">
+                <span class="user-name">{{ u.fullName }}</span>
+                <span class="user-meta">
+                  <span class="user-email">{{ u.email }}</span>
+                  <span class="role-badge role-{{ u.role }}">{{
+                    getRoleLabel(u.role)
+                  }}</span>
+                </span>
+              </div>
+            </div>
+            <button
+              mat-stroked-button
+              color="primary"
+              class="enable-btn"
+              [disabled]="isFormEnabled(u.id)"
+              (click)="enableForm(u)"
+            >
+              <mat-icon>{{ isFormEnabled(u.id) ? "check" : "send" }}</mat-icon>
+              {{ isFormEnabled(u.id) ? "Enable කර ඇත" : "Enable කරන්න" }}
+            </button>
+          </div>
+        </div>
+
+        <app-empty-state
+          *ngIf="!usersLoading && filteredUsers.length === 0"
+          icon="search_off"
+          title="පරිශීලකයින් නොමැත"
+          message="සෙවීමට ගැලපෙන පරිශීලකයින් නොමැත."
+        >
+        </app-empty-state>
+      </div>
+
+      <!-- Enabled Users List -->
+      <div class="enabled-section">
+        <h3>Enable කළ පරිශීලකයින් ({{ enabledUsers.length }})</h3>
+
+        <app-skeleton
+          *ngIf="enabledLoading"
+          type="user-list"
+          [count]="2"
+        ></app-skeleton>
+
+        <div class="enabled-list" *ngIf="!enabledLoading">
+          <div class="enabled-row" *ngFor="let t of enabledUsers">
+            <div class="user-row__info">
+              <div class="user-avatar-sm">{{ getInitials(t.userName) }}</div>
+              <div class="user-row__details">
+                <span class="user-name">{{ t.userName }}</span>
+                <span class="user-meta">
+                  <span class="role-badge role-{{ t.userRole }}">{{
+                    getRoleLabel(t.userRole)
+                  }}</span>
+                  <span
+                    class="submit-badge"
+                    [class.submitted]="t.isSubmitted"
+                    [class.pending]="!t.isSubmitted"
+                  >
+                    {{ t.isSubmitted ? "ඉදිරිපත් කර ඇත" : "බලා සිටී" }}
+                  </span>
+                </span>
+              </div>
+            </div>
+            <button
+              mat-icon-button
+              color="warn"
+              matTooltip="Disable කරන්න"
+              (click)="disableForm(t)"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <app-empty-state
+          *ngIf="!enabledLoading && enabledUsers.length === 0"
+          icon="person_off"
+          title="Enable කළ පරිශීලකයින් නොමැත"
+          message="තවම කිසිදු පරිශීලකයෙකුට feedback form එක enable කර නොමැත."
+        >
+        </app-empty-state>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
