@@ -64,14 +64,20 @@
       </p>
       <div class="testimonials__list">
         <div class="testimonial-card" *ngFor="let t of testimonials">
-          <div class="testimonial-card__header">
-            <div class="testimonial-card__avatar">{{ t.avatar }}</div>
-            <div class="testimonial-card__info">
-              <h3>{{ t.name }}</h3>
-              <p class="testimonial-card__position">{{ t.position }}</p>
-              <p class="testimonial-card__position-en">{{ t.positionEn }}</p>
-              <p class="testimonial-card__org">{{ t.organization }}</p>
-            </div>
+          <div class="testimonial-card__avatar">
+            <img
+              *ngIf="t.photoUrl; else avatarFallback"
+              [src]="t.photoUrl"
+              [alt]="t.name"
+              loading="lazy"
+            />
+            <ng-template #avatarFallback>{{ t.avatar }}</ng-template>
+          </div>
+          <div class="testimonial-card__info">
+            <h3>{{ t.name }}</h3>
+            <p class="testimonial-card__position">{{ t.position }}</p>
+            <p class="testimonial-card__position-en">{{ t.positionEn }}</p>
+            <p class="testimonial-card__org">{{ t.organization }}</p>
           </div>
           <blockquote class="testimonial-card__quote">
             <mat-icon class="quote-icon">format_quote</mat-icon>

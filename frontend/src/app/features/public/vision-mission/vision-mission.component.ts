@@ -50,6 +50,8 @@ export class VisionMissionComponent {
       position: 'අධ්‍යාපන අධ්‍යක්ෂ',
       positionEn: 'Director of Education',
       organization: 'පිරිවෙන් අධ්‍යාපන අමාත්‍යාංශය',
+      photoUrl:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&q=80',
       quote:
         'මෙම MCQ පද්ධතිය පිරිවෙන් අධ්‍යාපනයේ නව මාවතක් විවෘත කරයි. අපගේ සිසුන්ට ඉතා පහසුවෙන් විභාග පුහුණුව ලබාගැනීමට මෙය ඉතා වටිනා මෙවලමකි. තාක්ෂණය හා සම්භාව්‍ය අධ්‍යාපනය මනාසේ එකට බද්ධ වී ඇත.',
       avatar: 'S',
@@ -59,6 +61,8 @@ export class VisionMissionComponent {
       position: 'නියෝජ්‍ය අධ්‍යාපන අධ්‍යක්ෂ',
       positionEn: 'Deputy Director of Education',
       organization: 'බස්නාහිර පළාත් පිරිවෙන් අධ්‍යාපන දෙපාර්තමේන්තුව',
+      photoUrl:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=320&q=80',
       quote:
         'සාම්ප්‍රදායික පිරිවෙන් අධ්‍යාපනය නවීන තාක්ෂණය සමඟ සම්බන්ධ කිරීම ඉතා වැදගත් පියවරකි. මෙම පද්ධතිය පිරිවෙන් සිසුන්ගේ විභාග සාර්ථකත්වය වැඩි කිරීමට සැලකිය යුතු ලෙස දායක වනු ඇත.',
       avatar: 'D',
@@ -68,6 +72,8 @@ export class VisionMissionComponent {
       position: 'පිරිවෙන් පරිපාලන නිලධාරී',
       positionEn: 'Pirivena Administrative Officer',
       organization: 'ජාතික පිරිවෙන් සම්මේලනය',
+      photoUrl:
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=320&q=80',
       quote:
         'ගුරුවරුන්ට හා පරිපාලකයින්ට ප්‍රශ්න කළමනාකරණය, ප්‍රගති නිරීක්ෂණය ඉතා පහසු වී ඇත. මෙම පද්ධතිය ක්‍රියාත්මක කිරීම සඳහා සහය දීම ගැන සතුටුදායකය.',
       avatar: 'R',
